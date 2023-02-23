@@ -20,7 +20,9 @@ export default function RootLayout({
       <main className={`relative transition-all ${classString}`}>
         <div className="h-[80px]" />
         <Navbar isActive={isActive} togglerFunction={togglerFunction} />
-        <div className="h-[calc(100vh_-_80px)] bg-red-300">{children}</div>
+        <div className="scrollbar-thin scrollbar-thumb-[#aaa] scrollbar-track-transparent custom_shadow h-[calc(100vh_-_80px)] overflow-auto bg-[#f4f5fd]">
+          {children}
+        </div>
       </main>
     </section>
   );

@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+/*  */
+.custom_shadow {
+  box-shadow: 10px 10px 20px 0px rgba(0,0,0,0.75) inset;
+-webkit-box-shadow: 10px 10px 20px 0px rgba(0,0,0,0.75) inset;
+-moz-box-shadow: 10px 10px 20px 0px rgba(0,0,0,0.75) inset;
+}
