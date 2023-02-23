@@ -1,6 +1,9 @@
 import { Box, Button, Image, NavLink } from '@mantine/core';
+import { deleteCookie } from 'cookies-next';
+import customNotification from 'functions/customNotification';
 import { sidebarLink } from 'modules/Sidebar/sidebarLinks';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 //
 import { BiChevronRight } from 'react-icons/bi';
@@ -49,7 +52,21 @@ function SidebarBody() {
 }
 //
 export default function Sidebar({ isActive }: PropType) {
+  const router = useRouter();
   const classString: string = isActive ? 'w-[300px]' : 'w-[0px]';
+  // functions
+  const signOutHandler = () => {
+    deleteCookie('token', { secure: false });
+    deleteCookie('type', { secure: false });
+    deleteCookie('user_id', { secure: false });
+    deleteCookie('acc_no', { secure: false });
+    deleteCookie('loc_no', { secure: false });
+    customNotification({
+      message: 'Sign out Successfully!',
+    });
+    router.push('/');
+  };
+  //
   return (
     <>
       <div className={`overflow-hidden transition-all ${classString}`}>
@@ -60,7 +77,10 @@ export default function Sidebar({ isActive }: PropType) {
         </header>
         <SidebarBody />
         <footer className="flex h-[80px] items-center justify-center border">
-          <Button className="w-56 bg-red-500 transition-all hover:scale-110 hover:bg-red-900">
+          <Button
+            onClick={signOutHandler}
+            className="w-56 bg-red-500 transition-all hover:scale-110 hover:bg-red-900"
+          >
             Sign Out
           </Button>
         </footer>
