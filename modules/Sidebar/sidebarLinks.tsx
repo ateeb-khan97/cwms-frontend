@@ -90,12 +90,12 @@ export const sidebarLink: SidebarType[] = [
     children: [
       {
         label: 'Show Manufacturers',
-        href: '/dashboard/manufacturer',
+        href: '/dashboard/manufacturers',
         icon: <AiOutlineUnorderedList />,
       },
       {
         label: 'Add Manufacturer',
-        href: '/dashboard/manufacturer/add_manufacturer',
+        href: '/dashboard/manufacturers/add_manufacturer',
         icon: <RiAddFill />,
       },
     ],
@@ -134,22 +134,22 @@ export const sidebarLink: SidebarType[] = [
     children: [
       {
         label: 'Bulk Upload',
-        href: '/dashboard/settings/bulk_upload',
+        href: '/dashboard/bulk_upload',
         icon: <MdUpload />,
       },
       {
         label: 'Show Users',
-        href: '/dashboard/settings/users',
+        href: '/dashboard/users',
         icon: <HiUsers />,
       },
       {
         label: 'Create WMS',
-        href: '/dashboard/settings/create_wms',
+        href: '/dashboard/create_wms',
         icon: <FaWarehouse />,
       },
       {
         label: 'WH Structuring',
-        href: '/dashboard/settings/warehouse_structuring',
+        href: '/dashboard/warehouse_structuring',
         icon: <SiBlueprint />,
       },
     ],
