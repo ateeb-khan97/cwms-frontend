@@ -5,6 +5,7 @@
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "start:prod": "next start",
+    "start:windows": "set NODE_ENV=production && node server.js",
     "lint": "next lint",
     "format": "prettier --write \"**/*.{js,ts,tsx,md}\""
   },
