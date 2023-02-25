@@ -18,7 +18,7 @@ function Header() {
   );
 }
 //
-function Form() {
+function Table() {
   const { productData, loading } = useProductData();
   //
   const updateHandler = (id: number) => {};
@@ -48,7 +48,7 @@ function Form() {
             },
             {
               name: 'Manufacturer Name',
-              selector: (row: any) => row.manufacturer_name,
+              selector: (row: any) => row.manufacturer.manufacturer_name,
               grow: 2,
               sortable: true,
             },
@@ -144,7 +144,7 @@ export default function ShowProductPage() {
             Add Product
           </Link>
         </div>
-        <Form />
+        <Table />
       </div>
     </section>
   );

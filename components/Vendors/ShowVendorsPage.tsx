@@ -18,7 +18,7 @@ function Header() {
   );
 }
 //
-function Form() {
+function Table() {
   const { loading, vendorData } = useVendorData();
   //
   const updateHandler = (id: number) => {};
@@ -144,7 +144,7 @@ export default function ShowVendorsPage() {
             Add Vendor
           </Link>
         </div>
-        <Form />
+        <Table />
       </div>
     </section>
   );

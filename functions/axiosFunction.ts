@@ -2,6 +2,7 @@ import axios, { AxiosRequestConfig } from 'axios';
 import { getCookie } from 'cookies-next';
 // types
 type MethodType = 'POST' | 'GET' | 'PUT' | 'DELETE';
+//
 type axiosParams = {
   method?: MethodType;
   urlPath: string;

@@ -17,7 +17,7 @@ function Header() {
   );
 }
 //
-function Form() {
+function Table() {
   const { loading, manufacturerData } = useManufacturerData();
   //
   const updateHandler = (id: number) => {};
@@ -121,7 +121,7 @@ export default function ShowManufacturersPage() {
             Add Manufacturer
           </Link>
         </div>
-        <Form />
+        <Table />
       </div>
     </section>
   );

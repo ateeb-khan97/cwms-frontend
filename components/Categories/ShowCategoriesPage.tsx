@@ -18,7 +18,7 @@ function Header() {
   );
 }
 //
-function Form() {
+function Table() {
   const { categoryData, loading } = useCategoryData();
   //
   const updateHandler = (id: number) => {};
@@ -121,7 +121,7 @@ export default function ShowCategoriesPage() {
             Add Category
           </Link>
         </div>
-        <Form />
+        <Table />
       </div>
     </section>
   );
