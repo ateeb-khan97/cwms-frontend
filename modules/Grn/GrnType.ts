@@ -1,0 +1,25 @@
+export type GrnType = {
+  batch_expiry?: string;
+  batch_number?: string;
+  comments?: string;
+  created_at?: string;
+  discount_percentage?: number;
+  foc?: boolean;
+  grn_status?: string;
+  id?: number;
+  is_updatable?: boolean;
+  maximum_retail_price?: number;
+  percent_order_completed?: string;
+  po_id?: number;
+  po_status?: string;
+  product_id?: number;
+  product_name?: string;
+  qc_approved?: boolean;
+  received_quantity?: number;
+  remaining_quantity?: number;
+  required_quantity?: number;
+  status?: boolean;
+  trade_price?: number;
+  uom?: string;
+  updated_at?: string;
+};

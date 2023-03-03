@@ -43,6 +43,8 @@ export default function LoginPage() {
       message: 'Login Successfully!',
     });
     //
+    console.log(response.data);
+
     setCookie('token', response.data[0].token, { secure: false });
     setCookie('type', response.data[0].type, { secure: false });
     setCookie('user_id', response.data[0].user_id, { secure: false });

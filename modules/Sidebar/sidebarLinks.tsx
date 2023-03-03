@@ -4,7 +4,7 @@ import { RxDashboard } from 'react-icons/rx';
 import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { BiCategoryAlt, BiReceipt } from 'react-icons/bi';
 import { CgNotes } from 'react-icons/cg';
-import { BsBoxSeam, BsShop } from 'react-icons/bs';
+import { BsBoxSeam, BsHddStackFill, BsShop } from 'react-icons/bs';
 import { MdOutlinePrecisionManufacturing, MdUpload } from 'react-icons/md';
 import { RiAddFill, RiTestTubeLine } from 'react-icons/ri';
 import { FiSettings } from 'react-icons/fi';
@@ -126,6 +126,18 @@ export const sidebarLink: SidebarType[] = [
         icon: <RiTestTubeLine />,
       },
     ],
+  },
+  {
+    label:"Inbound",
+    hasChildren: true,
+    icon: <BsHddStackFill />,
+    children:[
+      {
+        href:"/dashboard/inbound/receive_items",
+        label:"Receive Items",
+        icon: <BiReceipt />,
+      }
+    ]
   },
   {
     label: 'Settings',

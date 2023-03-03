@@ -1,0 +1,23 @@
+export type ReceiveType = {
+  account_number: string;
+  batch_expiry: string;
+  batch_number: string;
+  comments: string;
+  created_at: string;
+  discount_percentage: string;
+  foc: boolean;
+  id: number;
+  inward_date?: Date;
+  inward_id?: string;
+  location_id: string;
+  maximum_retail_price: string;
+  po_id: number;
+  product_id: number;
+  product_name: string;
+  received_quantity: string;
+  required_quantity: string;
+  status: boolean;
+  trade_price: string;
+  uom: string;
+  updated_at: string;
+};
