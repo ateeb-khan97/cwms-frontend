@@ -26,13 +26,7 @@ export default function useCategoryData(): useCategoryType {
       urlPath: '/category/find_all/',
     });
     //
-    var all_categories: any[] = [];
-    response.data.forEach((each_parent_category) => {
-      all_categories.push(each_parent_category);
-      all_categories.push(...each_parent_category.child);
-    });
-    //
-    setData(all_categories);
+    setData(response.data);
     setLoading(false);
   };
   //

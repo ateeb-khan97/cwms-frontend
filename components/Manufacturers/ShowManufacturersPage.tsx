@@ -1,10 +1,13 @@
 'use client';
 
+import { Button } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
+import axiosFunction from 'functions/axiosFunction';
 import useManufacturerData from 'modules/Manufacturer/useManufacturerData';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AiFillEdit } from 'react-icons/ai';
 //
 function Header() {
@@ -18,9 +21,21 @@ function Header() {
 }
 //
 function Table() {
+  const router = useRouter();
   const { loading, manufacturerData } = useManufacturerData();
   //
-  const updateHandler = (id: number) => {};
+  const updateHandler = async (id: number) => {
+    const [filtered_manufacturer] = await axiosFunction({
+      urlPath: '/manufacturer/find',
+      method: 'POST',
+      data: { id },
+    }).then((res) => res.data);
+    localStorage.setItem(
+      'manufacturer_data',
+      JSON.stringify(filtered_manufacturer),
+    );
+    router.push('/dashboard/manufacturers/update_manufacturer');
+  };
   //
   return (
     <>
@@ -52,20 +67,6 @@ function Table() {
             },
 
             {
-              name: 'Created At',
-              selector: (row: any) => row.createdAt,
-              grow: 0,
-              center: true,
-              width: '190px',
-            },
-            {
-              name: 'Updated At',
-              selector: (row: any) => row.updatedAt,
-              grow: 0,
-              center: true,
-              width: '190px',
-            },
-            {
               name: 'Status',
               selector: (row: any) => (
                 <span
@@ -84,12 +85,13 @@ function Table() {
               name: 'Actions',
               cell: (row: any) => (
                 <>
-                  <span
-                    className="flex h-5 w-5 items-center justify-center rounded-md bg-[#002884]"
+                  <Button
+                    compact
+                    className="h-6 w-6 bg-[#002884] p-0"
                     onClick={() => updateHandler(row.id)}
                   >
                     <AiFillEdit className="text-white" />
-                  </span>
+                  </Button>
                 </>
               ),
               ignoreRowClick: true,

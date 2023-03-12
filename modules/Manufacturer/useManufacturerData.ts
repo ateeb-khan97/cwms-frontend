@@ -24,7 +24,7 @@ export default function useManufacturerData(): useManufacturerDataType {
   const dataFetcher = async () => {
     setLoading(true);
     const response = await axiosFunction({
-      urlPath: '/manufacturer/find_all/',
+      urlPath: '/manufacturer/find_for_dt/',
     });
     setData(response.data);
     setLoading(false);

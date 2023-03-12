@@ -22,7 +22,7 @@ export default function useVendorData(): useVendorDataType {
   //
   const dataFetcher = async () => {
     setLoading(true);
-    const response = await axiosFunction({ urlPath: '/vendor/find_all/' });
+    const response = await axiosFunction({ urlPath: '/vendor/find_for_dt' });
     setData(response.data);
     setLoading(false);
   };

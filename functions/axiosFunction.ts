@@ -38,6 +38,14 @@ export default async function axiosFunction({
   //
   if (method == 'GET') config['params'] = params;
   //
-  const result: any = await axios(config);
-  return result.data;
+  try {
+    const result: any = await axios(config);
+    return result.data;
+  } catch (err: any) {
+    return {
+      data: [],
+      message: err.message,
+      status: 401,
+    };
+  }
 }

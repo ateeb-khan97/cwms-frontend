@@ -1,9 +1,12 @@
 'use client';
+import { Button } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
+import axiosFunction from 'functions/axiosFunction';
 import useProductData from 'modules/Products/useProductData';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 //
 import React from 'react';
 import { AiFillEdit } from 'react-icons/ai';
@@ -19,9 +22,92 @@ function Header() {
 }
 //
 function Table() {
+  const router = useRouter();
   const { productData, loading } = useProductData();
   //
-  const updateHandler = (id: number) => {};
+  const updateHandler = async (id: number) => {
+    var category: any[] = [];
+    var vendor: any[] = [];
+    var productTags: any[] = [];
+    var productGenericFormula: any[] = [];
+    var product_conversion_su_1 = 'Carton';
+    var product_conversion_ic_1 = '1';
+    var product_conversion_su_2 = '';
+    var product_conversion_ic_2 = '1';
+    var product_conversion_su_3 = '';
+    var product_conversion_ic_3 = '1';
+    //
+    const [filtered_product] = await axiosFunction({
+      urlPath: '/product/find/',
+      method: 'POST',
+      data: { id },
+    }).then((res) => res.data);
+    //
+    if (filtered_product.product_conversions.length > 0) {
+      var product_conversion = [...filtered_product.product_conversions];
+      var sorted_conversion: any[] = product_conversion.sort(
+        (obj1: any, obj2: any) => {
+          if (obj1.sorting > obj2.sorting) {
+            return 1;
+          }
+          if (obj1.sorting < obj2.sorting) {
+            return -1;
+          }
+          return 0;
+        },
+      );
+
+      if (sorted_conversion[1].selling_unit == 'Box') {
+        product_conversion_su_3 = sorted_conversion[2].selling_unit;
+        product_conversion_ic_3 = sorted_conversion[2].item_conversion;
+      }
+      product_conversion_ic_1 = sorted_conversion[0].item_conversion;
+      product_conversion_ic_2 = sorted_conversion[1].item_conversion;
+      product_conversion_su_1 = sorted_conversion[0].selling_unit;
+      product_conversion_su_2 = sorted_conversion[1].selling_unit;
+    }
+
+    if (filtered_product.product_generic_formulas.length > 0) {
+      productGenericFormula = filtered_product.product_generic_formulas.map(
+        (each_formula: any) => {
+          return each_formula.product_generic_formula;
+        },
+      );
+    }
+    if (filtered_product.product_tags.length > 0) {
+      productTags = filtered_product.product_tags.map((each_tag: any) => {
+        return each_tag.tag;
+      });
+    }
+    if (filtered_product.categories.length > 0) {
+      category = filtered_product.categories.map((each_category: any) => {
+        return each_category.id;
+      });
+    }
+
+    if (filtered_product.vendors.length > 0) {
+      vendor = filtered_product.vendors.map((each_vendor: any) => {
+        return each_vendor.id;
+      });
+    }
+    //
+    const data_to_send_temp = {
+      ...filtered_product,
+      category,
+      productTags,
+      vendor,
+      productGenericFormula,
+      product_conversion_su_1,
+      product_conversion_ic_1,
+      product_conversion_su_2,
+      product_conversion_ic_2,
+      product_conversion_su_3,
+      product_conversion_ic_3,
+    };
+    localStorage.setItem('product_data', JSON.stringify(data_to_send_temp));
+    router.push(`/dashboard/products/update_product`);
+    //
+  };
   //
   return (
     <>
@@ -107,12 +193,13 @@ function Table() {
               name: 'Action',
               cell: (row: any) => (
                 <>
-                  <span
-                    className="flex h-5 w-5 items-center justify-center rounded-md bg-[#002884]"
+                  <Button
+                    compact
+                    className="h-6 w-6 bg-[#002884] p-0"
                     onClick={() => updateHandler(row.id)}
                   >
                     <AiFillEdit className="text-white" />
-                  </span>
+                  </Button>
                 </>
               ),
               ignoreRowClick: true,
@@ -139,7 +226,7 @@ export default function ShowProductPage() {
           </p>
           <Link
             className="rounded-md bg-red-500 py-2 px-5 text-white transition-all hover:scale-110 hover:bg-red-900"
-            href={'/dashboard/categories/add_category'}
+            href={'/dashboard/products/add_product'}
           >
             Add Product
           </Link>

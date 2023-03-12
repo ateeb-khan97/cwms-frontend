@@ -1,10 +1,13 @@
 'use client';
 
+import { Button } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
+import axiosFunction from 'functions/axiosFunction';
 import useCategoryData from 'modules/Category/useCategoryData';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { AiFillEdit } from 'react-icons/ai';
 
 //
@@ -20,8 +23,18 @@ function Header() {
 //
 function Table() {
   const { categoryData, loading } = useCategoryData();
+  const router = useRouter();
   //
-  const updateHandler = (id: number) => {};
+
+  const updateHandler = async (id: number) => {
+    const response = await axiosFunction({
+      urlPath: '/category/find',
+      method: 'POST',
+      data: { id },
+    });
+    localStorage.setItem('category_data', JSON.stringify(response.data));
+    router.push('/dashboard/categories/update_category');
+  };
   //
   return (
     <>
@@ -84,12 +97,13 @@ function Table() {
               name: 'Actions',
               cell: (row: any) => (
                 <>
-                  <span
-                    className="flex h-5 w-5 items-center justify-center rounded-md bg-[#002884]"
+                  <Button
+                    compact
+                    className="h-6 w-6 bg-[#002884] p-0"
                     onClick={() => updateHandler(row.id)}
                   >
                     <AiFillEdit className="text-white" />
-                  </span>
+                  </Button>
                 </>
               ),
               ignoreRowClick: true,

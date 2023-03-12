@@ -22,7 +22,7 @@ export default function useProductData(): useProductDataType {
   //
   const dataFetcher = async () => {
     setLoading(true);
-    const response = await axiosFunction({ urlPath: '/product/find_all/' });
+    const response = await axiosFunction({ urlPath: '/product/find_for_dt/' });
     setData(response.data);
     setLoading(false);
   };
