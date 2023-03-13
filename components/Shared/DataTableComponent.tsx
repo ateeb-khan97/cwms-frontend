@@ -1,15 +1,9 @@
 'use client';
-
-import { TextInput } from '@mantine/core';
-import { AiOutlineSearch } from 'react-icons/ai';
-import DataTable, { TableProps } from 'react-data-table-component';
 import React from 'react';
-// types
-type FilterComponentType = {
-  filterText: string;
-  onFilter: (value: any) => void;
-};
-//  styles
+import DataTable from 'react-data-table-component';
+import { AiOutlineSearch } from 'react-icons/ai';
+import { TextInput } from '@mantine/core';
+//
 const customStyles = {
   table: {
     style: {
@@ -62,31 +56,55 @@ const customStyles = {
     },
   },
 };
-// Components
-function FilterComponent({ filterText, onFilter }: FilterComponentType) {
-  return (
-    <>
-      <TextInput
-        icon={<AiOutlineSearch />}
-        placeholder="Search"
-        value={filterText}
-        onChange={onFilter}
-      />
-    </>
-  );
-}
 //
-export default function DataTableComponent(props: TableProps<any>) {
-  // States
-  const [filterText, setFilterText] = React.useState<string>('');
+type Props = {
+  columns: any;
+  data: any;
+  title?: string;
+  selectableRows?: boolean;
+  onSelectedRowsChange?: (row: any) => void;
+  onRowClick?: (row: any) => void;
+  clearSelectedRows?: boolean;
+  keyField?: string;
+};
+//
+type FilterProps = {
+  filterText: string;
+  onFilter: (value: any) => void;
+  title?: string;
+};
+//
+const FilterComponent = ({ filterText, onFilter, title }: FilterProps) => (
+  <>
+    <TextInput
+      icon={<AiOutlineSearch />}
+      type="text"
+      placeholder={`Search ${title ? title : ''}`}
+      value={filterText}
+      onChange={onFilter}
+    />
+  </>
+);
+//
+
+const DataTableComponent = ({
+  selectableRows,
+  onSelectedRowsChange,
+  columns,
+  data,
+  title,
+  clearSelectedRows,
+  onRowClick,
+  keyField,
+}: Props) => {
+  const [filterText, setFilterText] = React.useState('');
   const [resetPaginationToggle, setResetPaginationToggle] =
-    React.useState<boolean>(false);
-  const [filteredItems, setFilteredItems] = React.useState<any[]>([]);
+    React.useState(false);
+  const [filteredItems, setFilteredItems] = React.useState([]);
   //
-  // useEffect
   React.useEffect(() => {
     setFilteredItems(
-      props.data
+      data
         .filter((item: any) => {
           var filterFlag = false;
           Object.keys(item).every((each_key) => {
@@ -106,12 +124,13 @@ export default function DataTableComponent(props: TableProps<any>) {
         })
         .reverse(),
     );
-  }, [filterText, resetPaginationToggle]);
-  // useMemo
+  }, [data, filterText]);
+  //
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
       <FilterComponent
-        onFilter={(e: React.BaseSyntheticEvent) => {
+        title={title}
+        onFilter={(e: any) => {
           setFilterText(e.target.value);
         }}
         filterText={filterText}
@@ -121,14 +140,13 @@ export default function DataTableComponent(props: TableProps<any>) {
   //
   return (
     <DataTable
-      {...props}
-      title={props.title}
-      columns={props.columns}
+      title={title}
+      columns={columns}
       data={filteredItems}
       dense
       highlightOnHover
       pointerOnHover
-      keyField={props.keyField || 'id'}
+      keyField={keyField || 'id'}
       //@ts-ignore
       direction="auto"
       pagination
@@ -136,14 +154,16 @@ export default function DataTableComponent(props: TableProps<any>) {
       responsive
       subHeader
       subHeaderComponent={subHeaderComponentMemo}
-      selectableRows={props.selectableRows}
-      onSelectedRowsChange={props.onSelectedRowsChange}
+      selectableRows={selectableRows}
+      onSelectedRowsChange={onSelectedRowsChange}
       //@ts-ignore
       subHeaderAlign="right"
       subHeaderWrap
       customStyles={customStyles}
-      clearSelectedRows={props.clearSelectedRows}
-      onRowClicked={props.onRowClicked}
+      clearSelectedRows={clearSelectedRows}
+      onRowClicked={onRowClick}
     />
   );
-}
+};
+
+export default DataTableComponent;

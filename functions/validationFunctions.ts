@@ -10,15 +10,17 @@ export default class Validator {
   private static decimalRegex = /^[0-9]\d*\.?\d*$/;
   private static emailRegex = /^\S+@\S+$/;
   //
-  static numberValidator(value: any, func: Function) {
+  static numberValidator(value: any) {
     if (value.toString().match(this.numberRegex) || value == '') {
-      func(value);
+      return true;
+    } else {
+      return false;
     }
   }
   //
-  static decimalValidator(value: any, func: Function) {
+  static decimalValidator(value: any) {
     if (value.toString().match(this.decimalRegex) || value == '') {
-      func(value);
+      return value;
     }
   }
   //
