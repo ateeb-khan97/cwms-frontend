@@ -16,6 +16,7 @@ import { ProductDropDownData } from 'modules/Products/productData';
 import React from 'react';
 import RichTextComponent from 'components/Shared/RichTextComponent';
 import { useRouter } from 'next/navigation';
+import axiosFunction from 'functions/axiosFunction';
 //
 function Header({ isUpdate }: { isUpdate: boolean }) {
   return (
@@ -31,6 +32,29 @@ function Header({ isUpdate }: { isUpdate: boolean }) {
 //
 function Form({ isUpdate }: { isUpdate: boolean }) {
   const router = useRouter();
+  const [manufacturerData, setManufacturerData] = React.useState<any[]>([]);
+  const [categoryData, setCategoryData] = React.useState<any[]>([]);
+  const [vendorData, setVendorData] = React.useState<any[]>([]);
+  //
+  const manufacturerFetcher = async () => {
+    const manufacturer = await axiosFunction({
+      urlPath: '/manufacturer/find_for_dd',
+    }).then((res) => res.data);
+    setManufacturerData(manufacturer);
+  };
+  const categoryFetcher = async () => {
+    const category = await axiosFunction({
+      urlPath: `/category/find_for_dd`,
+    }).then((res) => res.data);
+    setCategoryData(category);
+  };
+  const vendorFetcher = async () => {};
+  //
+  React.useEffect(() => {
+    manufacturerFetcher();
+    categoryFetcher();
+    vendorFetcher();
+  }, []);
   //
   var localData: any = {};
   if (typeof window != 'undefined' && isUpdate) {
@@ -505,12 +529,28 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         withAsterisk
         searchable
         nothingFound="No options"
-        data={[]}
+        data={manufacturerData.map((each_manu) => {
+          return {
+            value: each_manu.id,
+            label: each_manu.manufacturer_name,
+          };
+        })}
       />
       <TransferList
         className="w-[100%]"
-        value={[[], []]}
-        onChange={() => {}}
+        value={[
+          categoryData.map((each_cat) => {
+            return {
+              value: each_cat.id,
+              label: each_cat.category_name,
+              group: each_cat.parent_name,
+            };
+          }),
+          [],
+        ]}
+        onChange={(val) => {
+          console.log(val);
+        }}
         searchPlaceholder="Search..."
         nothingFound="Nothing here"
         titles={['Categories', 'Selected Categories']}

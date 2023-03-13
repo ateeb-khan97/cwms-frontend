@@ -27,9 +27,7 @@ export default function OrderCart(props: {
   const [tableFresher, setTableFresher] = React.useState<boolean>(false);
   const [addToCartDisabler, setAddToCartDisabler] =
     React.useState<boolean>(true);
-
   //   functions
-
   const tableFresherToggler = () => setTableFresher((pre) => !pre);
   //
   const rowSelectFunction = (value: boolean, row: RowType) => {
