@@ -11,6 +11,7 @@ import {
   Switch,
   TextInput,
   TransferList,
+  TransferListData,
 } from '@mantine/core';
 import { ProductDropDownData } from 'modules/Products/productData';
 import React from 'react';
@@ -33,8 +34,10 @@ function Header({ isUpdate }: { isUpdate: boolean }) {
 function Form({ isUpdate }: { isUpdate: boolean }) {
   const router = useRouter();
   const [manufacturerData, setManufacturerData] = React.useState<any[]>([]);
-  const [categoryData, setCategoryData] = React.useState<any[]>([]);
   const [vendorData, setVendorData] = React.useState<any[]>([]);
+  //
+  const [categoryTransferListData, setCategoryTransferListData] =
+    React.useState<TransferListData>([[], []]);
   //
   const manufacturerFetcher = async () => {
     const manufacturer = await axiosFunction({
@@ -46,7 +49,16 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     const category = await axiosFunction({
       urlPath: `/category/find_for_dd`,
     }).then((res) => res.data);
-    setCategoryData(category);
+    setCategoryTransferListData([
+      category.map((each_cat) => {
+        return {
+          value: each_cat.id,
+          label: each_cat.category_name,
+          group: each_cat.parent_name,
+        };
+      }),
+      [],
+    ]);
   };
   const vendorFetcher = async () => {};
   //
@@ -538,19 +550,8 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
       />
       <TransferList
         className="w-[100%]"
-        value={[
-          categoryData.map((each_cat) => {
-            return {
-              value: each_cat.id,
-              label: each_cat.category_name,
-              group: each_cat.parent_name,
-            };
-          }),
-          [],
-        ]}
-        onChange={(val) => {
-          console.log(val);
-        }}
+        value={categoryTransferListData}
+        onChange={setCategoryTransferListData}
         searchPlaceholder="Search..."
         nothingFound="Nothing here"
         titles={['Categories', 'Selected Categories']}

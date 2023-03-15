@@ -5,25 +5,22 @@ import axiosFunction from 'functions/axiosFunction';
 //
 import React from 'react';
 //
-type formDataType = {
-  vendor: string;
-  expected_delivery_data: string;
-  delivery_location: string;
-  order_type: string;
-};
+
 //
-export default function Form({ setTableData }: { setTableData: Function }) {
-  const [formData, setFormData] = React.useState<formDataType>({
-    delivery_location: '',
-    expected_delivery_data: new Date().toString(),
-    order_type: '',
-    vendor: '',
-  });
+export default function Form({
+  setTableData,
+  formData,
+  setFormData,
+}: {
+  setTableData: Function;
+  formData: any;
+  setFormData: Function;
+}) {
   const [vendorData, setVendorData] = React.useState<any[]>([]);
   const [locationData, setLocationData] = React.useState<any[]>([]);
   //functions
   const inputHandler = (name: string, value: string) => {
-    setFormData((pre) => {
+    setFormData((pre: any) => {
       return {
         ...pre,
         [name]: value,
@@ -80,6 +77,8 @@ export default function Form({ setTableData }: { setTableData: Function }) {
       const product_ids = vendor.products.map((each_prod: any) => {
         return each_prod.id;
       });
+      console.log(product_ids);
+
       productFetcher(product_ids);
     }
   }, [formData.vendor]);
@@ -93,6 +92,7 @@ export default function Form({ setTableData }: { setTableData: Function }) {
           placeholder="Select Vendor"
           searchable
           nothingFound="No options"
+          disabled={formData.vendor != ''}
           required
           withAsterisk
           size="md"

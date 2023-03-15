@@ -1,6 +1,13 @@
 'use client';
 
+import { Button, TextInput } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
+import DataTableComponent from 'components/Shared/DataTableComponent';
+import axiosFunction from 'functions/axiosFunction';
+import customNotification from 'functions/customNotification';
+import React from 'react';
+import { AiOutlineSearch } from 'react-icons/ai';
 
 //
 function Header() {
@@ -13,10 +20,338 @@ function Header() {
   );
 }
 //
-export default function CreateGrnPage() {
+function Form({ setTableData }: { setTableData: Function }) {
+  const purchaseOrderIdRef = React.useRef<HTMLInputElement>(null);
+  const [loading, setLoading] = React.useState<boolean>(false);
+
+  async function submitHandler(e: React.SyntheticEvent) {
+    e.preventDefault();
+    setLoading(true);
+    const po_id = purchaseOrderIdRef.current?.value;
+    const response = await axiosFunction({
+      urlPath: '/purchase_order/find_for_grn',
+      method: 'POST',
+      data: { id: po_id },
+    });
+    //
+    if (response.data.length == 0) {
+      setTableData([]);
+      setLoading(false);
+      return customNotification({ message: response.message, title: 'Failed' });
+    }
+    if (response.data[0].is_po) {
+      const data_temp = response.data[0].purchase_order_detail.map(
+        (each_po: any, index: number) => {
+          return {
+            ...each_po,
+            index: index + 1,
+            po_id: response.data[0].po_id,
+            order_status: response.data[0].order_status,
+            maximum_retail_price: 0,
+            batch_number: '',
+            batch_expiry: new Date().toString(),
+            comments: '',
+          };
+        },
+      );
+      setTableData(data_temp);
+    }
+    //
+    setLoading(false);
+  }
   return (
-    <section className="min-h-[100%] p-7">
+    <>
+      <section>
+        <form className="flex items-end gap-5 p-5" onSubmit={submitHandler}>
+          <TextInput
+            className="w-96"
+            ref={purchaseOrderIdRef}
+            label="Purchase Order ID"
+            placeholder="Enter Purchase Order ID to Search"
+            required
+          />
+          <Button
+            loading={loading}
+            type={'submit'}
+            className="bg-red-500 transition-all hover:scale-110 hover:bg-red-900"
+            leftIcon={<AiOutlineSearch />}
+          >
+            Search
+          </Button>
+        </form>
+      </section>
+    </>
+  );
+}
+//
+function Table({
+  tableData,
+  setTableData,
+}: {
+  tableData: any[];
+  setTableData: Function;
+}) {
+  const tableInputHandler = (
+    index: number,
+    name: string,
+    value: string,
+    type?: string,
+  ) => {
+    setTableData((pre: any[]) => {
+      var tempData: any[] = [...pre];
+      const index_number = tempData.findIndex((pre) => pre.index == index);
+      tempData[index_number] = {
+        ...tempData[index_number],
+        [name]: value,
+      };
+      return tempData;
+    });
+  };
+  //
+  const submitHandler = async () => {
+    const mrp_check = tableData.filter((each_data: any) => {
+      return (
+        each_data.maximum_retail_price == '' || each_data.trade_price == ''
+      );
+    });
+    if (mrp_check.length > 0) {
+      return customNotification({
+        title: 'Failed',
+        message: 'MRP and Trade Price cannot be zero or empty!',
+      });
+    }
+    //
+    const response = await axiosFunction({
+      urlPath: '/grn/create/',
+      method: 'POST',
+      data: {
+        ...tableData,
+      },
+    });
+    //
+    var message = response.message;
+    if (response.status == 200) {
+      message = 'GRN Created/Updated Successfully!';
+    }
+    customNotification({
+      message,
+      title: response.status == 200 ? 'Success' : 'Failed',
+    });
+    //
+  };
+  //
+  return (
+    <section>
+      <DataTableComponent
+        data={tableData}
+        columns={[
+          {
+            name: 'ID',
+            selector: (row: any) => row.product_id,
+            grow: 0,
+            center: true,
+            width: '66px',
+          },
+          {
+            name: 'Product Name',
+            selector: (row: any) => row.product_name,
+            grow: 1,
+            sortable: true,
+          },
+          {
+            name: 'Req Quantity',
+            selector: (row: any) => row.required_quantity,
+            grow: 0,
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'UOM',
+            selector: (row: any) => row.uom,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Rec Quantity',
+            cell: (row: any) => (
+              <>
+                <TextInput
+                  size="xs"
+                  type="text"
+                  value={row.received_quantity}
+                  onChange={(e: any) => {
+                    tableInputHandler(
+                      row.index,
+                      'received_quantity',
+                      e.target.value,
+                      'number',
+                    );
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'MRP',
+            cell: (row: any) => (
+              <>
+                <TextInput
+                  size="xs"
+                  type="text"
+                  value={row.maximum_retail_price}
+                  onChange={(e: any) => {
+                    tableInputHandler(
+                      row.index,
+                      'maximum_retail_price',
+                      e.target.value,
+                      'double',
+                    );
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'Trade Price',
+            cell: (row: any) => (
+              <>
+                <TextInput
+                  size="xs"
+                  type="text"
+                  value={row.trade_price}
+                  onChange={(e: any) => {
+                    tableInputHandler(
+                      row.index,
+                      'trade_price',
+                      e.target.value,
+                      'double',
+                    );
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'Discount %',
+            cell: (row: any) => (
+              <>
+                <TextInput
+                  size="xs"
+                  type="text"
+                  value={row.discount_percentage}
+                  onChange={(e: any) => {
+                    tableInputHandler(
+                      row.index,
+                      'discount_percentage',
+                      e.target.value,
+                      'number',
+                    );
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'Batch No.',
+            cell: (row: any) => (
+              <>
+                <TextInput
+                  size="xs"
+                  type="text"
+                  value={row.batch_number}
+                  onChange={(e: any) => {
+                    tableInputHandler(
+                      row.index,
+                      'batch_number',
+                      e.target.value,
+                    );
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+
+          {
+            name: 'Batch Expiry',
+            cell: (row: any) => (
+              <>
+                <DatePicker
+                  className="table_date_picker"
+                  size="xs"
+                  value={new Date(row.batch_expiry)}
+                  onChange={(e: any) => {
+                    tableInputHandler(row.index, 'batch_expiry', e);
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'Comments',
+            cell: (row: any) => (
+              <>
+                <TextInput
+                  size="xs"
+                  type="text"
+                  value={row.comments}
+                  onChange={(e: any) => {
+                    tableInputHandler(row.index, 'comments', e.target.value);
+                  }}
+                />
+              </>
+            ),
+            center: true,
+            width: '120px',
+          },
+          {
+            name: 'FOC',
+            selector: (row: any) => (row.foc ? 'Yes' : 'No'),
+            grow: 0,
+            center: true,
+            width: '70px',
+          },
+        ]}
+      />
+      <div className="flex w-[100%] justify-end p-5">
+        <Button
+          disabled={tableData.length == 0}
+          className="bg-red-500 transition-all hover:scale-110 hover:bg-red-900"
+          onClick={submitHandler}
+        >
+          Submit
+        </Button>
+      </div>
+    </section>
+  );
+}
+//
+export default function CreateGrnPage() {
+  const [tableData, setTableData] = React.useState<any[]>([]);
+  return (
+    <section className="flex min-h-[100%] flex-col gap-10 p-7">
       <Header />
+      <div className="rounded-md border border-gray-100 bg-white shadow-xl">
+        <div className="flex items-center justify-between border-b-[1px] p-5">
+          <p className="py-2 font-semibold text-gray-500">
+            Here you can manage your all GRN!
+          </p>
+        </div>
+        <Form setTableData={setTableData} />
+        <Table tableData={tableData} setTableData={setTableData} />
+      </div>
     </section>
   );
 }

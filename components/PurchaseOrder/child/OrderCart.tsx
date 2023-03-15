@@ -1,125 +1,37 @@
 'use client';
-import { Button, Select, Switch, TextInput } from '@mantine/core';
+
+import { Button } from '@mantine/core';
 import DataTableComponent from 'components/Shared/DataTableComponent';
-import Validator from 'functions/validationFunctions';
-import React from 'react';
+import { RiDeleteBin7Line } from 'react-icons/ri';
+
 //
-type RowType = {
-  disabled: boolean;
-  foc: boolean;
-  id: number;
-  index: number;
-  item_conversion: string;
-  manufacturer_id: number;
-  manufacturer_name: string;
-  product_name: string;
-  required_quantity: string;
-  sales_tax_percentage: string;
-  selling_unit: string;
-  trade_discount: string;
-  trade_price: string;
-};
-export default function OrderCart(props: {
-  tableData: RowType[];
-  setTableData: Function;
+export default function OrderCart({
+  vendor_name,
+  orderedProducts,
+  setOrderedProducts,
+  subtotal,
+  subtotalDiscount,
+  totalTax,
+  po_id,
+}: {
+  subtotal: number;
+  subtotalDiscount: number;
+  totalTax: number;
+  vendor_name: string;
+  orderedProducts: any[];
+  setOrderedProducts: Function;
+  po_id: number;
 }) {
-  //   states
-  const [tableFresher, setTableFresher] = React.useState<boolean>(false);
-  const [addToCartDisabler, setAddToCartDisabler] =
-    React.useState<boolean>(true);
-  //   functions
-  const tableFresherToggler = () => setTableFresher((pre) => !pre);
-  //
-  const rowSelectFunction = (value: boolean, row: RowType) => {
-    const oldArray = [...props.tableData];
-    const oldIndex = oldArray.findIndex((obj) => obj.id == row.id);
-    if (oldIndex != -1) {
-      oldArray.splice(oldIndex, 1, {
-        ...row,
-        disabled: !row.disabled,
-      });
-    }
-    props.setTableData(oldArray);
-  };
-  //
-  const tableInputHandler = (row: RowType, name: string, value: string) => {
-    const oldArray = [...props.tableData];
-
-    var isUpdate = true;
-    if (name == 'required_quantity' || name == 'trade_discount') {
-      isUpdate = Validator.numberValidator(value);
-    }
-    if (name == 'trade_price') {
-      isUpdate = Validator.decimalValidator(value);
-    }
-
-    if (isUpdate) {
-      const index = oldArray.findIndex((obj) => obj.id == row.id);
-      if (index != -1) {
-        oldArray.splice(index, 1, {
-          ...row,
-          [name]: value,
-        });
-      }
-      props.setTableData(oldArray);
-    }
-  };
-  //
-  const addToCart = () => {
-    const data = props.tableData.filter((each_elem) => {
-      return !each_elem.disabled;
-    });
-    console.log(data);
-  };
-  //
-  React.useEffect(() => {
-    for (let i = 0; i < props.tableData.length; i++) {
-      if (props.tableData[i].disabled) {
-        setAddToCartDisabler(true);
-      } else {
-        setAddToCartDisabler(false);
-        break;
-      }
-    }
-  }, [props.tableData]);
-  //
   return (
     <>
       <div className="flex justify-between border-y p-5">
-        <h5 className="text-2xl font-semibold text-[#3b3e66]">
-          Products Table
-        </h5>
-        <Button
-          type={'button'}
-          onClick={addToCart}
-          disabled={addToCartDisabler}
-          className="bg-red-500 transition-all hover:scale-110 hover:bg-red-900"
-        >
-          Add to cart
-        </Button>
+        <h5 className="text-2xl font-semibold text-[#3b3e66]">Order Cart</h5>
       </div>
-
       <DataTableComponent
-        clearSelectedRows={tableFresher}
-        data={props.tableData}
         columns={[
           {
-            cell: (row: RowType) => (
-              <>
-                <input
-                  type={'checkbox'}
-                  checked={!row.disabled}
-                  onChange={(e) => rowSelectFunction(e.target.checked, row)}
-                />
-              </>
-            ),
-            width: '50px',
-            grow: 0,
-            center: true,
-          },
-          {
             name: 'ID',
-            selector: (row: any) => row.id,
+            selector: (row: any) => <>{row.product_id}</>,
             grow: 0,
             center: true,
             width: '70px',
@@ -127,131 +39,139 @@ export default function OrderCart(props: {
           {
             name: 'Product Name',
             selector: (row: any) => row.product_name,
-            grow: 2,
-            sortable: true,
+            grow: 1,
+          },
+          {
+            name: 'Vendor Name',
+            selector: () => vendor_name,
+            grow: 1,
           },
           {
             name: 'Sales Tax Percentage',
             selector: (row: any) => <>{row.sales_tax_percentage || '0'}%</>,
             grow: 0,
             center: true,
-            width: '150px',
+            width: '100px',
           },
           {
-            name: 'Required Quantity',
-            cell: (row: any) => (
-              <TextInput
-                key={row.id}
-                placeholder={'Enter Required Quantity'}
-                size={'xs'}
-                disabled={row.disabled}
-                value={row.required_quantity}
-                onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                  tableInputHandler(
-                    row,
-                    'required_quantity',
-                    event.currentTarget.value,
-                  )
-                }
-              />
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            center: true,
-            width: '150px',
+            name: 'Quantity',
+            selector: (row: any) => row.required_quantity,
             grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Pack Size',
+            selector: (row: any) => row.item_conversion,
+            grow: 0,
+            center: true,
+            width: '90px',
           },
           {
             name: 'UOM',
-            cell: (row: RowType) => (
-              <Select
-                key={row.id}
-                className=""
-                placeholder={'Select UOM'}
-                data={['Box', 'Pieces']}
-                size={'xs'}
-                disabled={true}
-                value={row.selling_unit}
-                onChange={(event: any) =>
-                  tableInputHandler(row, 'unit_of_measurement', event)
-                }
-              />
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            center: true,
-            width: '150px',
+            selector: (row: any) => row.uom,
             grow: 0,
+            center: true,
+            width: '80px',
           },
           {
             name: 'Trade Price',
-            cell: (row: any) => (
-              <TextInput
-                key={row.id}
-                placeholder={'Enter Trade Price'}
-                size={'xs'}
-                disabled={row.disabled || row.foc}
-                value={row.trade_price}
-                onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                  tableInputHandler(
-                    row,
-                    'trade_price',
-                    event.currentTarget.value,
-                  )
-                }
-              />
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            center: true,
-            width: '150px',
+            selector: (row: any) => row.trade_price || '0',
             grow: 0,
+            center: true,
+            width: '120px',
           },
           {
             name: 'Trade Discount',
+            selector: (row: any) => row.trade_discount_percentage + '%' || '0%',
+            grow: 0,
+            center: true,
+            width: '130px',
+          },
+          {
+            name: 'FOC',
+            selector: (row: any) => (row.foc ? 'Yes' : 'No'),
+            grow: 0,
+            center: true,
+            width: '60px',
+          },
+          {
+            name: 'Total Price',
+            selector: (row: any) => row.total_price,
+            grow: 0,
+            center: true,
+            width: '140px',
+          },
+          {
+            name: 'Total Disc',
+            selector: (row: any) => row.trade_price_after_trade_discount,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Tax',
+            selector: (row: any) => row.trade_price_after_applying_gst,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
             cell: (row: any) => (
-              <TextInput
-                key={row.id}
-                placeholder={'Enter Trade Discount'}
-                size={'xs'}
-                disabled={row.disabled || row.foc}
-                value={row.trade_discount}
-                onChange={(event: React.FormEvent<HTMLInputElement>) =>
-                  tableInputHandler(
-                    row,
-                    'trade_discount',
-                    event.currentTarget.value,
-                  )
-                }
-              />
+              <>
+                <Button
+                  onClick={() => {
+                    var temp_data = orderedProducts.filter(
+                      (each_ordered_product: any) => {
+                        return each_ordered_product.key != row.key;
+                      },
+                    );
+                    setOrderedProducts(temp_data);
+                  }}
+                  compact
+                  bg={'red'}
+                  className="w-[100%] bg-red-500 transition-all hover:bg-red-700"
+                >
+                  <RiDeleteBin7Line />
+                </Button>
+              </>
             ),
             ignoreRowClick: true,
             allowOverflow: true,
             center: true,
-            width: '150px',
-            grow: 0,
-          },
-          {
-            name: 'FOC',
-            cell: (row: any) => (
-              <Switch
-                size="md"
-                color="green"
-                className="cursor-pointer"
-                disabled={row.disabled}
-                checked={row.foc}
-                onChange={(event: any) =>
-                  tableInputHandler(row, 'foc', event.currentTarget.checked)
-                }
-              />
-            ),
-            allowOverflow: true,
-            center: true,
-            width: '90px',
+            width: '80px',
             grow: 0,
           },
         ]}
+        data={orderedProducts}
       />
+      <section className="flex w-[100%] flex-col gap-5 p-5">
+        <div className="ml-auto min-w-[400px]">
+          <div className="flex justify-between">
+            <span className="font-semibold">SubTotal:</span>
+            <span>{subtotal.toFixed(3)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold">Total Discounted Price:</span>
+            <span>{subtotalDiscount.toFixed(3)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold">Tax:</span>
+            <span>{totalTax.toFixed(3)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="font-semibold">Grand Total:</span>
+            <span>{(subtotal + totalTax - subtotalDiscount).toFixed(3)}</span>
+          </div>
+        </div>
+        <Button
+          className="ml-auto w-[300px] bg-red-500 transition-all hover:scale-110 hover:bg-red-900"
+          type={'submit'}
+          disabled={orderedProducts.length === 0 || po_id != 0}
+        >
+          Order
+        </Button>
+      </section>
     </>
   );
 }

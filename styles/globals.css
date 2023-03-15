@@ -40,3 +40,9 @@
     transform: rotate(360deg);
   }
 }
+
+/*  */
+.table_date_picker .mantine-DatePicker-dropdown {
+  z-index: 9 !important;
+  position: fixed;
+}
