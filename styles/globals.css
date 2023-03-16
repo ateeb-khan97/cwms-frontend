@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/*  */
+.custom_shadow {
+  box-shadow: 27px 27px 27px -33px rgba(0, 0, 0, 0.65) inset;
+  -webkit-box-shadow: 27px 27px 27px -33px rgba(0, 0, 0, 0.65) inset;
+  -moz-box-shadow: 27px 27px 27px -33px rgba(0, 0, 0, 0.65) inset;
+}
+.custom_loader {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  animation: rotate 1.5s ease-in infinite alternate;
+}
+.custom_loader::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  color: #3b3e66;
+  background: currentColor;
+  width: 64px;
+  height: 32px;
+  border-radius: 0 0 50px 50px;
+}
+.custom_loader::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 10%;
+  background: rgba(227, 8, 8, 0.784);
+  width: 8px;
+  height: 64px;
+  animation: rotate 1.2s linear infinite alternate-reverse;
+}
+
+@keyframes rotate {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*  */
+.table_date_picker .mantine-DatePicker-dropdown {
+  z-index: 9 !important;
+  position: fixed;
+}
+.mantine-1137jyz .mantine-Checkbox-input {
+  z-index: 999 !important;
+  position: fixed !important;
+  border: 2px solid red;
+}
+/*  */
+.multi_select {
+  all: initial;
+  display: flex;
+  gap: 20px;
+}
+.multi_select input {
+  z-index: 999 !important;
+}
+
+.dual_list_component input {
+  border-radius: 4px;
+  height: 45px;
+}
+.dual_list_component > div select {
+  border-radius: 4px;
+  @apply scrollbar-thin;
+}

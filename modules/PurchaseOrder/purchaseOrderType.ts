@@ -1,0 +1,27 @@
+export type PurchaseOrderType = {
+  address?: string;
+  advance_income?: string;
+  arrival_date?: string;
+  city?: string;
+  comment?: string;
+  created_at: string;
+  delivery_location?: string;
+  expected_delivery_date?: string;
+  id: number;
+  is_cancelled: boolean;
+  net_amount?: number;
+  ntn?: string;
+  order_status?: string;
+  order_type?: string;
+  payment_terms?: string;
+  po_type?: string;
+  purchase_order_detail?: any[];
+  sales_tax?: number;
+  status?: boolean;
+  strn?: string;
+  total_amount?: number;
+  total_discount?: number;
+  updated_at?: string;
+  vendor_id?: number;
+  vendor_name?: string;
+};
