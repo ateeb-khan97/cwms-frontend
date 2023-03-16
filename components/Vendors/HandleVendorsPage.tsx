@@ -100,55 +100,55 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
           file_attachment: null,
           comment: '',
         },
-    validate: (values: any) => {
-      return {
-        vendor_credit_limit: Validator.formValidator({
-          name: 'vendor_credit_limit',
-          type: 'double',
-          values: values.vendor_credit_limit.toString(),
-        }),
-        ntn: Validator.formValidator({
-          name: 'ntn',
-          type: 'number',
-          values: values.ntn.toString(),
-        }),
-        cnic: Validator.formValidator({
-          name: 'cnic',
-          type: 'number',
-          values: values.ntn.toString(),
-        }),
-        strn: Validator.formValidator({
-          name: 'strn',
-          type: 'number',
-          values: values.ntn.toString(),
-        }),
-        drug_license_no: Validator.formValidator({
-          name: 'drug_license_no',
-          type: 'number',
-          values: values.ntn.toString(),
-        }),
-        poc_phone_number: Validator.formValidator({
-          name: 'poc_phone_number',
-          type: 'phone',
-          values: values.ntn.toString(),
-        }),
-        business_phone_number: Validator.formValidator({
-          name: 'business_phone_number',
-          type: 'phone',
-          values: values.ntn.toString(),
-        }),
-        poc_email: Validator.formValidator({
-          name: 'poc_email',
-          type: 'email',
-          values: values.ntn.toString(),
-        }),
-        email_address: Validator.formValidator({
-          name: 'email_address',
-          type: 'email',
-          values: values.ntn.toString(),
-        }),
-      };
-    },
+    // validate: (values: any) => {
+    //   return {
+    //     vendor_credit_limit: Validator.formValidator({
+    //       name: 'vendor_credit_limit',
+    //       type: 'double',
+    //       values: values.vendor_credit_limit.toString(),
+    //     }),
+    //     ntn: Validator.formValidator({
+    //       name: 'ntn',
+    //       type: 'number',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     cnic: Validator.formValidator({
+    //       name: 'cnic',
+    //       type: 'number',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     strn: Validator.formValidator({
+    //       name: 'strn',
+    //       type: 'number',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     drug_license_no: Validator.formValidator({
+    //       name: 'drug_license_no',
+    //       type: 'number',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     poc_phone_number: Validator.formValidator({
+    //       name: 'poc_phone_number',
+    //       type: 'phone',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     business_phone_number: Validator.formValidator({
+    //       name: 'business_phone_number',
+    //       type: 'phone',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     poc_email: Validator.formValidator({
+    //       name: 'poc_email',
+    //       type: 'email',
+    //       values: values.ntn.toString(),
+    //     }),
+    //     email_address: Validator.formValidator({
+    //       name: 'email_address',
+    //       type: 'email',
+    //       values: values.ntn.toString(),
+    //     }),
+    //   };
+    // },
   });
   //
   async function submitHandler(values: any) {
