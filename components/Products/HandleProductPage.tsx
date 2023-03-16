@@ -586,43 +586,49 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
           />
         </div>
       </div>
-      <Select
-        className="w-[100%]"
-        placeholder="Pick Manufacturer"
-        size="md"
-        label="Manufacturer"
-        required
-        withAsterisk
-        searchable
-        nothingFound="No options"
-        data={manufacturerData.map((each_manu) => {
-          return {
-            value: each_manu.id,
-            label: each_manu.manufacturer_name,
-          };
-        })}
-        {...form.getInputProps('manufacturer_id')}
-      />
-      <DualListBoxComponent
-        label="Categories"
-        data={categoryData.map((each_cat: any) => {
-          return {
-            label: each_cat.category_name,
-            value: each_cat.id,
-          };
-        })}
-        {...form.getInputProps('category')}
-      />
-      <DualListBoxComponent
-        label="Vendors"
-        data={vendorData.map((each_cat: any) => {
-          return {
-            label: each_cat.vendor_name,
-            value: each_cat.id,
-          };
-        })}
-        {...form.getInputProps('vendor')}
-      />
+      {manufacturerData.length > 0 && (
+        <Select
+          className="w-[100%]"
+          placeholder="Pick Manufacturer"
+          size="md"
+          label="Manufacturer"
+          required
+          withAsterisk
+          searchable
+          nothingFound="No options"
+          data={manufacturerData.map((each_manu) => {
+            return {
+              value: each_manu.id,
+              label: each_manu.manufacturer_name,
+            };
+          })}
+          {...form.getInputProps('manufacturer_id')}
+        />
+      )}
+      {categoryData.length > 0 && (
+        <DualListBoxComponent
+          label="Categories"
+          data={categoryData.map((each_cat: any) => {
+            return {
+              label: each_cat.category_name,
+              value: each_cat.id,
+            };
+          })}
+          {...form.getInputProps('category')}
+        />
+      )}
+      {vendorData.length > 0 && (
+        <DualListBoxComponent
+          label="Vendors"
+          data={vendorData.map((each_cat: any) => {
+            return {
+              label: each_cat.vendor_name,
+              value: each_cat.id,
+            };
+          })}
+          {...form.getInputProps('vendor')}
+        />
+      )}
 
       <MultiSelect
         className="w-[47%]"
@@ -659,10 +665,10 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         {...form.getInputProps('productGenericFormula')}
       />
       <div className="w-[100%]">
-        {/* <label className="mantine-InputWrapper-label mantine-Select-label mantine-1js7218">
+        <label className="mantine-InputWrapper-label mantine-Select-label mantine-1js7218">
           SKU Description
         </label>
-        <RichTextComponent {...form.getInputProps('sku_description')} /> */}
+        <RichTextComponent {...form.getInputProps('sku_description')} />
       </div>
       <Button
         className="ml-auto w-56 bg-red-500 transition-all  hover:scale-110 hover:bg-red-900"
