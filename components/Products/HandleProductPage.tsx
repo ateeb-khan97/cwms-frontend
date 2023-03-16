@@ -188,7 +188,6 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     });
     //
     setProductData([]);
-    setVendorData([]);
     //
     const new_product_id = product_id_response.data[0].id;
     customNotification({
@@ -610,6 +609,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
             label: each_manu.manufacturer_name,
           };
         })}
+        {...form.getInputProps('manufacturer_id')}
       />
       <DualListBoxComponent
         label="Categories"
