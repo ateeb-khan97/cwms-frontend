@@ -154,7 +154,7 @@ export default function ShowVendorsPage() {
           </p>
           <Link
             className="rounded-md bg-red-500 py-2 px-5 text-white transition-all hover:scale-110 hover:bg-red-900"
-            href={'/dashboard/categories/add_category'}
+            href={'/dashboard/vendors/add_vendor'}
           >
             Add Vendor
           </Link>
