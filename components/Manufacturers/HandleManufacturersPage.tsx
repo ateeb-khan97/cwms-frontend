@@ -29,6 +29,17 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
   var localData: any = {};
   if (typeof window != 'undefined' && isUpdate) {
     localData = JSON.parse(localStorage.getItem('manufacturer_data')!);
+    var line_of_business =
+      localData.line_of_business != ''
+        ? JSON.parse(localData.line_of_business)
+        : [];
+    line_of_business = line_of_business.map((each_line: string) => {
+      return each_line.trim();
+    });
+    localData = {
+      ...localData,
+      line_of_business,
+    };
     console.log(localData);
   }
   //
