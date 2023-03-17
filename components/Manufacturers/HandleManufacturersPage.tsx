@@ -40,7 +40,6 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
       ...localData,
       line_of_business,
     };
-    console.log(localData);
   }
   //
   const form = useForm({

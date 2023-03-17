@@ -17,10 +17,16 @@ function Header() {
 }
 //
 function Form() {
+  //
+  const [pathId, setPathId] = React.useState<string>('');
+  const [pathSideId, setPathSideId] = React.useState<string>('');
+  const [sideId, setSideId] = React.useState<string>('');
+  const [shelfId, setShelfId] = React.useState<string>('');
+  //
   const [pathData, setPathData] = React.useState<any[]>([]);
-  const [binData, setBinData] = React.useState<any[]>([]);
-  const [rackData, setRackData] = React.useState<any[]>([]);
   const [sideData, setSideData] = React.useState<any[]>([]);
+  const [rackData, setRackData] = React.useState<any[]>([]);
+  const [binData, setBinData] = React.useState<any[]>([]);
   //
   const pathFetcher = async () => {
     const paths = await axiosFunction({ urlPath: '/wms/path/find_all' }).then(
@@ -29,40 +35,54 @@ function Form() {
     setPathData(paths);
   };
   const binFetcher = async () => {
-    const bins = await axiosFunction({ urlPath: '/wms/bin/find_all' }).then(
-      (res) => res.data,
-    );
+    const bins = await axiosFunction({
+      urlPath: '/wms/bin/find_all',
+      method: 'POST',
+      data: { shelfId },
+    }).then((res) => res.data);
+    console.log(bins);
+
     setBinData(bins);
   };
   const rackFetcher = async () => {
-    const racks = await axiosFunction({ urlPath: '/wms/shelf/find_all' }).then(
-      (res) => res.data,
-    );
+    const racks = await axiosFunction({
+      urlPath: '/wms/shelf/find_all',
+      method: 'POST',
+      data: { sideId },
+    }).then((res) => res.data);
     setRackData(racks);
   };
   const sideFetcher = async () => {
-    const sides = await axiosFunction({ urlPath: '/wms/side/find_all' }).then(
-      (res) => res.data,
-    );
+    const sides = await axiosFunction({
+      urlPath: '/wms/side/find_all',
+      method: 'POST',
+      data: { pathId },
+    }).then((res) => res.data);
     setSideData(sides);
   };
   //
-  React.useEffect(() => {
-    binFetcher();
-    pathFetcher();
-    rackFetcher();
-    sideFetcher();
-  }, []);
   //
-  const [pathId, setPathId] = React.useState<string>('');
-  const [pathSideId, setPathSideId] = React.useState<string>('');
-  const [sideId, setSideId] = React.useState<string>('');
-  const [shelfId, setShelfId] = React.useState<string>('');
-  //
-  const [sideDataTemp, setSideDataTemp] = React.useState<any[]>([]);
-  const [rackDataTemp, setRackDataTemp] = React.useState<any[]>([]);
-  const [refreshTemp, setRefreshTemp] = React.useState<boolean>(false);
 
+  //
+  React.useEffect(() => {
+    pathFetcher();
+    binFetcher();
+  }, []);
+  React.useEffect(() => {
+    if (pathId != '') {
+      sideFetcher();
+    }
+  }, [pathId]);
+  React.useEffect(() => {
+    if (sideId != '') {
+      rackFetcher();
+    }
+  }, [sideId]);
+  React.useEffect(() => {
+    if (shelfId != '') {
+      binFetcher();
+    }
+  }, [shelfId]);
   //
   async function addPath() {
     await axiosFunction({
@@ -110,7 +130,6 @@ function Form() {
       method: 'POST',
       data: { side_id: sideId },
     });
-    setRefreshTemp((pre) => !pre);
     rackFetcher();
   };
   //
@@ -182,7 +201,7 @@ function Form() {
           size="md"
           required
           withAsterisk
-          data={sideDataTemp.map((side) => {
+          data={sideData.map((side) => {
             {
               return side.side_id;
             }
@@ -203,7 +222,7 @@ function Form() {
           size="md"
           required
           withAsterisk
-          data={rackDataTemp.map((rack) => {
+          data={rackData.map((rack) => {
             return rack.rack_id;
           })}
         />
@@ -214,13 +233,31 @@ function Form() {
           Add Bin
         </Button>
       </div>
+      <div className="flex flex-col gap-2 p-5">
+        <h1 className="text-3xl font-semibold text-gray-500">Bins</h1>
+        <ul className="flex flex-col gap-2">
+          {binData.length > 0 &&
+            binData.map((each_item) => {
+              return (
+                <li
+                  key={each_item.id}
+                  className="flex items-center gap-5 rounded border border-gray-500"
+                >
+                  <span className="border-r border-gray-500 p-1">Bin ID:</span>
+                  <span>{each_item.bin_id}</span>
+                </li>
+              );
+            })}
+        </ul>
+      </div>
     </>
   );
 }
 //
+//
 export default function WarehouseStructuringPage() {
   return (
-    <section className="flex min-h-[100%] select-none flex-col gap-10 p-7">
+    <section className="flex min-h-[100%]  flex-col gap-10 p-7">
       <Header />
       <div className="rounded-md border border-gray-100 bg-white shadow-xl">
         <div className="flex items-center justify-between border-b-[1px] p-5">
