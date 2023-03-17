@@ -5,7 +5,11 @@ import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { BiCategoryAlt, BiReceipt } from 'react-icons/bi';
 import { CgNotes } from 'react-icons/cg';
 import { BsBookshelf, BsBoxSeam, BsHddStackFill, BsShop } from 'react-icons/bs';
-import { MdOutlinePrecisionManufacturing, MdUpload } from 'react-icons/md';
+import {
+  MdNote,
+  MdOutlinePrecisionManufacturing,
+  MdUpload,
+} from 'react-icons/md';
 import { RiAddFill, RiTestTubeLine } from 'react-icons/ri';
 import { FiSettings } from 'react-icons/fi';
 import { HiUsers } from 'react-icons/hi';
@@ -141,6 +145,16 @@ export const sidebarLink: SidebarType[] = [
         href: '/dashboard/inbound/stacking',
         label: 'Stacking',
         icon: <BsBookshelf />,
+      },
+      {
+        href: '/dashboard/inbound/restacking',
+        label: 'Restacking',
+        icon: <BsBookshelf />,
+      },
+      {
+        href: '/dashboard/inbound/demand_note',
+        label: 'Demand Note',
+        icon: <MdNote />,
       },
     ],
   },

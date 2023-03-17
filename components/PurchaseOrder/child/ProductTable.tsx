@@ -102,7 +102,7 @@ export default function ProductTable(props: {
     selected_data.forEach((each_selected_product, key) => {
       //
       total_price = +(
-        +each_selected_product.required_quantity +
+        +each_selected_product.required_quantity *
         +each_selected_product.trade_price
       ).toFixed(3);
 

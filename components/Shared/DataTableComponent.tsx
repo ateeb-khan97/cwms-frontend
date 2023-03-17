@@ -3,6 +3,11 @@ import React from 'react';
 import DataTable from 'react-data-table-component';
 import { AiOutlineSearch } from 'react-icons/ai';
 import { TextInput } from '@mantine/core';
+import {
+  PaginationChangePage,
+  PaginationChangeRowsPerPage,
+} from 'react-data-table-component/dist/src/DataTable/types';
+import Loader from './Loader';
 //
 const customStyles = {
   table: {
@@ -66,6 +71,12 @@ type Props = {
   onRowClick?: (row: any) => void;
   clearSelectedRows?: boolean;
   keyField?: string;
+  pagination?: boolean;
+  paginationServer?: boolean;
+  paginationTotalRows?: number;
+  onChangeRowsPerPage?: PaginationChangeRowsPerPage;
+  onChangePage?: PaginationChangePage;
+  progressPending?: boolean;
 };
 //
 type FilterProps = {
@@ -96,6 +107,11 @@ const DataTableComponent = ({
   clearSelectedRows,
   onRowClick,
   keyField,
+  onChangePage,
+  onChangeRowsPerPage,
+  paginationServer,
+  paginationTotalRows,
+  progressPending,
 }: Props) => {
   const [filterText, setFilterText] = React.useState('');
   const [resetPaginationToggle, setResetPaginationToggle] =
@@ -150,6 +166,10 @@ const DataTableComponent = ({
       //@ts-ignore
       direction="auto"
       pagination
+      paginationServer={paginationServer}
+      paginationTotalRows={paginationTotalRows}
+      onChangeRowsPerPage={onChangeRowsPerPage}
+      onChangePage={onChangePage}
       paginationResetDefaultPage={resetPaginationToggle}
       responsive
       subHeader
@@ -162,6 +182,12 @@ const DataTableComponent = ({
       customStyles={customStyles}
       clearSelectedRows={clearSelectedRows}
       onRowClicked={onRowClick}
+      progressPending={progressPending}
+      progressComponent={
+        <div className="flex h-[150px] items-center justify-center">
+          <Loader />
+        </div>
+      }
     />
   );
 };

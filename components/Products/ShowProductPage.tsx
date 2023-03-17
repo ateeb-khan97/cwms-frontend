@@ -23,7 +23,45 @@ function Header() {
 //
 function Table() {
   const router = useRouter();
-  const { productData, loading } = useProductData();
+  // const { productData, loading } = useProductData();
+  const [loading, setLoading] = React.useState<boolean>(true);
+  const [productData, setProductData] = React.useState<any[]>([]);
+  const [totalRows, setTotalRows] = React.useState<number>(0);
+  const [perPage, setPerPage] = React.useState<number>(10);
+  //
+  const fetchProduct = async (page: number) => {
+    setLoading(true);
+    const response = await axiosFunction({
+      urlPath: '/product/find_for_data_table',
+      method: 'POST',
+      data: {
+        page,
+        perPage,
+      },
+    });
+    setProductData(response.data[0].rows);
+    setTotalRows(response.data[0].count);
+    setLoading(false);
+  };
+  const handlePageChange = (page: number) => fetchProduct(page);
+  //
+  const handlePerRowsChange = async (newPerPage: number, page: number) => {
+    setLoading(true);
+    const response = await axiosFunction({
+      urlPath: '/product/find_for_data_table',
+      method: 'POST',
+      data: {
+        page,
+        perPage: newPerPage,
+      },
+    });
+    setProductData(response.data[0].rows);
+    setPerPage(newPerPage);
+    setLoading(false);
+  };
+  React.useEffect(() => {
+    fetchProduct(1);
+  }, []);
   //
   const updateHandler = async (id: number) => {
     var category: any[] = [];
@@ -111,106 +149,105 @@ function Table() {
   //
   return (
     <>
-      {loading ? (
-        <div className="flex w-[100%] justify-center p-28">
-          <Loader />
-        </div>
-      ) : (
-        <DataTableComponent
-          data={productData}
-          columns={[
-            {
-              name: 'ID',
-              selector: (row: any) => row.id,
-              grow: 0,
-              center: true,
-              width: '76px',
-            },
-            {
-              name: 'Product Name',
-              selector: (row: any) => row.product_name,
-              grow: 2,
-              sortable: true,
-            },
-            {
-              name: 'Manufacturer Name',
-              selector: (row: any) => row.manufacturer.manufacturer_name,
-              grow: 2,
-              sortable: true,
-            },
+      <DataTableComponent
+        progressPending={loading}
+        paginationServer={true}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={handlePerRowsChange}
+        onChangePage={handlePageChange}
+        data={productData}
+        columns={[
+          {
+            name: 'ID',
+            selector: (row: any) => row.id,
+            grow: 0,
+            center: true,
+            width: '76px',
+          },
+          {
+            name: 'Product Name',
+            selector: (row: any) => row.product_name,
+            grow: 2,
+            sortable: true,
+          },
+          {
+            name: 'Manufacturer Name',
+            selector: (row: any) => row.manufacturer.manufacturer_name,
+            grow: 2,
+            sortable: true,
+          },
 
-            {
-              name: 'Trade Price',
-              selector: (row: any) => row.trade_price,
-              grow: 0,
-              width: '96px',
-              center: true,
-            },
-            {
-              name: 'Discounted Price',
-              selector: (row: any) => row.discounted_price,
-              grow: 0,
-              width: '96px',
-              center: true,
-            },
-            {
-              name: 'MRP',
-              selector: (row: any) => row.maximum_retail_price,
-              grow: 0,
-              width: '80px',
-              center: true,
-            },
-            {
-              name: 'Stock Nature',
-              selector: (row: any) => row.stock_nature,
-              grow: 0,
-              width: '96px',
-              center: true,
-            },
-            {
-              name: 'Quantity',
-              selector: (row: any) => row.quantity,
-              grow: 0,
-              width: '86px',
-              center: true,
-            },
-            {
-              name: 'Status',
-              selector: (row: any) => (
-                <span
-                  className={`font-semibold ${
-                    row.status ? 'text-green-700' : 'text-red-700'
-                  }`}
+          {
+            name: 'Trade Price',
+            selector: (row: any) => row.trade_price,
+            grow: 0,
+            width: '96px',
+            center: true,
+          },
+          {
+            name: 'Discounted Price',
+            selector: (row: any) => row.discounted_price,
+            grow: 0,
+            width: '96px',
+            center: true,
+          },
+          {
+            name: 'MRP',
+            selector: (row: any) => row.maximum_retail_price,
+            grow: 0,
+            width: '80px',
+            center: true,
+          },
+          {
+            name: 'Stock Nature',
+            selector: (row: any) => row.stock_nature,
+            grow: 0,
+            width: '96px',
+            center: true,
+          },
+          {
+            name: 'Quantity',
+            selector: (row: any) => row.quantity,
+            grow: 0,
+            width: '86px',
+            center: true,
+          },
+          {
+            name: 'Status',
+            selector: (row: any) => (
+              <span
+                className={`font-semibold ${
+                  row.status ? 'text-green-700' : 'text-red-700'
+                }`}
+              >
+                {row.status ? 'Active' : 'In-Active'}
+              </span>
+            ),
+            grow: 0,
+            width: '100px',
+            center: true,
+          },
+          {
+            name: 'Action',
+            cell: (row: any) => (
+              <>
+                <Button
+                  compact
+                  className="h-6 w-6 bg-[#002884] p-0"
+                  onClick={() => updateHandler(row.id)}
                 >
-                  {row.status ? 'Active' : 'In-Active'}
-                </span>
-              ),
-              grow: 0,
-              width: '100px',
-              center: true,
-            },
-            {
-              name: 'Action',
-              cell: (row: any) => (
-                <>
-                  <Button
-                    compact
-                    className="h-6 w-6 bg-[#002884] p-0"
-                    onClick={() => updateHandler(row.id)}
-                  >
-                    <AiFillEdit className="text-white" />
-                  </Button>
-                </>
-              ),
-              ignoreRowClick: true,
-              allowOverflow: true,
-              center: true,
-              width: '80px',
-              grow: 0,
-            },
-          ]}
-        />
-      )}
+                  <AiFillEdit className="text-white" />
+                </Button>
+              </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            center: true,
+            width: '80px',
+            grow: 0,
+          },
+        ]}
+      />
     </>
   );
 }

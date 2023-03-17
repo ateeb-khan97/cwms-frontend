@@ -1,6 +1,6 @@
 'use client';
-
 import { Button, TextInput } from '@mantine/core';
+//
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
@@ -16,7 +16,7 @@ function Header() {
   return (
     <header className="select-none text-[#3b3e66]">
       <BreadcrumbComponent />
-      <h1 className="text-3xl font-semibold ">Stacking Process</h1>
+      <h1 className="text-3xl font-semibold ">Restacking Process</h1>
       <p>Please see Stacking Process below all connected channels</p>
     </header>
   );
@@ -169,7 +169,7 @@ function Table({ scannedItems }: { scannedItems: ScannedType[] }) {
   );
 }
 //
-export default function StackPage() {
+export default function RestackPage() {
   //    refs
   const binRef = React.useRef<HTMLInputElement>(null);
   const inwardRef = React.useRef<HTMLInputElement>(null);
@@ -188,7 +188,7 @@ export default function StackPage() {
   //  functions
   const submitHandler = async () => {
     const { status, message } = await axiosFunction({
-      urlPath: '/inward/scanned',
+      urlPath: '/inward/restacking',
       method: 'POST',
       data: { scannedItems },
     }).then((res) => {
@@ -219,7 +219,7 @@ export default function StackPage() {
       <div className="rounded-md border border-gray-100 bg-white shadow-xl">
         <div className="flex items-center justify-between border-b-[1px] p-5">
           <p className="py-2 font-semibold text-gray-500">
-            Here you can manage your all Stacking Process!
+            Here you can manage your all Restacking Process!
           </p>
         </div>
         <Form

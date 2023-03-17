@@ -14,6 +14,7 @@ import OrderCart from './child/OrderCart';
 import { modals } from '@mantine/modals';
 import ProductTable from './child/ProductTable';
 import DataTableComponent from 'components/Shared/DataTableComponent';
+import usePurchaseOrderData from 'modules/PurchaseOrder/usePurchaseOrder';
 
 //
 function Header() {
@@ -36,6 +37,7 @@ type formDataType = {
 };
 //
 export default function AddPurchaseOrder() {
+  const { setPurchaseOrderData } = usePurchaseOrderData();
   const router = useRouter();
   const [formData, setFormData] = React.useState<formDataType>({
     delivery_location: '',
@@ -111,6 +113,7 @@ export default function AddPurchaseOrder() {
     setTimeout(() => {
       router.push('/dashboard/purchase_order/');
     }, 3000);
+    setPurchaseOrderData([]);
   };
   //
   const vendorFetcher = async (id: number) => {
