@@ -4,11 +4,10 @@ import { Button } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
+import axiosFunction from 'functions/axiosFunction';
+import customNotification from 'functions/customNotification';
 import { ReceiveType } from 'modules/Inbound/receiveType';
 import useReceiveData from 'modules/Inbound/useReceivedData';
-import { TableColumn } from 'react-data-table-component';
-import { AiFillEdit } from 'react-icons/ai';
-
 //
 function Header() {
   return (
@@ -21,10 +20,22 @@ function Header() {
 }
 //
 function Table() {
-  const { loading, receiveData } = useReceiveData();
+  const { loading, receiveData, setReceiveData } = useReceiveData();
   //
   async function receiveHandler(id: number) {
-    console.log(id);
+    const response = await axiosFunction({
+      urlPath: '/inward/create_child',
+      method: 'POST',
+      data: { id },
+    }).then((res) => {
+      setReceiveData([]);
+      return res;
+    });
+    const message = response.status == 200 ? 'Success' : 'Failed';
+    customNotification({
+      message: response.message,
+      title: message,
+    });
   }
   //
   return (
@@ -39,7 +50,7 @@ function Table() {
           columns={[
             {
               name: 'PO. ID',
-              selector: (row: ReceiveType) => row.id,
+              selector: (row: ReceiveType) => row.po_id,
               grow: 0,
               center: true,
               width: '70px',
@@ -107,22 +118,34 @@ function Table() {
               width: '70px',
             },
             {
+              name: 'Inward Date',
+              center: true,
+              width: '170px',
+              grow: 0,
+              cell: (row: ReceiveType) =>
+                row.inward_date == null ? '-' : row.inward_date,
+            },
+            {
               name: 'Actions',
               cell: (row: ReceiveType) => (
                 <>
-                  <Button
-                    className="bg-red-500 transition-all hover:bg-red-900"
-                    compact
-                    onClick={() => receiveHandler(row.id)}
-                  >
-                    Receive
-                  </Button>
+                  {row.inward_id == null ? (
+                    <Button
+                      className="bg-red-500 transition-all hover:bg-red-900"
+                      compact
+                      onClick={() => receiveHandler(row.id)}
+                    >
+                      Receive
+                    </Button>
+                  ) : (
+                    <>{row.inward_id}</>
+                  )}
                 </>
               ),
               ignoreRowClick: true,
               allowOverflow: true,
               center: true,
-              width: '90px',
+              width: '150px',
               grow: 0,
             },
           ]}

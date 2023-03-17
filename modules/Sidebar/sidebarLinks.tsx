@@ -4,7 +4,7 @@ import { RxDashboard } from 'react-icons/rx';
 import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { BiCategoryAlt, BiReceipt } from 'react-icons/bi';
 import { CgNotes } from 'react-icons/cg';
-import { BsBoxSeam, BsHddStackFill, BsShop } from 'react-icons/bs';
+import { BsBookshelf, BsBoxSeam, BsHddStackFill, BsShop } from 'react-icons/bs';
 import { MdOutlinePrecisionManufacturing, MdUpload } from 'react-icons/md';
 import { RiAddFill, RiTestTubeLine } from 'react-icons/ri';
 import { FiSettings } from 'react-icons/fi';
@@ -128,37 +128,42 @@ export const sidebarLink: SidebarType[] = [
     ],
   },
   {
-    label:"Inbound",
+    label: 'Inbound',
     hasChildren: true,
     icon: <BsHddStackFill />,
-    children:[
+    children: [
       {
-        href:"/dashboard/inbound/receive_items",
-        label:"Receive Items",
+        href: '/dashboard/inbound/receive_items',
+        label: 'Receive Items',
         icon: <BiReceipt />,
-      }
-    ]
+      },
+      {
+        href: '/dashboard/inbound/stacking',
+        label: 'Stacking',
+        icon: <BsBookshelf />,
+      },
+    ],
   },
   {
     label: 'Settings',
     icon: <FiSettings />,
     hasChildren: true,
     children: [
-      {
-        label: 'Bulk Upload',
-        href: '/dashboard/bulk_upload',
-        icon: <MdUpload />,
-      },
+      // {
+      //   label: 'Bulk Upload',
+      //   href: '/dashboard/bulk_upload',
+      //   icon: <MdUpload />,
+      // },
       {
         label: 'Show Users',
         href: '/dashboard/users',
         icon: <HiUsers />,
       },
-      {
-        label: 'Create WMS',
-        href: '/dashboard/create_wms',
-        icon: <FaWarehouse />,
-      },
+      // {
+      //   label: 'Create WMS',
+      //   href: '/dashboard/create_wms',
+      //   icon: <FaWarehouse />,
+      // },
       {
         label: 'WH Structuring',
         href: '/dashboard/warehouse_structuring',
