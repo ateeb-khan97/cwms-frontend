@@ -91,6 +91,13 @@ function Form({
       return;
     }
     //
+    if (binRef.current!.value == '') {
+      return customNotification({
+        title: 'Failed',
+        message: 'Scan Bin ID first!',
+      });
+    }
+    //
     const id = scannedItems.findIndex(
       (eachScanned) => eachScanned.inward_id == inward_id,
     );

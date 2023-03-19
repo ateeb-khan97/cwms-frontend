@@ -4,7 +4,13 @@ import { RxDashboard } from 'react-icons/rx';
 import { AiOutlineUnorderedList } from 'react-icons/ai';
 import { BiCategoryAlt, BiReceipt } from 'react-icons/bi';
 import { CgNotes } from 'react-icons/cg';
-import { BsBookshelf, BsBoxSeam, BsHddStackFill, BsShop } from 'react-icons/bs';
+import {
+  BsBookshelf,
+  BsBoxSeam,
+  BsHddStackFill,
+  BsListCheck,
+  BsShop,
+} from 'react-icons/bs';
 import {
   MdNote,
   MdOutlinePrecisionManufacturing,
@@ -15,6 +21,7 @@ import { FiSettings } from 'react-icons/fi';
 import { HiUsers } from 'react-icons/hi';
 import { FaWarehouse } from 'react-icons/fa';
 import { SiBlueprint } from 'react-icons/si';
+import { TbTransferIn, TbTruckDelivery } from 'react-icons/tb';
 // types
 type SidebarChildrenType = {
   label: string;
@@ -155,6 +162,28 @@ export const sidebarLink: SidebarType[] = [
         href: '/dashboard/inbound/demand_note',
         label: 'Demand Note',
         icon: <MdNote />,
+      },
+    ],
+  },
+  {
+    label: 'Transfer',
+    hasChildren: true,
+    icon: <TbTruckDelivery size={20} />,
+    children: [
+      {
+        href: '/dashboard/transfer',
+        label: 'Transfer List',
+        icon: <TbTransferIn />,
+      },
+      {
+        href: '/dashboard/transfer/stock_transfer',
+        label: 'Stock Transfer',
+        icon: <BsBoxSeam />,
+      },
+      {
+        href: '/dashboard/transfer/stock_receive',
+        label: 'Stock Receive',
+        icon: <BsListCheck />,
       },
     ],
   },

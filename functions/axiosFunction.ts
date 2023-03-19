@@ -31,6 +31,7 @@ export default async function axiosFunction({
       'X-Custom-Header': JSON.stringify({
         acc_no: getCookie('acc_no'),
         loc_no: getCookie('loc_no'),
+        user_name: getCookie('user_name'),
       }),
     },
     data: data,

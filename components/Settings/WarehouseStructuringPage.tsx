@@ -71,11 +71,13 @@ function Form() {
   React.useEffect(() => {
     if (pathId != '') {
       sideFetcher();
+      setSideId('');
     }
   }, [pathId]);
   React.useEffect(() => {
     if (sideId != '') {
       rackFetcher();
+      setShelfId('');
     }
   }, [sideId]);
   React.useEffect(() => {
