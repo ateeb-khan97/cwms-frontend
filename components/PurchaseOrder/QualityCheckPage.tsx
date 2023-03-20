@@ -46,6 +46,7 @@ function Table() {
       urlPath: url,
       data: row,
     });
+    //
     customNotification({
       message: status ? 'Successfully Approved!' : 'Successfully Rejected!',
     });

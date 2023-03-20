@@ -181,10 +181,15 @@ export const sidebarLink: SidebarType[] = [
         icon: <BsBoxSeam />,
       },
       {
-        href: '/dashboard/transfer/stock_receive',
-        label: 'Stock Receive',
-        icon: <BsListCheck />,
+        href: '/dashboard/transfer/receive_list',
+        label: 'Receive List',
+        icon: <TbTransferIn />,
       },
+      // {
+      //   href: '/dashboard/transfer/stock_receive',
+      //   label: 'Stock Receive',
+      //   icon: <BsListCheck />,
+      // },
     ],
   },
   {

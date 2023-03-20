@@ -5,6 +5,7 @@ import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 //
 import React from 'react';
+import { AiOutlinePrinter } from 'react-icons/ai';
 //
 function Header() {
   return (
@@ -40,8 +41,6 @@ function Form() {
       method: 'POST',
       data: { shelfId },
     }).then((res) => res.data);
-    console.log(bins);
-
     setBinData(bins);
   };
   const rackFetcher = async () => {
@@ -60,9 +59,6 @@ function Form() {
     }).then((res) => res.data);
     setSideData(sides);
   };
-  //
-  //
-
   //
   React.useEffect(() => {
     pathFetcher();
@@ -151,6 +147,17 @@ function Form() {
     binFetcher();
   };
   //
+  const printShelfFunction = () => {
+    const data = rackData.map((each_rack) => each_rack.rack_id);
+    localStorage.setItem('bar_code_value', JSON.stringify(data));
+    window.open('/barcode');
+  };
+  const printBin = () => {
+    const data = binData.map((each_bin) => each_bin.bin_id);
+    localStorage.setItem('bar_code_value', JSON.stringify(data));
+    window.open('/barcode');
+  };
+  //
   return (
     <>
       <div className="flex flex-col gap-5 p-5">
@@ -189,6 +196,7 @@ function Form() {
           data={['R01', 'L01']}
         />
         <Button
+          disabled={pathSideId == '' || pathId == ''}
           onClick={addSide}
           className="w-48 bg-red-500 transition-all hover:bg-red-900"
         >
@@ -209,12 +217,23 @@ function Form() {
             }
           })}
         />
-        <Button
-          onClick={addShelf}
-          className="w-48 bg-red-500 transition-all hover:bg-red-900"
-        >
-          Add Shelf
-        </Button>
+        <div className="flex gap-5">
+          <Button
+            disabled={sideData.length == 0}
+            onClick={addShelf}
+            className="w-48 bg-red-500 transition-all hover:bg-red-900"
+          >
+            Add Shelf
+          </Button>
+          <Button
+            disabled={rackData.length == 0}
+            leftIcon={<AiOutlinePrinter size={20} />}
+            onClick={printShelfFunction}
+            className="w-48 bg-red-500 transition-all hover:bg-red-900"
+          >
+            Print Shelf
+          </Button>
+        </div>
         <Select
           value={shelfId}
           onChange={(value: string) => setShelfId(value)}
@@ -228,12 +247,23 @@ function Form() {
             return rack.rack_id;
           })}
         />
-        <Button
-          onClick={addBin}
-          className="w-48 bg-red-500 transition-all hover:bg-red-900"
-        >
-          Add Bin
-        </Button>
+        <div className="flex gap-5">
+          <Button
+            disabled={rackData.length == 0}
+            onClick={addBin}
+            className="w-48 bg-red-500 transition-all hover:bg-red-900"
+          >
+            Add Bin
+          </Button>
+          <Button
+            leftIcon={<AiOutlinePrinter size={20} />}
+            disabled={binData.length == 0}
+            onClick={printBin}
+            className="w-48 bg-red-500 transition-all hover:bg-red-900"
+          >
+            Print Bin
+          </Button>
+        </div>
       </div>
       <div className="flex flex-col gap-2 p-5">
         <h1 className="text-3xl font-semibold text-gray-500">Bins</h1>

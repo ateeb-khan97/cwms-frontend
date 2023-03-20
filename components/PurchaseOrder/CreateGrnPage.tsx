@@ -6,6 +6,7 @@ import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
+import usePurchaseOrderData from 'modules/PurchaseOrder/usePurchaseOrder';
 import React from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 
@@ -80,7 +81,7 @@ function Form({ setTableData }: { setTableData: Function }) {
       var index = 0;
       searched_grn_purchase_order = [];
       grn_data.forEach((each_grn: any) => {
-        if (each_grn.po_id == po_id && each_grn.is_updatable) {
+        if (each_grn.is_updatable) {
           searched_grn_purchase_order.push({
             ...each_grn,
             index: index++,
@@ -135,6 +136,7 @@ function Table({
   setTableData: Function;
 }) {
   //
+  const { setPurchaseOrderData } = usePurchaseOrderData();
   type InputPropType = 'number' | 'double';
   const tableInputHandler = (
     index: number,
@@ -180,6 +182,7 @@ function Table({
       message,
       title: response.status == 200 ? 'Success' : 'Failed',
     });
+    setPurchaseOrderData([]);
     //
   };
   //

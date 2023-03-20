@@ -59,9 +59,10 @@ function Table() {
     setPerPage(newPerPage);
     setLoading(false);
   };
-  React.useEffect(() => {
-    fetchProduct(1);
-  }, []);
+  //
+  // React.useEffect(() => {
+  //   // fetchProduct(1);
+  // }, []);
   //
   const updateHandler = async (id: number) => {
     var category: any[] = [];
@@ -150,6 +151,7 @@ function Table() {
   return (
     <>
       <DataTableComponent
+        desc={true}
         progressPending={loading}
         paginationServer={true}
         paginationTotalRows={totalRows}

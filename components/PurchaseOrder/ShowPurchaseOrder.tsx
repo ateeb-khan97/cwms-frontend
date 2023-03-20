@@ -26,6 +26,7 @@ function Table() {
   const commentRef = React.useRef<HTMLInputElement>(null);
   const { loading, purchaseOrderData, setPurchaseOrderData } =
     usePurchaseOrderData();
+
   //
   const actionFunction = async (row: any) => {
     await axiosFunction({
@@ -87,6 +88,8 @@ function Table() {
               name: 'Order #',
               selector: (row: any) => row.id,
               grow: 0,
+              center: true,
+              width: '100px',
               sortable: true,
             },
             {
@@ -173,21 +176,35 @@ function Table() {
               allowOverflow: true,
               grow: 0,
               width: '70px',
-              cell: (row: any) => (
-                <>
-                  <Button
-                    disabled={
-                      row.is_cancelled ||
-                      row.order_status == 'Received' ||
-                      row.order_status == 'Par-Received'
-                    }
-                    onClick={() => modalConfirmHandler(row.id)}
-                    className="flex h-6 w-4 items-center justify-center rounded-md bg-red-500"
-                  >
-                    <ImBin2 className="flex items-center justify-center text-white" />
-                  </Button>
-                </>
-              ),
+              cell: (row: any) => {
+                var isDisabled = false;
+                if (row.is_cancelled) {
+                  isDisabled = true;
+                }
+                //
+                if (
+                  row.order_status == 'Received' ||
+                  row.order_status == 'Par-Received'
+                ) {
+                  isDisabled = true;
+                }
+                //
+                if (row.grn_count != 0) {
+                  isDisabled = true;
+                }
+                //
+                return (
+                  <>
+                    <Button
+                      disabled={isDisabled}
+                      onClick={() => modalConfirmHandler(row.id)}
+                      className="flex h-6 w-4 items-center justify-center rounded-md bg-red-500"
+                    >
+                      <ImBin2 className="flex items-center justify-center text-white" />
+                    </Button>
+                  </>
+                );
+              },
             },
           ]}
         />

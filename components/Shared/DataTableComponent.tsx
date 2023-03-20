@@ -77,6 +77,7 @@ type Props = {
   onChangeRowsPerPage?: PaginationChangeRowsPerPage;
   onChangePage?: PaginationChangePage;
   progressPending?: boolean;
+  desc?: boolean;
 };
 //
 type FilterProps = {
@@ -112,6 +113,7 @@ const DataTableComponent = ({
   paginationServer,
   paginationTotalRows,
   progressPending,
+  desc,
 }: Props) => {
   const [filterText, setFilterText] = React.useState('');
   const [resetPaginationToggle, setResetPaginationToggle] =
@@ -119,27 +121,47 @@ const DataTableComponent = ({
   const [filteredItems, setFilteredItems] = React.useState([]);
   //
   React.useEffect(() => {
-    setFilteredItems(
-      data
-        .filter((item: any) => {
-          var filterFlag = false;
-          Object.keys(item).every((each_key) => {
-            if (
-              item[each_key] &&
-              item[each_key]
-                ?.toString()
-                .toLowerCase()
-                .includes(filterText.toLowerCase())
-            ) {
-              filterFlag = true;
-              return false;
-            }
-            return true;
-          });
-          return filterFlag;
-        })
-        .reverse(),
-    );
+    desc
+      ? setFilteredItems(
+          data.filter((item: any) => {
+            var filterFlag = false;
+            Object.keys(item).every((each_key) => {
+              if (
+                item[each_key] &&
+                item[each_key]
+                  ?.toString()
+                  .toLowerCase()
+                  .includes(filterText.toLowerCase())
+              ) {
+                filterFlag = true;
+                return false;
+              }
+              return true;
+            });
+            return filterFlag;
+          }),
+        )
+      : setFilteredItems(
+          data
+            .filter((item: any) => {
+              var filterFlag = false;
+              Object.keys(item).every((each_key) => {
+                if (
+                  item[each_key] &&
+                  item[each_key]
+                    ?.toString()
+                    .toLowerCase()
+                    .includes(filterText.toLowerCase())
+                ) {
+                  filterFlag = true;
+                  return false;
+                }
+                return true;
+              });
+              return filterFlag;
+            })
+            .reverse(),
+        );
   }, [data, filterText]);
   //
   const subHeaderComponentMemo = React.useMemo(() => {

@@ -5,9 +5,12 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import TransferType from 'modules/Transfer/transfer.type';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
-export default function TransferList() {
+export default function ReceiveList() {
+  // router
+  const router = useRouter();
   // states
   const [transferData, setTransferData] = React.useState<TransferType[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -15,13 +18,18 @@ export default function TransferList() {
   // functions
   const transferFetcher = async () => {
     setLoading(true);
-    const data = await axiosFunction({
-      urlPath: '/transfer/find_all_transfer',
-    }).then((res) => res.data);
+    const data = await axiosFunction({ urlPath: '/transfer/find_all' }).then(
+      (res) => res.data,
+    );
     setTransferData(data);
     setLoading(false);
   };
-
+  //
+  const receiveHandler = async (row: TransferType) => {
+    localStorage.setItem('transfer_data', JSON.stringify(row));
+    router.push('/dashboard/transfer/stock_receive');
+  };
+  //
   // useEffect
   React.useEffect(() => {
     transferFetcher();
@@ -46,7 +54,7 @@ export default function TransferList() {
               width: '100px',
             },
             {
-              name: 'Transfer.To',
+              name: 'Transfer.From',
               selector: (row: TransferType) => <>{row.loc_name}</>,
               grow: 1,
             },
@@ -65,6 +73,25 @@ export default function TransferList() {
               center: true,
               grow: 0,
               width: '120px',
+            },
+            {
+              name: 'Actions',
+              selector: (row: TransferType) => {
+                return (
+                  <>
+                    <Button
+                      disabled={row.transfer_status == 'Received'}
+                      onClick={() => receiveHandler(row)}
+                      compact
+                      className="bg-red-500 transition-all hover:bg-red-900"
+                    >
+                      Receive
+                    </Button>
+                  </>
+                );
+              },
+              center: true,
+              width: '100px',
             },
           ]}
         />

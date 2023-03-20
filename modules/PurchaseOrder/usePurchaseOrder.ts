@@ -25,6 +25,8 @@ export default function usePurchaseOrderData(): usePurchaseOrderDataType {
     const response = await axiosFunction({
       urlPath: '/purchase_order/find_all/',
     });
+    console.log(response.data[0]);
+
     setData(response.data);
     setLoading(false);
   };
@@ -33,6 +35,6 @@ export default function usePurchaseOrderData(): usePurchaseOrderDataType {
     if (data.length == 0) {
       dataFetcher();
     }
-  }, [data]);
+  }, [data.length]);
   return { purchaseOrderData: data, setPurchaseOrderData: setData, loading };
 }

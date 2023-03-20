@@ -38,6 +38,17 @@ function Table() {
     });
   }
   //
+  const qrGenerateFunction = async (row: ReceiveType) => {
+    const inward_id = row.inward_id;
+    const inward_child = await axiosFunction({
+      urlPath: '/inward/find_child',
+      method: 'POST',
+      data: { inward_id },
+    }).then((res) => res.data);
+    localStorage.setItem('bar_code_value', JSON.stringify(inward_child));
+    window.open('/barcode');
+  };
+  //
   return (
     <>
       {loading ? (
@@ -146,6 +157,26 @@ function Table() {
               allowOverflow: true,
               center: true,
               width: '150px',
+              grow: 0,
+            },
+            {
+              name: 'Barcode',
+              selector: (row: ReceiveType) => (
+                <>
+                  <Button
+                    onClick={() => qrGenerateFunction(row)}
+                    disabled={row.inward_id == null}
+                    className="bg-red-500 transition-all hover:bg-red-900"
+                    compact
+                  >
+                    QR Gen.
+                  </Button>
+                </>
+              ),
+              ignoreRowClick: true,
+              allowOverflow: true,
+              center: true,
+              width: '100px',
               grow: 0,
             },
           ]}

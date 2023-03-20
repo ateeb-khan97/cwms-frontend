@@ -27,8 +27,8 @@ function IssuanceTable({
   );
   return (
     <>
-      <section className=" w-[47%] ">
-        <div className="border-b py-5 text-xl font-semibold text-gray-500 ">
+      <section className=" w-[49%] border-l">
+        <div className="border-b p-5 text-xl font-semibold text-gray-500 ">
           <h1>Issuance List</h1>
         </div>
         <div className="w-[100%]">
@@ -76,7 +76,7 @@ function Table({
 }) {
   return (
     <>
-      <div className="border-y py-5 text-xl font-semibold text-gray-500 ">
+      <div className="border-y p-5 text-xl font-semibold text-gray-500 ">
         <h1>Stock Transfer Cart</h1>
       </div>
       <DataTableComponent
@@ -258,75 +258,79 @@ function From() {
     <section className="flex justify-between">
       <form
         onSubmit={submitHandler}
-        className="flex w-[47%] flex-col gap-2 p-5"
+        className="flex w-[49%] flex-col gap-2 border-r"
       >
-        <Select
-          value={locationFrom}
-          onChange={setLocationFrom}
-          searchable
-          nothingFound="No options"
-          required
-          withAsterisk
-          size="xs"
-          label="Stock From"
-          clearable
-          placeholder="Select location from stock will be transferred"
-          data={locationData.map((each_loc) => {
-            return {
-              value: each_loc.loc_code,
-              label: each_loc.loc_name,
-            };
-          })}
-        />
-        <Select
-          value={locationTo}
-          onChange={setLocationTo}
-          searchable
-          nothingFound="No options"
-          required
-          withAsterisk
-          size="xs"
-          label="Stock To"
-          clearable
-          placeholder="Select location where stock will be transferred"
-          data={locationData.map((each_loc) => {
-            return {
-              value: each_loc.loc_code,
-              label: each_loc.loc_name,
-            };
-          })}
-        />
-        <DatePicker
-          ref={expectedDeliveryRef}
-          placeholder="Select Date"
-          label="Expected Delivery Date"
-          required
-          withAsterisk
-          size="xs"
-        />
-        <TextInput
-          ref={scanProductsRef}
-          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-            if (e.key === 'Enter') {
-              e.preventDefault();
-              scannedProductsFunction();
-            }
-          }}
-          label="Scan Products"
-          placeholder="Scan Products Here"
-          size="xs"
-        />
+        <div className="p-5">
+          <Select
+            value={locationFrom}
+            onChange={setLocationFrom}
+            searchable
+            nothingFound="No options"
+            required
+            withAsterisk
+            size="xs"
+            label="Stock From"
+            clearable
+            placeholder="Select location from stock will be transferred"
+            data={locationData.map((each_loc) => {
+              return {
+                value: each_loc.loc_code,
+                label: each_loc.loc_name,
+              };
+            })}
+          />
+          <Select
+            value={locationTo}
+            onChange={setLocationTo}
+            searchable
+            nothingFound="No options"
+            required
+            withAsterisk
+            size="xs"
+            label="Stock To"
+            clearable
+            placeholder="Select location where stock will be transferred"
+            data={locationData.map((each_loc) => {
+              return {
+                value: each_loc.loc_code,
+                label: each_loc.loc_name,
+              };
+            })}
+          />
+          <DatePicker
+            ref={expectedDeliveryRef}
+            placeholder="Select Date"
+            label="Expected Delivery Date"
+            required
+            withAsterisk
+            size="xs"
+          />
+          <TextInput
+            ref={scanProductsRef}
+            onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+              if (e.key === 'Enter') {
+                e.preventDefault();
+                scannedProductsFunction();
+              }
+            }}
+            label="Scan Products"
+            placeholder="Scan Products Here"
+            size="xs"
+          />
+        </div>
         <Table
           ScannedProducts={scannedProducts}
           removeFunction={removeFunction}
         />
-        <Button
-          type={'submit'}
-          disabled={scannedProducts.length == 0}
-          className="ml-auto w-56 bg-red-500 transition-all hover:bg-red-500"
-        >
-          Transfer
-        </Button>
+        <div className="flex p-5">
+          <Button
+            type={'submit'}
+            disabled={scannedProducts.length == 0}
+            className="ml-auto w-56 bg-red-500 transition-all hover:bg-red-500"
+          >
+            Transfer
+          </Button>
+        </div>
       </form>
       <IssuanceTable scannedProducts={issuanceData} />
     </section>
