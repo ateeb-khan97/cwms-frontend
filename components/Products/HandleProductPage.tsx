@@ -59,10 +59,14 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
     React.useState([]);
   //
   var localData: any = {};
+  const [myFlag, setMyFlag] = React.useState<boolean>(true);
   if (typeof window != 'undefined' && isUpdate) {
-    localData = JSON.parse(localStorage.getItem('product_data')!);
-    setProductTags(localData.productTags);
-    setProductGenericFormula(localData.productGenericFormula);
+    if (myFlag) {
+      localData = JSON.parse(localStorage.getItem('product_data')!);
+      setProductTags(localData.productTags);
+      setProductGenericFormula(localData.productGenericFormula);
+      setMyFlag(false);
+    }
   }
   //
   const form = useForm({
