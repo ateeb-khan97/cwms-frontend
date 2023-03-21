@@ -1,7 +1,7 @@
 import React from 'react';
 //  icons
 import { RxDashboard } from 'react-icons/rx';
-import { AiOutlineUnorderedList } from 'react-icons/ai';
+import { AiOutlineStock, AiOutlineUnorderedList } from 'react-icons/ai';
 import { BiCategoryAlt, BiReceipt } from 'react-icons/bi';
 import { CgNotes } from 'react-icons/cg';
 import {
@@ -21,7 +21,11 @@ import { FiSettings } from 'react-icons/fi';
 import { HiUsers } from 'react-icons/hi';
 import { FaWarehouse } from 'react-icons/fa';
 import { SiBlueprint } from 'react-icons/si';
-import { TbTransferIn, TbTruckDelivery } from 'react-icons/tb';
+import {
+  TbReportAnalytics,
+  TbTransferIn,
+  TbTruckDelivery,
+} from 'react-icons/tb';
 // types
 type SidebarChildrenType = {
   label: string;
@@ -190,6 +194,18 @@ export const sidebarLink: SidebarType[] = [
       //   label: 'Stock Receive',
       //   icon: <BsListCheck />,
       // },
+    ],
+  },
+  {
+    label: 'Report',
+    icon: <TbReportAnalytics />,
+    hasChildren: true,
+    children: [
+      {
+        href: '/dashboard/report/stock_report',
+        label: 'Stock Report',
+        icon: <AiOutlineStock />,
+      },
     ],
   },
   {

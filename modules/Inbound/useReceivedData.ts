@@ -31,6 +31,6 @@ export default function useReceiveData(): useProductDataType {
     if (data.length == 0) {
       dataFetcher();
     }
-  }, [data]);
+  }, [data.length]);
   return { receiveData: data, setReceiveData: setData, loading };
 }
