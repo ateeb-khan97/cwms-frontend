@@ -110,9 +110,7 @@ export default function AddPurchaseOrder() {
     customNotification({
       message: `Purchase Order ID:${response.po_id} created successfully!`,
     });
-    setTimeout(() => {
-      router.push('/dashboard/purchase_order/');
-    }, 3000);
+    router.push('/dashboard/purchase_order/');
     setPurchaseOrderData([]);
   };
   //

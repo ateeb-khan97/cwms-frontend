@@ -182,6 +182,7 @@ function Table({
       message,
       title: response.status == 200 ? 'Success' : 'Failed',
     });
+    setTableData([]);
     setPurchaseOrderData([]);
     //
   };

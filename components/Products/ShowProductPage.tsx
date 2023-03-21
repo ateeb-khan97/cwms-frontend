@@ -60,9 +60,9 @@ function Table() {
     setLoading(false);
   };
   //
-  // React.useEffect(() => {
-  //   // fetchProduct(1);
-  // }, []);
+  React.useEffect(() => {
+    fetchProduct(1);
+  }, []);
   //
   const updateHandler = async (id: number) => {
     var category: any[] = [];
