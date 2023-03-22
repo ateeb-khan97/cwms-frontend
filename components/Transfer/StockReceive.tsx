@@ -28,8 +28,10 @@ function IssuanceTable({
   return (
     <>
       <section className=" w-[49%] border-l">
-        <div className="border-b p-5 text-xl font-semibold text-gray-500 ">
-          <h1>Issuance List</h1>
+        <div className="border-b p-5">
+          <h1 className="text-[1em] font-semibold text-gray-500 ">
+            Issuance List
+          </h1>
         </div>
         <div className="w-[100%]">
           <DataTableComponent
@@ -74,8 +76,10 @@ function StockReceiveCart({
 }) {
   return (
     <section className="w-[100%]">
-      <div className="border-y p-5 text-xl font-semibold text-gray-500 ">
-        <h1>Stock Receive Cart</h1>
+      <div className="border-y p-5 ">
+        <h1 className="text-[1em] font-semibold text-gray-500 ">
+          Stock Receive Cart
+        </h1>
       </div>
       <DataTableComponent
         columns={[

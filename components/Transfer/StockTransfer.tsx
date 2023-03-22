@@ -29,8 +29,10 @@ function IssuanceTable({
   return (
     <>
       <section className=" w-[49%] border-l">
-        <div className="border-b p-5 text-xl font-semibold text-gray-500 ">
-          <h1>Issuance List</h1>
+        <div className="border-b p-5 ">
+          <h1 className="text-[1em] font-semibold text-gray-500 ">
+            Issuance List
+          </h1>
         </div>
         <div className="w-[100%]">
           <DataTableComponent
@@ -344,9 +346,11 @@ function From() {
 //
 function Header() {
   return (
-    <header className="select-none text-[#3b3e66]">
+    <header className="select-none ">
       <BreadcrumbComponent />
-      <h1 className="text-3xl font-semibold ">Stock Transfer</h1>
+      <h1 className="text-[1em] font-semibold text-[#3b3e66]">
+        Stock Transfer
+      </h1>
       <p>Please see Stock Transfer below all connected channels</p>
     </header>
   );
