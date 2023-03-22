@@ -5,6 +5,7 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
+import Validator from 'functions/validationFunctions';
 import React from 'react';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 
@@ -17,9 +18,15 @@ type DemandProductType = {
 //
 function DemandTable({
   demandProducts,
+  deleteHandler,
+  isDetails,
 }: {
+  isDetails: boolean;
   demandProducts: DemandProductType[];
+  deleteHandler: (id: string) => void;
 }) {
+  //
+  //
   return (
     <>
       <div className="border-y p-5 font-semibold text-gray-500 ">
@@ -52,8 +59,10 @@ function DemandTable({
             selector: (row: DemandProductType) => (
               <>
                 <Button
+                  disabled={isDetails}
                   className="bg-red-500 transition-all hover:bg-red-900"
                   compact
+                  onClick={() => deleteHandler(row.id)}
                 >
                   <MdOutlineDeleteOutline size={20} />
                 </Button>
@@ -68,19 +77,23 @@ function DemandTable({
   );
 }
 //
-export default function DemandNotePage() {
-  //
+export default function AddDemandNotePage({
+  isDetails,
+}: {
+  isDetails: boolean;
+}) {
   // refs
-  const productRef = React.useRef<HTMLInputElement>(null);
   const quantityRef = React.useRef<HTMLInputElement>(null);
   //
   // states
-  const [locationTo, setLocationTo] = React.useState<string | null>('');
+  const [product, setProduct] = React.useState<string>('');
+  const [location, setLocation] = React.useState<string | null>('');
   const [locationData, setLocationData] = React.useState<any[]>([]);
   const [demandProducts, setDemandProducts] = React.useState<
     DemandProductType[]
   >([]);
   const [productData, setProductData] = React.useState<DemandProductType[]>([]);
+  const [disabler, setDisabler] = React.useState<boolean>(false);
   const [loading, setLoading] = React.useState<boolean>(true);
   //
   //  functions
@@ -100,13 +113,20 @@ export default function DemandNotePage() {
     setLocationData(location);
   };
   //
-  const submitHandler = async () => {
-    const product = productRef.current!.value;
+  const addProductFunction = async () => {
     const quantity = quantityRef.current!.value;
     // check if empty
     if (product == '' || quantity == '') {
       return customNotification({
         message: 'Select a product and enter the quantity!',
+        title: 'Failed',
+      });
+    }
+    //
+    if (!Validator.numberValidator(quantity)) {
+      quantityRef.current!.value = '';
+      return customNotification({
+        message: 'Quantity must be a number!',
         title: 'Failed',
       });
     }
@@ -136,11 +156,76 @@ export default function DemandNotePage() {
     setDemandProducts((pre) => [...pre, { ...filteredProduct, quantity }]);
   };
   //
+  const deleteHandler = (id: string) => {
+    const filteredList = demandProducts.filter(
+      (each_prod) => each_prod.id != id,
+    );
+    setDemandProducts(filteredList);
+  };
+  //
+  const submitHandler = async () => {
+    if (demandProducts.length == 0) {
+      return customNotification({
+        title: 'Failed',
+        message: 'Select at least one product',
+      });
+    }
+    //
+    if (location == null || location == '') {
+      return customNotification({
+        title: 'Failed',
+        message: 'Select location From',
+      });
+    }
+    //
+    const { message, status } = await axiosFunction({
+      urlPath: '/demand_note/create',
+      method: 'POST',
+      data: {
+        location,
+        demandProducts,
+      },
+    });
+    //
+    const title = status == 200 ? 'Success' : 'Failed';
+    customNotification({
+      title,
+      message,
+    });
+    //
+    setDemandProducts([]);
+    setProduct('');
+    quantityRef.current!.value = '';
+    setLocation('');
+  };
+  //
+  const detailsFetcher = async (id: number) => {
+    setLoading(true);
+    const [data] = await axiosFunction({
+      urlPath: '/demand_note/find_by_id',
+      method: 'POST',
+      data: { id },
+    }).then((res) => res.data);
+    setLocation(data.location_from);
+    setDemandProducts(data.demand_note_detail);
+    setDisabler(true);
+    setLoading(false);
+  };
   //  useEffects
   React.useEffect(() => {
-    productFetcher();
-    locationFetcher();
+    if (isDetails) {
+      locationFetcher();
+      const id = +localStorage.getItem('demand_id')!;
+      if (id != 0) {
+        detailsFetcher(id);
+      }
+      localStorage.removeItem('demand_id');
+    } else {
+      productFetcher();
+      locationFetcher();
+    }
   }, []);
+  //
   //
   return (
     <main>
@@ -151,8 +236,10 @@ export default function DemandNotePage() {
       ) : (
         <div className="flex flex-wrap justify-between gap-3 p-5">
           <Autocomplete
+            disabled={disabler}
             required
-            ref={productRef}
+            value={product}
+            onChange={setProduct}
             className="w-[47%]"
             size="xs"
             label="Select Product"
@@ -165,11 +252,12 @@ export default function DemandNotePage() {
             })}
             onKeyDown={(e) => {
               if (e.key == 'Enter') {
-                submitHandler();
+                addProductFunction();
               }
             }}
           />
           <TextInput
+            disabled={disabler}
             ref={quantityRef}
             label="Quantity"
             placeholder="Enter Quantity"
@@ -178,14 +266,15 @@ export default function DemandNotePage() {
             className="w-[47%]"
             onKeyDown={(e) => {
               if (e.key == 'Enter') {
-                submitHandler();
+                addProductFunction();
               }
             }}
           />
           <Select
+            disabled={disabler}
             className="w-[47%]"
-            value={locationTo}
-            onChange={setLocationTo}
+            value={location}
+            onChange={setLocation}
             searchable
             nothingFound="No options"
             required
@@ -203,7 +292,20 @@ export default function DemandNotePage() {
           />
         </div>
       )}
-      <DemandTable demandProducts={demandProducts} />
+      <DemandTable
+        isDetails={isDetails}
+        demandProducts={demandProducts}
+        deleteHandler={deleteHandler}
+      />
+      <div className="flex w-[100%] p-5">
+        <Button
+          disabled={demandProducts.length == 0 || disabler}
+          onClick={submitHandler}
+          className="ml-auto w-56 bg-red-500 transition hover:bg-red-900"
+        >
+          Submit
+        </Button>
+      </div>
     </main>
   );
 }

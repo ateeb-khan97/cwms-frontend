@@ -15,4 +15,5 @@ export default interface TransferType {
   loc_name?: string;
   transfer_detail: TransferDetailType[];
   transfer_status: string;
+  created_at?: Date;
 }

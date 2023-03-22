@@ -66,6 +66,15 @@ export default function TransferList() {
               width: '160px',
             },
             {
+              name: 'Created At',
+              selector: (row: TransferType) => (
+                <>{row.created_at?.toString().substring(0, 10)}</>
+              ),
+              center: true,
+              grow: 0,
+              width: '150px',
+            },
+            {
               name: 'Transfer.Status',
               selector: (row: TransferType) => <>{row.transfer_status}</>,
               center: true,
