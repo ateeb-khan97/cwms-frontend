@@ -79,8 +79,10 @@ function Table({
 }) {
   return (
     <>
-      <div className="border-y p-5 text-xl font-semibold text-gray-500 ">
-        <h1>Stock Transfer Cart</h1>
+      <div className="border-y p-5 ">
+        <h1 className="text-[1em] font-semibold text-gray-500 ">
+          Stock Transfer Cart
+        </h1>
       </div>
       <DataTableComponent
         data={ScannedProducts}
@@ -346,11 +348,9 @@ function From() {
 //
 function Header() {
   return (
-    <header className="select-none ">
+    <header className="select-none text-[#3b3e66]">
       <BreadcrumbComponent />
-      <h1 className="text-[1em] font-semibold text-[#3b3e66]">
-        Stock Transfer
-      </h1>
+      <h1 className="text-3xl font-semibold ">Stock Transfer</h1>
       <p>Please see Stock Transfer below all connected channels</p>
     </header>
   );
