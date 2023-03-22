@@ -12,6 +12,7 @@ export default interface TransferType {
   stock_receive_date?: string;
   loc_to_name: string;
   loc_from_name: string;
+  loc_name?: string;
   transfer_detail: TransferDetailType[];
   transfer_status: string;
 }
