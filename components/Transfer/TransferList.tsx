@@ -18,6 +18,7 @@ export default function TransferList() {
     const data = await axiosFunction({
       urlPath: '/transfer/find_all_transfer',
     }).then((res) => res.data);
+
     setTransferData(data);
     setLoading(false);
   };
@@ -47,7 +48,12 @@ export default function TransferList() {
             },
             {
               name: 'Transfer.To',
-              selector: (row: TransferType) => <>{row.loc_name}</>,
+              selector: (row: TransferType) => <>{row.loc_to_name}</>,
+              grow: 1,
+            },
+            {
+              name: 'Transfer.From',
+              selector: (row: TransferType) => <>{row.loc_from_name}</>,
               grow: 1,
             },
             {

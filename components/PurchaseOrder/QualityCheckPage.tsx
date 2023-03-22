@@ -7,6 +7,7 @@ import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import useGrnData from 'modules/Grn/useGrnData';
+import useReceiveData from 'modules/Inbound/useReceivedData';
 import React from 'react';
 
 //
@@ -22,6 +23,7 @@ function Header() {
 //
 var loading = false;
 function Table() {
+  const { setReceiveData } = useReceiveData();
   const [grnData, setGrnData] = React.useState<any[]>([]);
   const [btnDisable, setBtnDisable] = React.useState<boolean>(false);
   //
@@ -52,6 +54,7 @@ function Table() {
     });
     grnFetcher();
     setBtnDisable(false);
+    status ? setReceiveData([]) : null;
   };
   //
   return (

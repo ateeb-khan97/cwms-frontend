@@ -162,11 +162,11 @@ export const sidebarLink: SidebarType[] = [
         label: 'Restacking',
         icon: <BsBookshelf />,
       },
-      {
-        href: '/dashboard/inbound/demand_note',
-        label: 'Demand Note',
-        icon: <MdNote />,
-      },
+      // {
+      //   href: '/dashboard/inbound/demand_note',
+      //   label: 'Demand Note',
+      //   icon: <MdNote />,
+      // },
     ],
   },
   {
@@ -194,6 +194,23 @@ export const sidebarLink: SidebarType[] = [
       //   label: 'Stock Receive',
       //   icon: <BsListCheck />,
       // },
+    ],
+  },
+  {
+    label: 'Demand Note',
+    icon: <MdNote />,
+    hasChildren: true,
+    children: [
+      {
+        href: '/dashboard/demand_note',
+        label: 'Show Demand Note',
+        icon: <AiOutlineUnorderedList />,
+      },
+      {
+        href: '/dashboard/demand_note/add_demand_note',
+        label: 'Add Demand Note',
+        icon: <RiAddFill />,
+      },
     ],
   },
   {

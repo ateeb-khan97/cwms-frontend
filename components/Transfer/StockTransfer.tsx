@@ -8,6 +8,7 @@ import customNotification from 'functions/customNotification';
 import axiosFunction from 'functions/axiosFunction';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import { RiDeleteBin2Line } from 'react-icons/ri';
+import { getCookie } from 'cookies-next';
 //
 type ScannedType = {
   product_id: number;
@@ -124,7 +125,7 @@ function Table({
 //
 function From() {
   // Refs
-  const [locationFrom, setLocationFrom] = React.useState<string | null>('');
+  // const [locationFrom, setLocationFrom] = React.useState<string | null>('');
   const [locationTo, setLocationTo] = React.useState<string | null>('');
   const expectedDeliveryRef = React.useRef<HTMLInputElement>(null);
   const scanProductsRef = React.useRef<HTMLInputElement>(null);
@@ -228,10 +229,17 @@ function From() {
   };
   const submitHandler = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const location_from = locationFrom;
+    const location_from = getCookie('loc_no');
     const location_to = locationTo;
     const expected_delivery_date = expectedDeliveryRef.current!.value;
     //
+    if (location_from == undefined) {
+      return customNotification({
+        title: 'Failed',
+        message: 'Location not found! Please Re-Login!',
+      });
+    }
+
     const response = await axiosFunction({
       urlPath: '/transfer/create',
       method: 'POST',
@@ -249,19 +257,16 @@ function From() {
     });
     setIssuanceData([]);
     setScannedProducts([]);
-    setLocationFrom('');
+    // setLocationFrom('');
     setLocationTo('');
     expectedDeliveryRef.current!.value = '';
     scanProductsRef.current!.value = '';
   };
   return (
     <section className="flex justify-between">
-      <form
-        onSubmit={submitHandler}
-        className="flex w-[49%] flex-col gap-2 border-r"
-      >
-        <div className="p-5">
-          <Select
+      <form onSubmit={submitHandler} className=" w-[49%]  border-r">
+        <div className="flex flex-col gap-2 p-5">
+          {/* <Select
             value={locationFrom}
             onChange={setLocationFrom}
             searchable
@@ -278,7 +283,7 @@ function From() {
                 label: each_loc.loc_name,
               };
             })}
-          />
+          /> */}
           <Select
             value={locationTo}
             onChange={setLocationTo}

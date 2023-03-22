@@ -246,11 +246,8 @@ export default function StockReceive() {
         </div>
       ) : (
         <section className="flex justify-between">
-          <form
-            onSubmit={submitHandler}
-            className="flex w-[49%] flex-col gap-2 border-r"
-          >
-            <div className="p-5">
+          <form onSubmit={submitHandler} className="w-[49%]  border-r">
+            <div className="flex flex-col gap-2 p-5">
               <TextInput
                 label="Transfer ID"
                 value={transferData.id}

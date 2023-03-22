@@ -99,6 +99,13 @@ function Table() {
               sortable: true,
             },
             {
+              name: 'Delivery Location',
+              selector: (row: any) => row.loc_name,
+              grow: 0,
+              width: '150px',
+              center: true,
+            },
+            {
               name: 'Order Type',
               selector: (row: any) => row.order_type,
               grow: 0,
