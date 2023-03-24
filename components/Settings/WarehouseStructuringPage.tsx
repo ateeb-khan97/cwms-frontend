@@ -69,7 +69,7 @@ function Form() {
       sideFetcher();
       setSideId('');
     }
-  }, [pathId]);
+  }, [pathId, pathSideId]);
   React.useEffect(() => {
     if (sideId != '') {
       rackFetcher();
@@ -139,6 +139,7 @@ function Form() {
       });
       return;
     }
+
     await axiosFunction({
       urlPath: '/wms/bin/add_bin',
       method: 'POST',

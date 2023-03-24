@@ -1,3 +1,3 @@
 export default function Head() {
-  return <title>Barcode</title>;
+  return <title>CWMS | Barcode</title>;
 }

@@ -25,13 +25,15 @@ function Header() {
 function Form({
   setFormData,
   scannedItems,
-  binRef,
   inwardRef,
+  bin,
+  setBin,
 }: {
-  binRef: any;
   inwardRef: any;
   setFormData: Function;
   scannedItems: ScannedType[];
+  bin: string;
+  setBin: Function;
 }) {
   //    refs
   // const binRef = React.useRef<HTMLInputElement>(null);
@@ -39,11 +41,11 @@ function Form({
   //    function
   const binSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const bin_id = binRef.current!.value;
+
     const [is_exists] = await axiosFunction({
       urlPath: '/wms/bin/find_by_id',
       method: 'POST',
-      data: { bin_id },
+      data: { bin_id: bin.trim() },
     }).then((res) => res.data);
     //
     if (!is_exists) {
@@ -62,7 +64,7 @@ function Form({
     setFormData((pre: any) => {
       return {
         ...pre,
-        bin_id: bin_id.trim(),
+        bin_id: bin.trim(),
       };
     });
     inwardRef.current!.focus();
@@ -70,16 +72,24 @@ function Form({
   //
   const inwardSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
-    const inward_id = inwardRef.current!.value;
+    const inward_id: string = inwardRef.current!.value;
+
+    //
+    if (bin == '') {
+      return customNotification({
+        message: 'Bin ID Cannot be null',
+        title: 'Failed',
+      });
+    }
     //
     const [does_exists] = await axiosFunction({
-      urlPath: '/inward/does_exists',
+      urlPath: '/inward/does_exists_stack',
       method: 'POST',
       data: { inward_id },
     }).then((res) => res.data);
     if (!does_exists) {
       customNotification({
-        message: 'Inward ID does not exists!',
+        message: 'Inward ID does not exists or already Stacked!',
         title: 'Failed',
       });
       setFormData((pre: any) => {
@@ -92,7 +102,7 @@ function Form({
     }
     //
     const id = scannedItems.findIndex(
-      (eachScanned) => eachScanned.inward_id == inward_id,
+      (eachScanned) => eachScanned.inward_id.trim() == inward_id.trim(),
     );
     if (id != -1) {
       customNotification({
@@ -120,24 +130,38 @@ function Form({
   //
   return (
     <>
-      <section className="flex w-96 flex-col gap-5 p-5">
-        <form onSubmit={binSubmit}>
+      <section className="flex flex-col gap-5 p-5">
+        <form onSubmit={binSubmit} className="flex w-[100%] items-end gap-5">
           <TextInput
-            ref={binRef}
+            className="w-96"
+            value={bin}
+            onChange={(e) => {
+              if (scannedItems.length > 0) {
+                customNotification({
+                  message: 'Submit first before changing the BIN',
+                  title: 'Failed',
+                });
+              } else {
+                setBin(e.target.value);
+              }
+            }}
             required
             withAsterisk={false}
             label="Scan Bin ID"
             placeholder="Scan here..."
           />
+          <span>(Press Enter...)</span>
         </form>
-        <form onSubmit={inwardSubmit}>
+        <form onSubmit={inwardSubmit} className="flex w-[100%] items-end gap-5">
           <TextInput
+            className="w-96"
             ref={inwardRef}
             required
             withAsterisk={false}
             label="Scan Inward ID"
             placeholder="Scan here..."
           />
+          <span>(Press Enter...)</span>
         </form>
       </section>
     </>
@@ -171,9 +195,8 @@ function Table({ scannedItems }: { scannedItems: ScannedType[] }) {
 //
 export default function StackPage() {
   //    refs
-  const binRef = React.useRef<HTMLInputElement>(null);
   const inwardRef = React.useRef<HTMLInputElement>(null);
-
+  const [bin, setBin] = React.useState<string>('');
   //
   const [formData, setFormData] = React.useState<ScannedType>({
     bin_id: '',
@@ -209,7 +232,7 @@ export default function StackPage() {
       inward_id: '',
     });
     inwardRef.current!.value = '';
-    binRef.current!.value = '';
+    setBin('');
     setScannedItems([]);
   };
   //
@@ -223,10 +246,11 @@ export default function StackPage() {
           </p>
         </div>
         <Form
-          binRef={binRef}
           inwardRef={inwardRef}
           scannedItems={scannedItems}
           setFormData={setFormData}
+          bin={bin}
+          setBin={setBin}
         />
         <Table scannedItems={scannedItems} />
         <div className="flex justify-end p-5">

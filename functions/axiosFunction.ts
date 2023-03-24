@@ -1,5 +1,6 @@
 import axios, { AxiosRequestConfig } from 'axios';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
+import customNotification from './customNotification';
 // types
 type MethodType = 'POST' | 'GET' | 'PUT' | 'DELETE';
 //
@@ -41,12 +42,26 @@ export default async function axiosFunction({
   //
   try {
     const result: any = await axios(config);
+    if (result.data.status == 401) {
+      customNotification({
+        message: 'Session Expired',
+        title: 'Failed',
+      });
+      setCookie('token', '', { secure: false });
+      setCookie('type', '', { secure: false });
+      setCookie('user_id', '', { secure: false });
+      setCookie('acc_no', '', {
+        secure: false,
+      });
+      setCookie('loc_no', '');
+      setCookie('user_name', '');
+    }
     return result.data;
   } catch (err: any) {
     return {
       data: [],
       message: err.message,
-      status: 401,
+      status: 500,
     };
   }
 }
