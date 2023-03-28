@@ -2,12 +2,13 @@
 import React from 'react';
 import DataTable from 'react-data-table-component';
 import { AiOutlineSearch } from 'react-icons/ai';
-import { TextInput } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 import {
   PaginationChangePage,
   PaginationChangeRowsPerPage,
 } from 'react-data-table-component/dist/src/DataTable/types';
 import Loader from './Loader';
+import { MdDownload } from 'react-icons/md';
 //
 const customStyles = {
   table: {
@@ -98,6 +99,15 @@ const FilterComponent = ({ filterText, onFilter, title }: FilterProps) => (
   </>
 );
 //
+const Export = ({ onExport }: { onExport: Function }) => (
+  <Button
+    className="aspect-square bg-transparent p-0 text-gray-400 transition hover:bg-gray-400 hover:text-white"
+    onClick={(e: any) => onExport(e.target.value)}
+  >
+    <MdDownload size={25} />
+  </Button>
+);
+//
 
 const DataTableComponent = ({
   selectableRows,
@@ -119,6 +129,50 @@ const DataTableComponent = ({
   const [resetPaginationToggle, setResetPaginationToggle] =
     React.useState(false);
   const [filteredItems, setFilteredItems] = React.useState([]);
+  //
+  function convertArrayOfObjectsToCSV(array: any[]) {
+    let result: string;
+
+    const columnDelimiter = ',';
+    const lineDelimiter = '\n';
+    const keys = Object.keys(data[0]);
+
+    result = '';
+    result += keys.join(columnDelimiter);
+    result += lineDelimiter;
+
+    array.forEach((item) => {
+      let ctr = 0;
+      keys.forEach((key) => {
+        if (ctr > 0) result += columnDelimiter;
+
+        result += item[key];
+
+        ctr++;
+      });
+      result += lineDelimiter;
+    });
+
+    return result;
+  }
+  //
+  function downloadCSV(array: any[]) {
+    const link = document.createElement('a');
+    let csv = convertArrayOfObjectsToCSV(array);
+    if (csv == null) return;
+
+    const filename = 'export.csv';
+
+    if (!csv.match(/^data:text\/csv/i)) {
+      csv = `data:text/csv;charset=utf-8,${csv}`;
+    }
+
+    link.setAttribute('href', encodeURI(csv));
+    link.setAttribute('download', filename);
+    link.click();
+  }
+  //
+
   //
   React.useEffect(() => {
     desc
@@ -166,13 +220,16 @@ const DataTableComponent = ({
   //
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
-      <FilterComponent
-        title={title}
-        onFilter={(e: any) => {
-          setFilterText(e.target.value);
-        }}
-        filterText={filterText}
-      />
+      <section className="flex gap-5">
+        <Export onExport={() => downloadCSV(data)} />
+        <FilterComponent
+          title={title}
+          onFilter={(e: any) => {
+            setFilterText(e.target.value);
+          }}
+          filterText={filterText}
+        />
+      </section>
     );
   }, [filterText, resetPaginationToggle]);
   //
