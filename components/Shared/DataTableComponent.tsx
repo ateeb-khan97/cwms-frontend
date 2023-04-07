@@ -14,6 +14,7 @@ const customStyles = {
   table: {
     style: {
       width: '100%',
+      paddingBottom: '12px',
     },
   },
   header: {
@@ -30,6 +31,8 @@ const customStyles = {
   },
   headCells: {
     style: {
+      fontWeight: 'bold',
+      color: '#3b3e66',
       '&:not(:last-of-type)': {
         borderRightStyle: 'solid',
         borderRightWidth: '1px',

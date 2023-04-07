@@ -2,7 +2,7 @@ import React from 'react';
 //  icons
 import { RxDashboard } from 'react-icons/rx';
 import { AiOutlineStock, AiOutlineUnorderedList } from 'react-icons/ai';
-import { BiCategoryAlt, BiReceipt } from 'react-icons/bi';
+import { BiCategoryAlt, BiDetail, BiReceipt } from 'react-icons/bi';
 import { CgNotes } from 'react-icons/cg';
 import {
   BsBookshelf,
@@ -126,6 +126,11 @@ export const sidebarLink: SidebarType[] = [
         icon: <AiOutlineUnorderedList />,
       },
       {
+        label: 'Purchase Order Detail',
+        href: '/dashboard/purchase_order/purchase_order_detail',
+        icon: <BiDetail />,
+      },
+      {
         label: 'Add Purchase Order',
         href: '/dashboard/purchase_order/add_purchase_order',
         icon: <RiAddFill />,
@@ -180,6 +185,11 @@ export const sidebarLink: SidebarType[] = [
         icon: <TbTransferIn />,
       },
       {
+        href: '/dashboard/transfer/transfer_detail',
+        label: 'Transfer Detail List',
+        icon: <BiDetail />,
+      },
+      {
         href: '/dashboard/transfer/stock_transfer',
         label: 'Stock Transfer',
         icon: <BsBoxSeam />,
@@ -207,6 +217,11 @@ export const sidebarLink: SidebarType[] = [
         icon: <AiOutlineUnorderedList />,
       },
       {
+        href: '/dashboard/demand_note/demand_note_detail',
+        label: 'Demand Note Detail',
+        icon: <BiDetail />,
+      },
+      {
         href: '/dashboard/demand_note/add_demand_note',
         label: 'Add Demand Note',
         icon: <RiAddFill />,
@@ -223,6 +238,11 @@ export const sidebarLink: SidebarType[] = [
         label: 'Stock Report',
         icon: <AiOutlineStock />,
       },
+      {
+        href: '/dashboard/report/stock_detail_report',
+        label: 'Stock Detail Report',
+        icon: <BiDetail />,
+      },
     ],
   },
   {
@@ -230,11 +250,11 @@ export const sidebarLink: SidebarType[] = [
     icon: <FiSettings />,
     hasChildren: true,
     children: [
-      // {
-      //   label: 'Bulk Upload',
-      //   href: '/dashboard/bulk_upload',
-      //   icon: <MdUpload />,
-      // },
+      {
+        label: 'Bulk Upload',
+        href: '/dashboard/bulk_upload',
+        icon: <MdUpload />,
+      },
       {
         label: 'Show Users',
         href: '/dashboard/users',

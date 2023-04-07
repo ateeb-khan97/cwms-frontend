@@ -6,6 +6,7 @@ import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import TransferType from 'modules/Transfer/transfer.type';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 //
 interface ScannedProductsType {
@@ -113,6 +114,7 @@ export default function StockReceive() {
   // refs
   const scanProductsRef = React.useRef<HTMLInputElement>(null);
   //
+  const router = useRouter();
   // states
   const [loading, setLoading] = React.useState<boolean>(true);
   const [transferData, setTransferData] = React.useState<TransferType>({
@@ -199,6 +201,7 @@ export default function StockReceive() {
       message,
       title,
     });
+    router.push('/dashboard/transfer');
   };
   //
   // useEffect

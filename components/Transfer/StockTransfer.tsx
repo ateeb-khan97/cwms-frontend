@@ -220,6 +220,8 @@ function From() {
       method: 'POST',
       data: { scannedProduct },
     });
+    console.log(response.data);
+
     if (response.data.length == 0) {
       return customNotification({
         message: response.message,

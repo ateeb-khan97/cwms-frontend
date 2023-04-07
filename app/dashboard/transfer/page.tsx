@@ -1,5 +1,4 @@
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
-import StockReceive from 'components/Transfer/StockReceive';
 import TransferList from 'components/Transfer/TransferList';
 
 function Header() {
