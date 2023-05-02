@@ -47,8 +47,15 @@ export default function StockReport() {
               grow: 1,
             },
             {
-              name: 'Qty',
-              cell: (row: any) => row.quantity,
+              name: 'Tot.Qty',
+              cell: (row: any) => row.total_qty,
+              center: true,
+              grow: 0,
+              width: '100px',
+            },
+            {
+              name: 'Tot.In Transit',
+              cell: (row: any) => row.total_intransit,
               center: true,
               grow: 0,
               width: '100px',

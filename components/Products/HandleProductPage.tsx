@@ -107,6 +107,7 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
           drap_id: '',
           dosage_instruction: '',
           side_effects: '',
+          pct_code: '',
           discount_type: 'price',
           margin: 0,
           purchasing_price: 0,
@@ -282,6 +283,14 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
           type={'text'}
           {...form.getInputProps('trade_discount')}
           disabled
+        />
+        <TextInput
+          className="w-full"
+          size="md"
+          label="PCT Code"
+          placeholder="Enter PCT Code"
+          type={'text'}
+          {...form.getInputProps('pct_code')}
         />
         <div className="flex w-[100%] justify-between">
           <TextInput
