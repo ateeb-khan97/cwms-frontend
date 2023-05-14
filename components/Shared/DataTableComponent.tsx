@@ -82,6 +82,7 @@ type Props = {
   onChangePage?: PaginationChangePage;
   progressPending?: boolean;
   desc?: boolean;
+  children?: React.ReactNode;
 };
 //
 type FilterProps = {
@@ -127,6 +128,7 @@ const DataTableComponent = ({
   paginationTotalRows,
   progressPending,
   desc,
+  children,
 }: Props) => {
   const [filterText, setFilterText] = React.useState('');
   const [resetPaginationToggle, setResetPaginationToggle] =
@@ -225,52 +227,58 @@ const DataTableComponent = ({
     return (
       <section className="flex gap-5">
         <Export onExport={() => downloadCSV(data)} />
-        <FilterComponent
-          title={title}
-          onFilter={(e: any) => {
-            setFilterText(e.target.value);
-          }}
-          filterText={filterText}
-        />
+        {children ? (
+          children
+        ) : (
+          <FilterComponent
+            title={title}
+            onFilter={(e: any) => {
+              setFilterText(e.target.value);
+            }}
+            filterText={filterText}
+          />
+        )}
       </section>
     );
   }, [filterText, resetPaginationToggle]);
   //
   return (
-    <DataTable
-      title={title}
-      columns={columns}
-      data={filteredItems}
-      dense
-      highlightOnHover
-      pointerOnHover
-      keyField={keyField || 'id'}
-      //@ts-ignore
-      direction="auto"
-      pagination
-      paginationServer={paginationServer}
-      paginationTotalRows={paginationTotalRows}
-      onChangeRowsPerPage={onChangeRowsPerPage}
-      onChangePage={onChangePage}
-      paginationResetDefaultPage={resetPaginationToggle}
-      responsive
-      subHeader
-      subHeaderComponent={subHeaderComponentMemo}
-      selectableRows={selectableRows}
-      onSelectedRowsChange={onSelectedRowsChange}
-      //@ts-ignore
-      subHeaderAlign="right"
-      subHeaderWrap
-      customStyles={customStyles}
-      clearSelectedRows={clearSelectedRows}
-      onRowClicked={onRowClick}
-      progressPending={progressPending}
-      progressComponent={
-        <div className="flex h-[150px] items-center justify-center">
-          <Loader />
-        </div>
-      }
-    />
+    <>
+      <DataTable
+        title={title}
+        columns={columns}
+        data={filteredItems}
+        dense
+        highlightOnHover
+        pointerOnHover
+        keyField={keyField || 'id'}
+        //@ts-ignore
+        direction="auto"
+        pagination
+        paginationServer={paginationServer}
+        paginationTotalRows={paginationTotalRows}
+        onChangeRowsPerPage={onChangeRowsPerPage}
+        onChangePage={onChangePage}
+        paginationResetDefaultPage={resetPaginationToggle}
+        responsive
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        selectableRows={selectableRows}
+        onSelectedRowsChange={onSelectedRowsChange}
+        //@ts-ignore
+        subHeaderAlign="right"
+        subHeaderWrap
+        customStyles={customStyles}
+        clearSelectedRows={clearSelectedRows}
+        onRowClicked={onRowClick}
+        progressPending={progressPending}
+        progressComponent={
+          <div className="flex h-[150px] items-center justify-center">
+            <Loader />
+          </div>
+        }
+      />
+    </>
   );
 };
 

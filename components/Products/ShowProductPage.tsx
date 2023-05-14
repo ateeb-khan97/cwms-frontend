@@ -1,5 +1,6 @@
 'use client';
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
+import { useDebouncedState } from '@mantine/hooks';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
@@ -9,7 +10,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 //
 import React from 'react';
-import { AiFillEdit } from 'react-icons/ai';
+import { AiFillEdit, AiOutlineSearch } from 'react-icons/ai';
 //
 function Header() {
   return (
@@ -21,9 +22,29 @@ function Header() {
   );
 }
 //
+type FilterProps = {
+  value: string;
+  setValue: (value: string) => void;
+};
+const FilterComponent = ({ setValue, value }: FilterProps) => {
+  return (
+    <>
+      <TextInput
+        icon={<AiOutlineSearch />}
+        type="text"
+        placeholder={`Search`}
+        defaultValue={value}
+        onChange={(event) => setValue(event.currentTarget.value)}
+      />
+    </>
+  );
+};
+//
 function Table() {
   const router = useRouter();
   // const { productData, loading } = useProductData();
+  const [value, setValue] = useDebouncedState('', 200);
+
   const [loading, setLoading] = React.useState<boolean>(true);
   const [productData, setProductData] = React.useState<any[]>([]);
   const [totalRows, setTotalRows] = React.useState<number>(0);
@@ -32,11 +53,12 @@ function Table() {
   const fetchProduct = async (page: number) => {
     setLoading(true);
     const response = await axiosFunction({
-      urlPath: '/product/find_for_data_table',
+      urlPath: '/product/data_table_search',
       method: 'POST',
       data: {
         page,
         perPage,
+        searchValue: value,
       },
     });
     setProductData(response.data[0].rows);
@@ -48,11 +70,12 @@ function Table() {
   const handlePerRowsChange = async (newPerPage: number, page: number) => {
     setLoading(true);
     const response = await axiosFunction({
-      urlPath: '/product/find_for_data_table',
+      urlPath: '/product/data_table_search',
       method: 'POST',
       data: {
         page,
         perPage: newPerPage,
+        searchValue: value,
       },
     });
     setProductData(response.data[0].rows);
@@ -62,7 +85,7 @@ function Table() {
   //
   React.useEffect(() => {
     fetchProduct(1);
-  }, []);
+  }, [value]);
   //
   const updateHandler = async (id: number) => {
     var category: any[] = [];
@@ -249,7 +272,9 @@ function Table() {
             grow: 0,
           },
         ]}
-      />
+      >
+        <FilterComponent setValue={setValue} value={value} />
+      </DataTableComponent>
     </>
   );
 }
@@ -264,7 +289,7 @@ export default function ShowProductPage() {
             Here you can manage your all Products!
           </p>
           <Link
-            className="rounded-md bg-red-500 py-2 px-5 text-white transition-all hover:scale-110 hover:bg-red-900"
+            className="rounded-md bg-red-500 px-5 py-2 text-white transition-all hover:scale-110 hover:bg-red-900"
             href={'/dashboard/products/add_product'}
           >
             Add Product
