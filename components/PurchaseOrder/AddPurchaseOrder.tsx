@@ -30,6 +30,7 @@ function Header() {
 }
 //
 type formDataType = {
+  addition_terms: string;
   vendor: string;
   expected_delivery_data: string;
   delivery_location: string;
@@ -40,7 +41,8 @@ export default function AddPurchaseOrder() {
   const { setPurchaseOrderData } = usePurchaseOrderData();
   const router = useRouter();
   const [formData, setFormData] = React.useState<formDataType>({
-    delivery_location: '',
+    addition_terms: '',
+    delivery_location: '1',
     expected_delivery_data: new Date().toString(),
     order_type: '',
     vendor: '',
@@ -93,6 +95,7 @@ export default function AddPurchaseOrder() {
       po_date: new Date(),
       expected_delivery_date: formData.expected_delivery_data,
       order_type: formData.order_type,
+      additional_terms: formData.addition_terms,
       delivery_location: formData.delivery_location,
       orders: orderedProducts,
       total_amount: subtotal,
@@ -179,6 +182,7 @@ export default function AddPurchaseOrder() {
   //
   const clearFunction = () => {
     setFormData({
+      addition_terms: '',
       delivery_location: '',
       expected_delivery_data: new Date().toString(),
       order_type: '',

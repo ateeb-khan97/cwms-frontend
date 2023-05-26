@@ -1,5 +1,5 @@
 'use client';
-import { Select } from '@mantine/core';
+import { Select, TextInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import axiosFunction from 'functions/axiosFunction';
 //
@@ -77,8 +77,6 @@ export default function Form({
       const product_ids = vendor.products.map((each_prod: any) => {
         return each_prod.id;
       });
-      console.log(product_ids);
-
       productFetcher(product_ids);
     }
   }, [formData.vendor]);
@@ -147,6 +145,16 @@ export default function Form({
           data={['Normal', 'Advance']}
           value={formData.order_type}
           onChange={(value) => inputHandler('order_type', value!)}
+        />
+        <TextInput
+          label="Additional Terms"
+          className="w-full"
+          placeholder="Enter Additional Terms here..."
+          size="md"
+          value={formData.addition_terms}
+          onChange={(event) =>
+            inputHandler('addition_terms', event.currentTarget.value)
+          }
         />
       </div>
     </>

@@ -18,6 +18,9 @@ interface TableDataType {
   product_name: string;
   total_amount: string;
   vendor_name: string;
+  required_quantity: string;
+  sales_tax_percentage: string;
+  trade_discount_percentage: string;
 }
 //
 export default function PurchaseOrderDetail() {
@@ -74,6 +77,28 @@ export default function PurchaseOrderDetail() {
               name: 'Vendor',
               selector: (row: TableDataType) => row.vendor_name,
               grow: 1,
+            },
+
+            {
+              name: 'Qty',
+              selector: (row: TableDataType) => row.required_quantity,
+              grow: 0,
+              center: true,
+              width: '100px',
+            },
+            {
+              name: 'S.T.P',
+              selector: (row: TableDataType) => row.sales_tax_percentage,
+              grow: 0,
+              center: true,
+              width: '100px',
+            },
+            {
+              name: 'Discount %',
+              selector: (row: TableDataType) => row.trade_discount_percentage,
+              grow: 0,
+              center: true,
+              width: '100px',
             },
             {
               name: 'Order Type',

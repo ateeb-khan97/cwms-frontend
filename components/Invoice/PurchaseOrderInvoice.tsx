@@ -20,6 +20,7 @@ const InvoiceComponent = (props: Props) => {
     arrival_date: new Date(),
     city: '',
     delivery_location: '',
+    loc_address: '',
     expected_delivery_date: new Date().toString(),
     id: 0,
     net_amount: 0,
@@ -47,6 +48,8 @@ const InvoiceComponent = (props: Props) => {
       method: 'POST',
       data: { id: id },
     }).then((res) => res.data);
+    console.log(po_data);
+
     const created_at = moment(new Date(po_data.created_at));
     const expected_delivery_date = moment(
       new Date(po_data.expected_delivery_date),
@@ -103,10 +106,10 @@ const InvoiceComponent = (props: Props) => {
                     <span className="font-bold">City:</span>
                     <span>{purchaseOrder.city}</span>
                   </div>
-                  <div className="flex justify-between gap-5">
+                  {/* <div className="flex justify-between gap-5">
                     <span className="font-bold">NTN:</span>
                     <span>{purchaseOrder.ntn}</span>
-                  </div>
+                  </div> */}
                   <div className="flex justify-between gap-5">
                     <span className="font-bold">STRN:</span>
                     <span>{purchaseOrder.strn}</span>
@@ -137,7 +140,7 @@ const InvoiceComponent = (props: Props) => {
                   </div>
                   <div className="flex justify-between gap-5">
                     <span className="font-bold">Delivery Location:</span>
-                    <span>{purchaseOrder.delivery_location}</span>
+                    <span>{purchaseOrder.loc_address}</span>
                   </div>
                   <div className="flex justify-between gap-5">
                     <span className="font-bold">PO Type:</span>
@@ -145,11 +148,11 @@ const InvoiceComponent = (props: Props) => {
                   </div>
                   <div className="flex justify-between gap-5">
                     <span className="font-bold">Sales Tax #:</span>
-                    <span>{123}</span>
+                    <span>327787617539-9</span>
                   </div>
                   <div className="flex justify-between gap-5">
                     <span className="font-bold">NTN:</span>
-                    <span>{purchaseOrder.ntn}</span>
+                    <span>1354964-2</span>
                   </div>
                 </div>
               </div>
@@ -158,14 +161,12 @@ const InvoiceComponent = (props: Props) => {
                   <thead>
                     <tr>
                       <th className="w-[20px] border border-black">#</th>
-                      <th className="border border-black">Product</th>
+                      <th className="w-[150px] border border-black">Product</th>
                       <th className="w-[110px] border border-black">
                         Manufacturer
                       </th>
-                      <th className="w-[75px] border border-black">
-                        Pack Size
-                      </th>
-                      <th className="w-[65px] border border-black">UOM</th>
+                      <th className="w-[55px] border border-black">P.Z</th>
+                      <th className="w-[55px] border border-black">UOM</th>
                       <th className="w-[40px] border border-black">Qty</th>
                       <th className="w-[55px] border border-black">T.P</th>
                       <th className="w-[85px] border border-black">
@@ -239,11 +240,13 @@ const InvoiceComponent = (props: Props) => {
                                 ).toFixed(3)}
                               </td>
                               <td className="text-center">
-                                {(
-                                  +total_price -
-                                  +trade_price_after_trade_discount +
-                                  +trade_price_after_applying_gst
-                                ).toFixed(3)}
+                                {Number(
+                                  (
+                                    +total_price -
+                                    +trade_price_after_trade_discount +
+                                    +trade_price_after_applying_gst
+                                  ).toFixed(3),
+                                ).toLocaleString()}
                               </td>
                             </tr>
                           );
@@ -259,7 +262,7 @@ const InvoiceComponent = (props: Props) => {
                     Total Amount
                   </div>
                   <div className="w-[85px] border border-l-black text-center">
-                    {purchaseOrder.total_amount}
+                    {Number(purchaseOrder.total_amount).toLocaleString()}
                   </div>
                 </div>
                 <div className="flex justify-end border border-t-0 border-black">
@@ -268,7 +271,7 @@ const InvoiceComponent = (props: Props) => {
                     Total Discount
                   </div>
                   <div className="w-[85px] border border-l-black text-center">
-                    {purchaseOrder.total_discount}
+                    {Number(purchaseOrder.total_discount).toLocaleString()}
                   </div>
                 </div>
                 <div className="flex justify-end border border-t-0 border-black">
@@ -277,7 +280,7 @@ const InvoiceComponent = (props: Props) => {
                     Sales Tax
                   </div>
                   <div className="w-[85px] border border-l-black text-center">
-                    {purchaseOrder.sales_tax}
+                    {Number(purchaseOrder.sales_tax).toLocaleString()}
                   </div>
                 </div>
                 {/* <div className="flex justify-end border border-black border-t-0">
@@ -295,7 +298,7 @@ const InvoiceComponent = (props: Props) => {
                     Net Amount
                   </div>
                   <div className="w-[85px] border border-l-black text-center">
-                    {purchaseOrder.net_amount}
+                    {Number(purchaseOrder.net_amount).toLocaleString()}
                   </div>
                 </div>
               </div>

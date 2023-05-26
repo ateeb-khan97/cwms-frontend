@@ -167,7 +167,7 @@ function Table() {
                       className="bg-[#002884]"
                       onClick={() => invoiceGenerator(row)}
                     >
-                      Invoice
+                      Print
                     </Button>
                   </>
                 );
@@ -230,7 +230,7 @@ export default function ShowPurchaseOrder() {
             Here you can manage your all Purchase Order!
           </p>
           <Link
-            className="rounded-md bg-red-500 py-2 px-5 text-white transition-all hover:scale-110 hover:bg-red-900"
+            className="rounded-md bg-red-500 px-5 py-2 text-white transition-all hover:scale-110 hover:bg-red-900"
             href={'/dashboard/purchase_order/add_purchase_order'}
           >
             Add Purchase Order

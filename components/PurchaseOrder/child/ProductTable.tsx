@@ -53,10 +53,10 @@ export default function ProductTable(props: {
     const oldArray = [...props.tableData];
 
     var isUpdate = true;
-    if (name == 'required_quantity' || name == 'trade_discount') {
+    if (name == 'required_quantity') {
       isUpdate = Validator.numberValidator(value);
     }
-    if (name == 'trade_price') {
+    if (name == 'trade_price'|| name == 'trade_discount') {
       isUpdate = Validator.decimalValidator(value);
     }
 
@@ -263,28 +263,28 @@ export default function ProductTable(props: {
             width: '150px',
             grow: 0,
           },
-          {
-            name: 'UOM',
-            cell: (row: RowType) => (
-              <Select
-                key={row.id}
-                className=""
-                placeholder={'Select UOM'}
-                data={['Box', 'Pieces']}
-                size={'xs'}
-                disabled={true}
-                value={row.selling_unit}
-                onChange={(event: any) =>
-                  tableInputHandler(row, 'unit_of_measurement', event)
-                }
-              />
-            ),
-            ignoreRowClick: true,
-            allowOverflow: true,
-            center: true,
-            width: '150px',
-            grow: 0,
-          },
+          // {
+          //   name: 'UOM',
+          //   cell: (row: RowType) => (
+          //     <Select
+          //       key={row.id}
+          //       className=""
+          //       placeholder={'Select UOM'}
+          //       data={['Box', 'Pieces']}
+          //       size={'xs'}
+          //       disabled={true}
+          //       value={row.selling_unit}
+          //       onChange={(event: any) =>
+          //         tableInputHandler(row, 'unit_of_measurement', event)
+          //       }
+          //     />
+          //   ),
+          //   ignoreRowClick: true,
+          //   allowOverflow: true,
+          //   center: true,
+          //   width: '150px',
+          //   grow: 0,
+          // },
           {
             name: 'Trade Price',
             cell: (row: any) => (
