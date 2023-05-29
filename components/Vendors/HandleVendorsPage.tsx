@@ -2,6 +2,7 @@
 
 import {
   Button,
+  FileInput,
   MultiSelect,
   Radio,
   Select,
@@ -549,6 +550,12 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         nothingFound="No options"
         data={VendorDropDownValues.stock_return_policy}
         {...form.getInputProps('stock_return_policy')}
+      />
+      <FileInput
+        placeholder="Select your document"
+        label="Document"
+        size="md"
+        className="w-full"
       />
       <Button
         // disabled={submitButtonDisabler}
