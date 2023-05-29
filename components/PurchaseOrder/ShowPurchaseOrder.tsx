@@ -10,6 +10,7 @@ import { ImBin2 } from 'react-icons/im';
 import { modals } from '@mantine/modals';
 import axiosFunction from 'functions/axiosFunction';
 import React from 'react';
+import { MdPrint } from 'react-icons/md';
 
 //
 function Header() {
@@ -162,10 +163,12 @@ function Table() {
                 return (
                   <>
                     <Button
+                      disabled={row.order_status == 'Pending'}
                       // disabled={row.is_cancelled}
                       compact
                       className="bg-[#002884]"
                       onClick={() => invoiceGenerator(row)}
+                      rightIcon={<MdPrint />}
                     >
                       Print
                     </Button>

@@ -145,6 +145,10 @@ function Table({
     type?: InputPropType,
   ) => {
     var data_temp = [...tableData];
+    var tempObject = data_temp[index];
+    if (name == 'received_quantity' && value > tempObject.required_quantity) {
+      value = tempObject.required_quantity;
+    }
 
     data_temp[index] = { ...data_temp[index], [name]: value };
     setTableData(data_temp);
@@ -334,6 +338,7 @@ function Table({
             cell: (row: any) => (
               <>
                 <DatePicker
+                  minDate={new Date()}
                   className="table_date_picker"
                   size="xs"
                   value={new Date(row.batch_expiry)}

@@ -56,7 +56,7 @@ export default function ProductTable(props: {
     if (name == 'required_quantity') {
       isUpdate = Validator.numberValidator(value);
     }
-    if (name == 'trade_price'|| name == 'trade_discount') {
+    if (name == 'trade_price' || name == 'trade_discount') {
       isUpdate = Validator.decimalValidator(value);
     }
 
@@ -124,9 +124,7 @@ export default function ProductTable(props: {
           product_name: each_selected_product.product_name,
           sales_tax_percentage: each_selected_product.sales_tax_percentage,
           required_quantity: each_selected_product.required_quantity,
-          item_conversion:
-            +each_selected_product.item_conversion *
-            +each_selected_product.required_quantity,
+          item_conversion: each_selected_product.item_conversion,
           last_selling_unit: each_selected_product.selling_unit,
           manufacturer_name: each_selected_product.manufacturer_name,
           manufacturer_id: each_selected_product.manufacturer_id,
@@ -147,9 +145,7 @@ export default function ProductTable(props: {
           product_name: each_selected_product.product_name,
           sales_tax_percentage: each_selected_product.sales_tax_percentage,
           required_quantity: each_selected_product.required_quantity,
-          item_conversion:
-            +each_selected_product.item_conversion *
-            +each_selected_product.required_quantity,
+          item_conversion: each_selected_product.item_conversion,
           last_selling_unit: each_selected_product.selling_unit,
           manufacturer_name: each_selected_product.manufacturer_name,
           manufacturer_id: each_selected_product.manufacturer_id,

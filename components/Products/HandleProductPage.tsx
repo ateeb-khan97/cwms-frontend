@@ -166,7 +166,10 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
       product_tag: values.productTags,
       product_generic_formula: values.productGenericFormula,
       product_conversion: productConversion,
-      sales_tax_percentage: values.sales_tax_group?.substring(0, 1),
+      sales_tax_percentage: values.sales_tax_group?.substring(
+        0,
+        form.values.sales_tax_group.indexOf('%'),
+      ),
       margin: +values.mrp_unit_price - +values.trade_price,
     };
     //
@@ -387,7 +390,9 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
           size="md"
           label="Sales Tax Percentage"
           type={'text'}
-          value={form.getInputProps('sales_tax_group').value?.substring(0, 1)}
+          value={form
+            .getInputProps('sales_tax_group')
+            .value?.substring(0, form.values.sales_tax_group.indexOf('%'))}
           readOnly
         />
         <TextInput
