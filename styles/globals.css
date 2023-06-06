@@ -42,9 +42,9 @@
 }
 
 /*  */
-.table_date_picker .mantine-DatePicker-dropdown {
-  z-index: 9 !important;
-  position: fixed;
+.mantine-Popover-dropdown {
+  z-index: 999 !important;
+  position: fixed !important;
 }
 .mantine-1137jyz .mantine-Checkbox-input {
   z-index: 999 !important;

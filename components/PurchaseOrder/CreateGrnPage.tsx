@@ -1,7 +1,7 @@
 'use client';
 
 import { Button, TextInput } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DateInput } from '@mantine/dates';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
@@ -337,12 +337,13 @@ function Table({
             name: 'Batch Expiry',
             cell: (row: any) => (
               <>
-                <DatePicker
+                <DateInput
+                  valueFormat="DD MM YYYY"
                   minDate={new Date()}
                   className="table_date_picker"
                   size="xs"
                   value={new Date(row.batch_expiry)}
-                  onChange={(e: any) => {
+                  onChange={(e) => {
                     tableInputHandler(row.index, 'batch_expiry', e);
                   }}
                 />

@@ -21,6 +21,7 @@ interface TableDataType {
   required_quantity: string;
   sales_tax_percentage: string;
   trade_discount_percentage: string;
+  trade_price: string;
 }
 //
 export default function PurchaseOrderDetail() {
@@ -55,6 +56,7 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '100px',
+              sortable: true,
             },
             {
               name: 'Prod.ID',
@@ -62,21 +64,25 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '100px',
+              sortable: true,
             },
             {
               name: 'Product',
               selector: (row: TableDataType) => row.product_name,
               grow: 1,
+              sortable: true,
             },
             {
               name: 'Manufacturer',
               selector: (row: TableDataType) => row.manufacturer_name,
               grow: 1,
+              sortable: true,
             },
             {
               name: 'Vendor',
               selector: (row: TableDataType) => row.vendor_name,
               grow: 1,
+              sortable: true,
             },
 
             {
@@ -85,6 +91,7 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '100px',
+              sortable: true,
             },
             {
               name: 'S.T.P',
@@ -92,6 +99,7 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '100px',
+              sortable: true,
             },
             {
               name: 'Discount %',
@@ -99,6 +107,7 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '100px',
+              sortable: true,
             },
             {
               name: 'Order Type',
@@ -106,13 +115,25 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '100px',
+              sortable: true,
             },
             {
               name: 'Order Amount',
-              selector: (row: TableDataType) => row.total_amount,
+              selector: (row: TableDataType) =>
+                (+(+row.total_amount).toFixed(2)).toLocaleString(),
               grow: 0,
               center: true,
               width: '120px',
+              sortable: true,
+            },
+            {
+              name: 'T.P',
+              selector: (row: TableDataType) =>
+                (+row.trade_price).toLocaleString(),
+              grow: 0,
+              center: true,
+              width: '120px',
+              sortable: true,
             },
             {
               name: 'Created By',
@@ -120,26 +141,29 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '150px',
+              sortable: true,
             },
             {
               name: 'Created at',
               selector: (row: TableDataType) => {
                 const mom = moment(row.created_at);
-                return mom.format('DD-MM-YYYY | HH:mm:ss');
+                return mom.format('DD-MM-YYYY');
               },
               grow: 0,
               center: true,
               width: '150px',
+              sortable: true,
             },
             {
               name: 'Exp. Delivery Date',
               selector: (row: TableDataType) => {
                 const mom = moment(row.expected_delivery_date);
-                return mom.format('DD-MM-YYYY | HH:mm:ss');
+                return mom.format('DD-MM-YYYY');
               },
               grow: 0,
               center: true,
               width: '150px',
+              sortable: true,
             },
             {
               name: 'Status',
@@ -147,6 +171,7 @@ export default function PurchaseOrderDetail() {
               grow: 0,
               center: true,
               width: '110px',
+              sortable: true,
             },
           ]}
         />

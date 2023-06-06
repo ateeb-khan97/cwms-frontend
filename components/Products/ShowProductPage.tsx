@@ -208,6 +208,7 @@ function Table() {
             grow: 0,
             width: '96px',
             center: true,
+            sortable: true,
           },
           {
             name: 'Discounted Price',
@@ -221,6 +222,7 @@ function Table() {
             selector: (row: any) => row.maximum_retail_price,
             grow: 0,
             width: '80px',
+            sortable: true,
             center: true,
           },
           {
@@ -235,6 +237,7 @@ function Table() {
             selector: (row: any) => row.quantity,
             grow: 0,
             width: '86px',
+            sortable: true,
             center: true,
           },
           {
@@ -250,6 +253,22 @@ function Table() {
             ),
             grow: 0,
             width: '100px',
+            center: true,
+          },
+          {
+            name: 'User Name',
+            selector: (row: any) => row.user_name,
+            grow: 0,
+            width: '86px',
+            sortable: true,
+            center: true,
+          },
+          {
+            name: 'User ID',
+            selector: (row: any) => row.user_id,
+            grow: 0,
+            width: '86px',
+            sortable: true,
             center: true,
           },
           {

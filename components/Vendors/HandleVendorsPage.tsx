@@ -10,7 +10,7 @@ import {
   TextInput,
   TransferList,
 } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DateInput, DatePicker } from '@mantine/dates';
 import { useForm } from '@mantine/form';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DualListBoxComponent from 'components/Shared/DualListBoxComponent';
@@ -277,7 +277,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         type={'text'}
         {...form.getInputProps('cnic')}
       />
-      <DatePicker
+      <DateInput
         className="w-[31%]"
         placeholder="Pick CNIC Expiry Date"
         size="md"
@@ -289,9 +289,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
       <Radio.Group
         className="w-[31%]"
         name="tax_status"
-        orientation="vertical"
         label="Select Tax Status"
-        spacing="xs"
         size="md"
         withAsterisk
         {...form.getInputProps('tax_status')}
@@ -302,9 +300,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
       <Radio.Group
         className="w-[31%]"
         name="drug_sales_license"
-        orientation="vertical"
         label="Select Drug Sale License"
-        spacing="xs"
         size="md"
         withAsterisk
         {...form.getInputProps('drug_sales_license')}
@@ -315,9 +311,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
       <Radio.Group
         className="w-[31%]"
         name="tax_exemption"
-        orientation="vertical"
         label="Select Tax Exemption"
-        spacing="xs"
         size="md"
         withAsterisk
         {...form.getInputProps('tax_exemption')}
@@ -325,7 +319,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         <Radio value="yes" label="Yes" />
         <Radio value="no" label="No" />
       </Radio.Group>
-      <DatePicker
+      <DateInput
         className="w-[47%]"
         placeholder="Pick Tax Exemption Validity"
         size="md"

@@ -330,10 +330,7 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
 
           <Radio.Group
             className="w-[31%]"
-            orientation="vertical"
             label="Select Discount Type"
-            spacing="xs"
-            offset="md"
             size="md"
             {...form.getInputProps('discount_type')}
           >

@@ -9,6 +9,7 @@ type axiosParams = {
   urlPath: string;
   data?: any;
   params?: any;
+  token?: string;
 };
 type axiosReturnType = {
   status: number;
@@ -22,13 +23,14 @@ export default async function axiosFunction({
   method = 'GET',
   data = {},
   params = {},
+  token = undefined,
 }: axiosParams): Promise<axiosReturnType> {
   const url = process.env.NEXT_PUBLIC_THIS_URL + urlPath;
   var config: AxiosRequestConfig = {
     method: method,
     url: url,
     headers: {
-      Authorization: `Bearer ${getCookie('token')}`,
+      Authorization: `Bearer ${token || getCookie('token')}`,
       'X-Custom-Header': JSON.stringify({
         acc_no: getCookie('acc_no'),
         loc_no: getCookie('loc_no'),

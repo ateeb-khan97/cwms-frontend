@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
@@ -8,6 +8,9 @@ import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import { ReceiveType } from 'modules/Inbound/receiveType';
 import useReceiveData from 'modules/Inbound/useReceivedData';
+import { BsPrinter } from 'react-icons/bs';
+import { modals } from '@mantine/modals';
+import { useRef } from 'react';
 //
 function Header() {
   return (
@@ -33,7 +36,7 @@ function Table() {
     });
     const message = response.status == 200 ? 'Success' : 'Failed';
     customNotification({
-      message: response.message,
+      message: 'Success',
       title: message,
     });
   }
@@ -49,8 +52,57 @@ function Table() {
     window.open('/barcode');
   };
   //
+  const poIdRef = useRef<HTMLInputElement>(null);
+  function printHandler(e: React.SyntheticEvent) {
+    e.preventDefault();
+    const id = poIdRef.current?.value;
+    window.open('/invoice/grn-invoice/' + id);
+    modals.closeAll();
+  }
+  const openPrintModal = () => {
+    modals.open({
+      id: 'good-receive-modal',
+      title: 'Print Good Receive',
+      centered: true,
+      children: (
+        <>
+          <form onSubmit={printHandler} className="flex items-center gap-5">
+            <TextInput
+              placeholder="Enter PO ID"
+              required
+              autoFocus
+              maxLength={4}
+              minLength={4}
+              ref={poIdRef}
+              className="w-full"
+              size="xs"
+              pattern="[0-9]+"
+            />
+            <Button
+              compact
+              type="submit"
+              className="bg-red-500 hover:bg-red-900"
+            >
+              Print
+            </Button>
+          </form>
+        </>
+      ),
+    });
+    setTimeout(() => {
+      poIdRef.current?.focus();
+    }, 100);
+  };
+  //
   return (
-    <>
+    <section>
+      <Button
+        onClick={openPrintModal}
+        leftIcon={<BsPrinter />}
+        className="mb-2 ml-auto mr-5 mt-5 block bg-red-500 hover:bg-red-900"
+      >
+        Print
+      </Button>
       {loading ? (
         <div className="flex w-[100%] justify-center p-28">
           <Loader />
@@ -112,14 +164,12 @@ function Table() {
                 row.batch_number ? row.batch_number : '-',
               grow: 0,
               center: true,
-              width: '100px',
             },
             {
               name: 'Batch. Exp.',
               selector: (row: ReceiveType) => row.batch_expiry.substring(0, 10),
               grow: 0,
               center: true,
-              width: '100px',
             },
             {
               name: 'FOC',
@@ -131,10 +181,21 @@ function Table() {
             {
               name: 'Inward Date',
               center: true,
-              width: '170px',
               grow: 0,
               cell: (row: ReceiveType) =>
-                row.inward_date == null ? '-' : row.inward_date,
+                row.inward_date?.toString().substring(0, 10) || '-',
+            },
+            {
+              name: 'User ID',
+              center: true,
+              grow: 0,
+              cell: (row: ReceiveType) => row.user_id || '-',
+            },
+            {
+              name: 'User Name',
+              center: true,
+              grow: 0,
+              cell: (row: ReceiveType) => row.user_name || '-',
             },
             {
               name: 'Actions',
@@ -182,7 +243,7 @@ function Table() {
           ]}
         />
       )}
-    </>
+    </section>
   );
 }
 //

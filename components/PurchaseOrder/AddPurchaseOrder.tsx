@@ -183,7 +183,7 @@ export default function AddPurchaseOrder() {
   const clearFunction = () => {
     setFormData({
       addition_terms: '',
-      delivery_location: '',
+      delivery_location: '1',
       expected_delivery_data: new Date().toString(),
       order_type: '',
       vendor: '',

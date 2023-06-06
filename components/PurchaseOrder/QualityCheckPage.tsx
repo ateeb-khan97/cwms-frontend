@@ -1,6 +1,7 @@
 'use client';
 
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
+import { modals } from '@mantine/modals';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
@@ -8,7 +9,7 @@ import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import useGrnData from 'modules/Grn/useGrnData';
 import useReceiveData from 'modules/Inbound/useReceivedData';
-import React from 'react';
+import React, { useRef } from 'react';
 
 //
 function Header() {
@@ -23,6 +24,8 @@ function Header() {
 //
 var loading = false;
 function Table() {
+  const commentRef = useRef<HTMLInputElement>(null);
+
   const { setReceiveData } = useReceiveData();
   const [grnData, setGrnData] = React.useState<any[]>([]);
   const [btnDisable, setBtnDisable] = React.useState<boolean>(false);
@@ -46,7 +49,7 @@ function Table() {
     await axiosFunction({
       method: 'POST',
       urlPath: url,
-      data: row,
+      data: { ...row, reject_comment: commentRef.current?.value },
     });
     //
     customNotification({
@@ -55,6 +58,48 @@ function Table() {
     grnFetcher();
     setBtnDisable(false);
     status ? setReceiveData([]) : null;
+  };
+  //
+  function RejectSubmit(row: any) {
+    actionHandler(row, false);
+    modals.closeAll();
+  }
+  const openRejectModal = (row: any) => {
+    modals.open({
+      id: 'good-receive-modal',
+      title: 'Enter Comment',
+      centered: true,
+      children: (
+        <>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              RejectSubmit(row);
+            }}
+            className="flex items-center gap-5"
+          >
+            <TextInput
+              placeholder="Enter Comment..."
+              required
+              autoFocus
+              ref={commentRef}
+              className="w-full"
+              size="xs"
+            />
+            <Button
+              compact
+              type="submit"
+              className="bg-red-500 hover:bg-red-900"
+            >
+              Reject
+            </Button>
+          </form>
+        </>
+      ),
+    });
+    setTimeout(() => {
+      commentRef.current?.focus();
+    }, 100);
   };
   //
   return (
@@ -189,7 +234,7 @@ function Table() {
                     radius={'xs'}
                     color={'red'}
                     compact
-                    onClick={() => actionHandler(row, false)}
+                    onClick={() => openRejectModal(row)}
                   >
                     Reject
                   </Button>

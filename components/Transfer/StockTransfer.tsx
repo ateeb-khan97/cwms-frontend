@@ -2,7 +2,7 @@
 //
 import React from 'react';
 import { Button, Select, TextInput } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DateInput, DatePicker } from '@mantine/dates';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import customNotification from 'functions/customNotification';
 import axiosFunction from 'functions/axiosFunction';
@@ -308,7 +308,7 @@ function From() {
               };
             })}
           />
-          <DatePicker
+          <DateInput
             ref={expectedDeliveryRef}
             placeholder="Select Date"
             label="Expected Delivery Date"

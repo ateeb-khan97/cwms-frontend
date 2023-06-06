@@ -1,6 +1,6 @@
 'use client';
 //
-import { showNotification } from '@mantine/notifications';
+import { notifications, showNotification } from '@mantine/notifications';
 import { MdCheck, MdClose } from 'react-icons/md';
 // types
 type TitleType = 'Success' | 'Failed';
@@ -16,10 +16,9 @@ export default function customNotification({
   //
   const isSuccess: boolean = title == 'Success';
   //
-  return showNotification({
+  return notifications.show({
     message: message,
     title: title,
-    disallowClose: true,
     autoClose: 3000,
     color: isSuccess ? 'green' : 'red',
     icon: isSuccess ? <MdCheck /> : <MdClose />,

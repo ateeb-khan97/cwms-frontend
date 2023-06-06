@@ -20,4 +20,6 @@ export type ReceiveType = {
   trade_price: string;
   uom: string;
   updated_at: string;
+  user_id: string;
+  user_name: string;
 };

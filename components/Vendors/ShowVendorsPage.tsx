@@ -103,6 +103,27 @@ function Table() {
               center: true,
             },
             {
+              name: 'NTN',
+              selector: (row: any) => row.ntn,
+              grow: 0,
+              width: '100px',
+              center: true,
+            },
+            {
+              name: 'User ID',
+              selector: (row: any) => row.user_id,
+              grow: 0,
+              width: '100px',
+              center: true,
+            },
+            {
+              name: 'User Name',
+              selector: (row: any) => row.user_name,
+              grow: 0,
+              width: '100px',
+              center: true,
+            },
+            {
               name: 'Status',
               selector: (row: any) => (
                 <span
@@ -153,7 +174,7 @@ export default function ShowVendorsPage() {
             Here you can manage your all Vendors!
           </p>
           <Link
-            className="rounded-md bg-red-500 py-2 px-5 text-white transition-all hover:scale-110 hover:bg-red-900"
+            className="rounded-md bg-red-500 px-5 py-2 text-white transition-all hover:scale-110 hover:bg-red-900"
             href={'/dashboard/vendors/add_vendor'}
           >
             Add Vendor

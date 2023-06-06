@@ -130,6 +130,20 @@ function Table() {
               width: '156px',
             },
             {
+              name: 'User',
+              selector: (row: any) => row.user_name,
+              grow: 0,
+              center: true,
+              sortable: false,
+            },
+            {
+              name: 'User ID',
+              selector: (row: any) => row.user_id,
+              grow: 0,
+              center: true,
+              sortable: false,
+            },
+            {
               name: 'Status',
               selector: (row: any) => row.order_status,
               grow: 0,

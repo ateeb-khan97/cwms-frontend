@@ -24,4 +24,6 @@ export type PurchaseOrderType = {
   updated_at?: string;
   vendor_id?: number;
   vendor_name?: string;
+  user_id: string;
+  user_name: string;
 };

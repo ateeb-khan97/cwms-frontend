@@ -1,6 +1,6 @@
 'use client';
 import { Select, TextInput } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { DateInput, DatePicker } from '@mantine/dates';
 import axiosFunction from 'functions/axiosFunction';
 //
 import React from 'react';
@@ -47,6 +47,7 @@ export default function Form({
       method: 'POST',
       data: { ids },
     }).then((res) => res.data);
+
     const product = response.map((each_prod, index) => {
       return {
         id: each_prod.id,
@@ -55,8 +56,8 @@ export default function Form({
         index,
         disabled: true,
         foc: false,
-        trade_price: '0',
-        trade_discount: '0',
+        trade_price: each_prod.trade_price || '0',
+        trade_discount: each_prod.discount || '0',
         selling_unit:
           each_prod.product_conversions[2]?.selling_unit ||
           each_prod.product_conversions[1].selling_unit,
@@ -107,7 +108,7 @@ export default function Form({
             };
           })}
         />
-        <DatePicker
+        <DateInput
           className="w-[47%]"
           placeholder="Select Date"
           label="Expected Delivery Date"

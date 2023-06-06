@@ -24,7 +24,7 @@ const data = {
   selling_unit: [['Carton'], ['Box', 'Pieces'], ['Pieces', 'Strips']],
   item_release_level: ['POS', 'ECOM', 'Both'],
   price_levels: ['Special Sale', 'Promotion'],
-  stock_nature: ['Stock / Non Stock', 'Internal Consumption'],
+  stock_nature: ['Stock', 'Non Stock', 'Internal Consumption'],
   bar_code: ['QR Code', '2D Code', '1D Code'],
   item_storage_location: ['Aisle', 'Racks', 'Shelf Level'],
   item_tracking_level: ['Batch', 'Expiry'],

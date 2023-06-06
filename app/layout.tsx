@@ -5,7 +5,7 @@ import React from 'react';
 //
 import { RecoilRoot } from 'recoil';
 import { MantineProvider } from '@mantine/core';
-import { NotificationsProvider } from '@mantine/notifications';
+import { Notifications } from '@mantine/notifications';
 import { ModalsProvider } from '@mantine/modals';
 //
 export default function RootLayout({
@@ -17,11 +17,10 @@ export default function RootLayout({
     <html>
       <RecoilRoot>
         <MantineProvider withNormalizeCSS withGlobalStyles>
-          <NotificationsProvider>
-            <ModalsProvider>
-              <body>{children}</body>
-            </ModalsProvider>
-          </NotificationsProvider>
+          <Notifications />
+          <ModalsProvider>
+            <body>{children}</body>
+          </ModalsProvider>
         </MantineProvider>
       </RecoilRoot>
     </html>
