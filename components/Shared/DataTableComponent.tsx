@@ -6,6 +6,7 @@ import { Button, TextInput } from '@mantine/core';
 import {
   PaginationChangePage,
   PaginationChangeRowsPerPage,
+  SortFunction,
 } from 'react-data-table-component/dist/src/DataTable/types';
 import Loader from './Loader';
 import { MdDownload } from 'react-icons/md';
@@ -83,6 +84,8 @@ type Props = {
   progressPending?: boolean;
   desc?: boolean;
   children?: React.ReactNode;
+  sortFunction?: SortFunction<any>;
+  onSort?: (col: any, orderBy: 'asc' | 'desc') => void;
 };
 //
 type FilterProps = {
@@ -129,6 +132,8 @@ const DataTableComponent = ({
   progressPending,
   desc,
   children,
+  sortFunction,
+  onSort,
 }: Props) => {
   const [filterText, setFilterText] = React.useState('');
   const [resetPaginationToggle, setResetPaginationToggle] =
@@ -226,17 +231,19 @@ const DataTableComponent = ({
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
       <section className="flex gap-5">
-        <Export onExport={() => downloadCSV(data)} />
         {children ? (
           children
         ) : (
-          <FilterComponent
-            title={title}
-            onFilter={(e: any) => {
-              setFilterText(e.target.value);
-            }}
-            filterText={filterText}
-          />
+          <>
+            <Export onExport={() => downloadCSV(data)} />
+            <FilterComponent
+              title={title}
+              onFilter={(e: any) => {
+                setFilterText(e.target.value);
+              }}
+              filterText={filterText}
+            />
+          </>
         )}
       </section>
     );
@@ -245,6 +252,7 @@ const DataTableComponent = ({
   return (
     <>
       <DataTable
+        onSort={onSort}
         title={title}
         columns={columns}
         data={filteredItems}
@@ -272,6 +280,7 @@ const DataTableComponent = ({
         clearSelectedRows={clearSelectedRows}
         onRowClicked={onRowClick}
         progressPending={progressPending}
+        sortFunction={sortFunction}
         progressComponent={
           <div className="flex h-[150px] items-center justify-center">
             <Loader />

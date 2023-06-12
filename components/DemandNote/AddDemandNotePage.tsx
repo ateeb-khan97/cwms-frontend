@@ -3,10 +3,14 @@
 import { Autocomplete, Button, Select, TextInput } from '@mantine/core';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
+import { setCookie } from 'cookies-next';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import Validator from 'functions/validationFunctions';
+import Link from 'next/link';
 import React from 'react';
+import { BiSearch } from 'react-icons/bi';
+import { BsFilePdfFill } from 'react-icons/bs';
 import { MdOutlineDeleteOutline } from 'react-icons/md';
 
 //
@@ -26,14 +30,58 @@ function DemandTable({
   deleteHandler: (id: string) => void;
 }) {
   //
+  const [filteredData, setFilteredData] = React.useState(demandProducts);
+  const [searchTerm, setSearchTerm] = React.useState('');
+  React.useEffect(() => {
+    setFilteredData(demandProducts);
+  }, [demandProducts.length]);
+  //
+  const filterData = (value: string) => {
+    const filtered = demandProducts.filter((item) => {
+      return Object.values(item).some(
+        (val) =>
+          typeof val === 'string' &&
+          val.toLowerCase().includes(value.toLowerCase()),
+      );
+    });
+    setFilteredData(filtered);
+  };
+  //
+  const handleInputChange = (event: any) => {
+    setSearchTerm(event.target.value);
+    filterData(event.target.value);
+  };
   //
   return (
     <>
       <div className="border-y p-5 font-semibold text-gray-500 ">
         <h1 className="text-xl">Demand Cart</h1>
       </div>
+      <header className="ml-auto flex w-96 gap-5 p-5">
+        <Link
+          onClick={() => {
+            setCookie('demandNoteDate', JSON.stringify(demandProducts));
+          }}
+          target="_blank"
+          href={'/invoice/demandnote-invoice'}
+        >
+          <Button
+            className="bg-red-500 transition-all hover:bg-red-900"
+            leftIcon={<BsFilePdfFill />}
+          >
+            PDF
+          </Button>
+        </Link>
+        <TextInput
+          value={searchTerm}
+          onChange={handleInputChange}
+          placeholder="Search"
+          icon={<BiSearch />}
+        />
+      </header>
       <DataTableComponent
-        data={demandProducts}
+        children={<></>}
+        data={filteredData}
         columns={[
           {
             name: 'Prod.ID',

@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosRequestConfig, ResponseType } from 'axios';
 import { getCookie, setCookie } from 'cookies-next';
 import customNotification from './customNotification';
 // types
@@ -10,6 +10,7 @@ type axiosParams = {
   data?: any;
   params?: any;
   token?: string;
+  responseType?: ResponseType;
 };
 type axiosReturnType = {
   status: number;
@@ -24,6 +25,7 @@ export default async function axiosFunction({
   data = {},
   params = {},
   token = undefined,
+  responseType = undefined,
 }: axiosParams): Promise<axiosReturnType> {
   const url = process.env.NEXT_PUBLIC_THIS_URL + urlPath;
   var config: AxiosRequestConfig = {
@@ -39,6 +41,9 @@ export default async function axiosFunction({
     },
     data: data,
   };
+  if (responseType) {
+    config['responseType'] = responseType;
+  }
   //
   if (method == 'GET') config['params'] = params;
   //

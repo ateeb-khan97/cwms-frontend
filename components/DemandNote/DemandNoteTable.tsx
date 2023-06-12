@@ -1,11 +1,13 @@
 'use client';
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import { useRouter } from 'next/navigation';
 //
 import React from 'react';
+import { BiSearch } from 'react-icons/bi';
+import { BsFilePdfFill } from 'react-icons/bs';
 //
 interface TableDataType {
   assigned_from: string;
@@ -33,6 +35,8 @@ export default function DemandNoteTable() {
     localStorage.setItem('demand_id', id.toString());
     router.push('/dashboard/demand_note/details_demand_note');
   };
+  //
+
   //
   React.useEffect(() => {
     dataFetcher();

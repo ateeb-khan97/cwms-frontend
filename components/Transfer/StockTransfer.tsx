@@ -8,7 +8,11 @@ import customNotification from 'functions/customNotification';
 import axiosFunction from 'functions/axiosFunction';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import { RiDeleteBin2Line } from 'react-icons/ri';
-import { getCookie } from 'cookies-next';
+import { getCookie, setCookie } from 'cookies-next';
+import { FiSearch } from 'react-icons/fi';
+import { AiFillFilePdf } from 'react-icons/ai';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 //
 type ScannedType = {
   product_id: number;
@@ -77,6 +81,30 @@ function Table({
   ScannedProducts: ScannedType[];
   removeFunction: (bar_code: string) => void;
 }) {
+  const router = useRouter();
+  const [searchText, setSearchText] = React.useState<string>('');
+  const [filteredData, setFilteredData] =
+    React.useState<ScannedType[]>(ScannedProducts);
+  //
+  React.useEffect(() => {
+    setFilteredData(ScannedProducts);
+  }, [ScannedProducts.length]);
+  //
+  const handleInputChange = (event: any) => {
+    setSearchText(event.target.value);
+    filterData(event.target.value);
+  };
+  const filterData = (value: string) => {
+    const filtered = ScannedProducts.filter((item) => {
+      return Object.values(item).some(
+        (val) =>
+          typeof val === 'string' &&
+          val.toLowerCase().includes(value.toLowerCase()),
+      );
+    });
+    setFilteredData(filtered);
+  };
+  //
   return (
     <>
       <div className="border-y p-5 ">
@@ -84,8 +112,31 @@ function Table({
           Stock Transfer Cart
         </h1>
       </div>
+      <div className="ml-auto flex w-1/2 gap-5 p-5">
+        <Link target="_blank" href={'/invoice/transfer-invoice'}>
+          <Button
+            disabled={ScannedProducts.length == 0}
+            onClick={() => {
+              setCookie('transferData', JSON.stringify(ScannedProducts));
+            }}
+            className="bg-red-500 transition-all hover:bg-red-900"
+            leftIcon={<AiFillFilePdf />}
+          >
+            PDF
+          </Button>
+        </Link>
+        <TextInput
+          className="w-full"
+          placeholder="Search"
+          value={searchText}
+          onChange={handleInputChange}
+          icon={<FiSearch />}
+        />
+      </div>
       <DataTableComponent
-        data={ScannedProducts}
+        children={<></>}
+        keyField="bar_code"
+        data={filteredData}
         columns={[
           {
             name: 'Prod.ID',
@@ -220,13 +271,12 @@ function From() {
       method: 'POST',
       data: { scannedProduct },
     });
-    console.log(response.data);
-
     if (response.data.length == 0) {
-      return customNotification({
+      customNotification({
         message: response.message,
         title: 'Failed',
       });
+      return null;
     }
     setScannedProducts((pre) => [
       ...pre,
@@ -309,6 +359,7 @@ function From() {
             })}
           />
           <DateInput
+            minDate={new Date()}
             ref={expectedDeliveryRef}
             placeholder="Select Date"
             label="Expected Delivery Date"

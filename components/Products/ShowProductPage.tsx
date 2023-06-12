@@ -11,6 +11,7 @@ import { useRouter } from 'next/navigation';
 //
 import React from 'react';
 import { AiFillEdit, AiOutlineSearch } from 'react-icons/ai';
+import { MdFileDownload } from 'react-icons/md';
 //
 function Header() {
   return (
@@ -27,8 +28,31 @@ type FilterProps = {
   setValue: (value: string) => void;
 };
 const FilterComponent = ({ setValue, value }: FilterProps) => {
+  async function downloadHandler() {
+    await axiosFunction({
+      urlPath: '/product/download',
+      responseType: 'blob',
+    }).then((response: any) => {
+      console.log(response);
+
+      const url = window.URL.createObjectURL(new Blob([response]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', 'product-data.csv');
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    });
+  }
   return (
-    <>
+    <div className="flex gap-5">
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdFileDownload />}
+        className="bg-red-500 transition-all hover:bg-red-900"
+      >
+        Download
+      </Button>
       <TextInput
         icon={<AiOutlineSearch />}
         type="text"
@@ -36,7 +60,7 @@ const FilterComponent = ({ setValue, value }: FilterProps) => {
         defaultValue={value}
         onChange={(event) => setValue(event.currentTarget.value)}
       />
-    </>
+    </div>
   );
 };
 //
@@ -49,6 +73,8 @@ function Table() {
   const [productData, setProductData] = React.useState<any[]>([]);
   const [totalRows, setTotalRows] = React.useState<number>(0);
   const [perPage, setPerPage] = React.useState<number>(10);
+  const [columnName, setColumnName] = React.useState<string>('id');
+  const [orderBy, setOrderBy] = React.useState<string>('desc');
   //
   const fetchProduct = async (page: number) => {
     setLoading(true);
@@ -59,6 +85,8 @@ function Table() {
         page,
         perPage,
         searchValue: value,
+        columnName,
+        orderBy,
       },
     });
     setProductData(response.data[0].rows);
@@ -76,6 +104,8 @@ function Table() {
         page,
         perPage: newPerPage,
         searchValue: value,
+        columnName,
+        orderBy,
       },
     });
     setProductData(response.data[0].rows);
@@ -85,7 +115,7 @@ function Table() {
   //
   React.useEffect(() => {
     fetchProduct(1);
-  }, [value]);
+  }, [value, columnName, orderBy]);
   //
   const updateHandler = async (id: number) => {
     var category: any[] = [];
@@ -174,6 +204,10 @@ function Table() {
   return (
     <>
       <DataTableComponent
+        onSort={(col, orderBy) => {
+          setColumnName(col.alias);
+          setOrderBy(orderBy);
+        }}
         desc={true}
         progressPending={loading}
         paginationServer={true}
@@ -184,6 +218,8 @@ function Table() {
         columns={[
           {
             name: 'ID',
+            alias: 'id',
+            sortable: true,
             selector: (row: any) => row.id,
             grow: 0,
             center: true,
@@ -191,6 +227,7 @@ function Table() {
           },
           {
             name: 'Product Name',
+            alias: 'product_name',
             selector: (row: any) => row.product_name,
             grow: 2,
             sortable: true,
@@ -199,11 +236,11 @@ function Table() {
             name: 'Manufacturer Name',
             selector: (row: any) => row.manufacturer.manufacturer_name,
             grow: 2,
-            sortable: true,
           },
 
           {
             name: 'Trade Price',
+            alias: 'trade_price',
             selector: (row: any) => row.trade_price,
             grow: 0,
             width: '96px',
@@ -219,6 +256,7 @@ function Table() {
           },
           {
             name: 'MRP',
+            alias: 'maximum_retail_price',
             selector: (row: any) => row.maximum_retail_price,
             grow: 0,
             width: '80px',
@@ -227,6 +265,7 @@ function Table() {
           },
           {
             name: 'Stock Nature',
+            alias: 'stock_nature',
             selector: (row: any) => row.stock_nature,
             grow: 0,
             width: '96px',
@@ -234,6 +273,7 @@ function Table() {
           },
           {
             name: 'Quantity',
+            alias: 'quantity',
             selector: (row: any) => row.quantity,
             grow: 0,
             width: '86px',
