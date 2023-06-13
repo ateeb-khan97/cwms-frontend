@@ -1,7 +1,9 @@
 'use client';
 
 import DataTableComponent from 'components/Shared/DataTableComponent';
+import axiosFunction from 'functions/axiosFunction';
 import moment from 'moment';
+import { useEffect, useState } from 'react';
 
 //
 type TableType = {
@@ -20,11 +22,22 @@ type TableType = {
   tax_code: string;
   aging_time: string;
 };
-export default function StockBatchReport({
-  tableData,
-}: {
-  tableData: TableType[];
-}) {
+//
+
+//
+export default function StockBatchReport() {
+  const [tableData, setTableData] = useState<TableType[]>([]);
+  //
+  async function dataFetchFunction() {
+    const response = await axiosFunction({
+      urlPath: '/inward/find_for_batch_report',
+    });
+    setTableData(response.data);
+  }
+  //
+  useEffect(() => {
+    dataFetchFunction();
+  }, []);
   return (
     <>
       <DataTableComponent

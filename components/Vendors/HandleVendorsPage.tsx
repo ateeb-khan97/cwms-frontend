@@ -53,11 +53,17 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
   var localData: any = {};
   if (typeof window != 'undefined' && isUpdate) {
     localData = JSON.parse(localStorage.getItem('vendor_data')!);
+    console.log(localData);
   }
   const form = useForm({
     validateInputOnChange: true,
     initialValues: isUpdate
-      ? { ...localData }
+      ? {
+          ...localData,
+          tax_exemption_validity:
+            localData.tax_exemption_validity || new Date(),
+          cnic_expiry_date: localData.cnic_expiry_date || new Date(),
+        }
       : {
           status: false,
           vendor_name: '',
@@ -327,7 +333,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         disabled={form.getInputProps('tax_exemption').value === 'no'}
         required={form.getInputProps('tax_exemption').value === 'yes'}
         withAsterisk={form.getInputProps('tax_exemption').value === 'yes'}
-        {...form.getInputProps('tax_exemption_validity')}
+        // {...form.getInputProps('tax_exemption_validity')}
       />
       <Select
         className="w-[47%]"
