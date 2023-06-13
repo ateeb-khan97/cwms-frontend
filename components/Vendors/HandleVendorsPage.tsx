@@ -60,9 +60,8 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     initialValues: isUpdate
       ? {
           ...localData,
-          tax_exemption_validity:
-            localData.tax_exemption_validity || new Date(),
-          cnic_expiry_date: localData.cnic_expiry_date || new Date(),
+          tax_exemption_validity: new Date(localData?.tax_exemption_validity),
+          cnic_expiry_date: new Date(localData?.cnic_expiry_date),
         }
       : {
           status: false,
