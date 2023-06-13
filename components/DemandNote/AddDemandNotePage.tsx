@@ -85,26 +85,26 @@ function DemandTable({
         columns={[
           {
             name: 'Prod.ID',
-            selector: (row: DemandProductType) => <>{row.id}</>,
+            cell: (row: DemandProductType) => <>{row.id}</>,
             center: true,
             grow: 0,
             width: '100px',
           },
           {
             name: 'Prod.Name',
-            selector: (row: DemandProductType) => <>{row.product_name}</>,
+            cell: (row: DemandProductType) => <>{row.product_name}</>,
             grow: 1,
           },
           {
             name: 'Qty',
-            selector: (row: DemandProductType) => <>{row.quantity}</>,
+            cell: (row: DemandProductType) => <>{row.quantity}</>,
             center: true,
             grow: 0,
             width: '100px',
           },
           {
             name: 'Action',
-            selector: (row: DemandProductType) => (
+            cell: (row: DemandProductType) => (
               <>
                 <Button
                   disabled={isDetails}

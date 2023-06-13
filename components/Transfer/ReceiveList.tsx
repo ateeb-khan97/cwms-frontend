@@ -48,19 +48,19 @@ export default function ReceiveList() {
           columns={[
             {
               name: 'Transfer.ID',
-              selector: (row: TransferType) => <>{row.id}</>,
+              cell: (row: TransferType) => <>{row.id}</>,
               center: true,
               grow: 0,
               width: '100px',
             },
             {
               name: 'Transfer.From',
-              selector: (row: TransferType) => <>{row.loc_name}</>,
+              cell: (row: TransferType) => <>{row.loc_name}</>,
               grow: 1,
             },
             {
               name: 'Expected Delivery Date',
-              selector: (row: TransferType) => (
+              cell: (row: TransferType) => (
                 <>{row.expected_arrival_date.toString().substring(0, 10)}</>
               ),
               center: true,
@@ -69,7 +69,7 @@ export default function ReceiveList() {
             },
             {
               name: 'Created At',
-              selector: (row: TransferType) => (
+              cell: (row: TransferType) => (
                 <>{row.created_at?.toString().substring(0, 10)}</>
               ),
               center: true,
@@ -78,14 +78,14 @@ export default function ReceiveList() {
             },
             {
               name: 'Transfer.Status',
-              selector: (row: TransferType) => <>{row.transfer_status}</>,
+              cell: (row: TransferType) => <>{row.transfer_status}</>,
               center: true,
               grow: 0,
               width: '120px',
             },
             {
               name: 'Actions',
-              selector: (row: TransferType) => {
+              cell: (row: TransferType) => {
                 return (
                   <>
                     <Button

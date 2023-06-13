@@ -243,6 +243,11 @@ export const sidebarLink: SidebarType[] = [
         label: 'Stock Detail Report',
         icon: <BiDetail />,
       },
+      {
+        href: '/dashboard/report/stock_batch_report',
+        label: 'Stock Batch Report',
+        icon: <BiDetail />,
+      },
     ],
   },
   {

@@ -222,7 +222,7 @@ function Table() {
             },
             {
               name: 'Barcode',
-              selector: (row: ReceiveType) => (
+              cell: (row: ReceiveType) => (
                 <>
                   <Button
                     onClick={() => qrGenerateFunction(row)}

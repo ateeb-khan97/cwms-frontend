@@ -217,7 +217,7 @@ function Table() {
         data={productData}
         columns={[
           {
-            name: 'ID',
+            name: 'ID', //@ts-ignore
             alias: 'id',
             sortable: true,
             selector: (row: any) => row.id,
@@ -226,7 +226,7 @@ function Table() {
             width: '76px',
           },
           {
-            name: 'Product Name',
+            name: 'Product Name', //@ts-ignore
             alias: 'product_name',
             selector: (row: any) => row.product_name,
             grow: 2,
@@ -239,7 +239,7 @@ function Table() {
           },
 
           {
-            name: 'Trade Price',
+            name: 'Trade Price', //@ts-ignore
             alias: 'trade_price',
             selector: (row: any) => row.trade_price,
             grow: 0,
@@ -255,7 +255,7 @@ function Table() {
             center: true,
           },
           {
-            name: 'MRP',
+            name: 'MRP', //@ts-ignore
             alias: 'maximum_retail_price',
             selector: (row: any) => row.maximum_retail_price,
             grow: 0,
@@ -264,7 +264,7 @@ function Table() {
             center: true,
           },
           {
-            name: 'Stock Nature',
+            name: 'Stock Nature', //@ts-ignore
             alias: 'stock_nature',
             selector: (row: any) => row.stock_nature,
             grow: 0,
@@ -273,6 +273,7 @@ function Table() {
           },
           {
             name: 'Quantity',
+            //@ts-ignore
             alias: 'quantity',
             selector: (row: any) => row.quantity,
             grow: 0,
@@ -282,7 +283,7 @@ function Table() {
           },
           {
             name: 'Status',
-            selector: (row: any) => (
+            cell: (row: any) => (
               <span
                 className={`font-semibold ${
                   row.status ? 'text-green-700' : 'text-red-700'

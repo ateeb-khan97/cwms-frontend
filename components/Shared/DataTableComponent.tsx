@@ -7,6 +7,7 @@ import {
   PaginationChangePage,
   PaginationChangeRowsPerPage,
   SortFunction,
+  TableColumn,
 } from 'react-data-table-component/dist/src/DataTable/types';
 import Loader from './Loader';
 import { MdDownload } from 'react-icons/md';
@@ -68,7 +69,7 @@ const customStyles = {
 };
 //
 type Props = {
-  columns: any;
+  columns: TableColumn<any>[];
   data: any;
   title?: string;
   selectableRows?: boolean;

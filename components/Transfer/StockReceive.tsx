@@ -52,7 +52,7 @@ function IssuanceTable({
 
               {
                 name: 'Qty',
-                selector: (row: ScannedProductsType) => row.quantity,
+                cell: (row: ScannedProductsType) => row.quantity,
                 grow: 0,
                 center: true,
                 width: '100px',

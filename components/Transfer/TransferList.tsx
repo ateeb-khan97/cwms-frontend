@@ -41,24 +41,26 @@ export default function TransferList() {
           columns={[
             {
               name: 'Transfer.ID',
-              selector: (row: TransferType) => <>{row.id}</>,
+              cell: (row: TransferType) => <>{row.id}</>,
               center: true,
               grow: 0,
               width: '100px',
+              compact: true,
+              wrap: true,
             },
             {
               name: 'Transfer.To',
-              selector: (row: TransferType) => <>{row.loc_to_name}</>,
+              cell: (row: TransferType) => <>{row.loc_to_name}</>,
               grow: 1,
             },
             {
               name: 'Transfer.From',
-              selector: (row: TransferType) => <>{row.loc_from_name}</>,
+              cell: (row: TransferType) => <>{row.loc_from_name}</>,
               grow: 1,
             },
             {
               name: 'Expected Delivery Date',
-              selector: (row: TransferType) => (
+              cell: (row: TransferType) => (
                 <>{row.expected_arrival_date.toString().substring(0, 10)}</>
               ),
               center: true,
@@ -67,7 +69,7 @@ export default function TransferList() {
             },
             {
               name: 'Created At',
-              selector: (row: TransferType) => (
+              cell: (row: TransferType) => (
                 <>{row.created_at?.toString().substring(0, 10)}</>
               ),
               center: true,
@@ -76,10 +78,17 @@ export default function TransferList() {
             },
             {
               name: 'Transfer.Status',
-              selector: (row: TransferType) => <>{row.transfer_status}</>,
+              cell: (row: TransferType) => <>{row.transfer_status}</>,
               center: true,
               grow: 0,
               width: '120px',
+            },
+            {
+              name: 'Created By',
+              cell: (row: any) => row.user_name || '',
+              center: true,
+              grow: 0,
+              width: '150px',
             },
           ]}
         />

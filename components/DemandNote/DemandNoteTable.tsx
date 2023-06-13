@@ -86,7 +86,7 @@ export default function DemandNoteTable() {
                 width: '100px',
               },
               {
-                selector: (row: TableDataType) => (
+                cell: (row: TableDataType) => (
                   <>
                     <Button
                       onClick={() => viewDetailsFunction(row.id)}
