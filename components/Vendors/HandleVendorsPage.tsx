@@ -53,7 +53,6 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
   var localData: any = {};
   if (typeof window != 'undefined' && isUpdate) {
     localData = JSON.parse(localStorage.getItem('vendor_data')!);
-    console.log(localData);
   }
   const form = useForm({
     validateInputOnChange: true,

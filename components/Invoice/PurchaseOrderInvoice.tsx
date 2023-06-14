@@ -33,6 +33,7 @@ const InvoiceComponent = () => {
     vendor_id: 0,
     vendor_name: '',
     purchase_order_detail: [],
+    additional_terms: '',
   });
   const [product, setProduct] = React.useState<any[]>([]);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -76,7 +77,14 @@ const InvoiceComponent = () => {
             <main className="w-[180mm]">
               <Header dataProp={purchaseOrder} />
               <Table product={product} />
+
               <Total purchaseOrder={purchaseOrder} />
+              {typeof purchaseOrder.additional_terms == 'string' && (
+                <div className="w-full p-5">
+                  <span className="font-bold">Additional Terms:</span>&nbsp;
+                  {purchaseOrder.additional_terms}
+                </div>
+              )}
             </main>
           </div>
           <div className="flex h-screen items-center justify-center">

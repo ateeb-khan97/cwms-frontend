@@ -47,6 +47,7 @@ export default async function axiosFunction({
   //
   if (method == 'GET') config['params'] = params;
   //
+
   try {
     const result: any = await axios(config);
     if (result.data.status == 401) {

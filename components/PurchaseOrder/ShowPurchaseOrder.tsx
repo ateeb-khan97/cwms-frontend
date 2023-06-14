@@ -9,7 +9,7 @@ import Link from 'next/link';
 import { ImBin2 } from 'react-icons/im';
 import { modals } from '@mantine/modals';
 import axiosFunction from 'functions/axiosFunction';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { MdPrint } from 'react-icons/md';
 
 //
@@ -23,7 +23,7 @@ function Header() {
   );
 }
 //
-function Table() {
+function Table({ userDesignation }: { userDesignation: string | null }) {
   const commentRef = React.useRef<HTMLInputElement>(null);
   const { loading, purchaseOrderData, setPurchaseOrderData } =
     usePurchaseOrderData();
@@ -153,10 +153,39 @@ function Table() {
             {
               name: 'Approve',
               cell: (row: any) => {
+                let disableApproveBtn = true;
+
+                if (row.total_amount <= 300000 && userDesignation == 'DMP') {
+                  disableApproveBtn = false;
+                }
+                if (
+                  row.total_amount > 300000 &&
+                  row.total_amount <= 1500000 &&
+                  userDesignation == 'LSC'
+                ) {
+                  disableApproveBtn = false;
+                }
+                if (
+                  row.total_amount > 1500000 &&
+                  row.total_amount <= 2000000 &&
+                  userDesignation == 'HOF'
+                ) {
+                  disableApproveBtn = false;
+                }
+                if (row.total_amount > 2000000 && userDesignation == 'CD') {
+                  disableApproveBtn = false;
+                }
+                if (row.order_status != 'Pending') {
+                  disableApproveBtn = true;
+                }
+
+                if (userDesignation == null) {
+                  disableApproveBtn = true;
+                }
                 return (
                   <>
                     <Button
-                      disabled={row.order_status != 'Pending'}
+                      disabled={disableApproveBtn}
                       compact
                       className="bg-[#002884]"
                       onClick={() => actionFunction(row)}
@@ -238,6 +267,14 @@ function Table() {
 }
 //
 export default function ShowPurchaseOrder() {
+  const [userDesignation, setUserDesignation] = useState<string | null>(null);
+  const userDesignationFetch = async () => {
+    const response = await axiosFunction({ urlPath: '/user/find_designation' });
+    setUserDesignation(response.data[0]);
+  };
+  useEffect(() => {
+    userDesignationFetch();
+  }, []);
   return (
     <section className="flex min-h-[100%] flex-col gap-10 p-7">
       <Header />
@@ -253,7 +290,7 @@ export default function ShowPurchaseOrder() {
             Add Purchase Order
           </Link>
         </div>
-        <Table />
+        <Table userDesignation={userDesignation} />
       </div>
     </section>
   );

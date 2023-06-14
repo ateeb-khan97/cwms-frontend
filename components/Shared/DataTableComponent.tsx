@@ -156,9 +156,7 @@ const DataTableComponent = ({
       let ctr = 0;
       keys.forEach((key) => {
         if (ctr > 0) result += columnDelimiter;
-
         result += item[key];
-
         ctr++;
       });
       result += lineDelimiter;

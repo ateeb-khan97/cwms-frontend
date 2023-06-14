@@ -7,12 +7,14 @@ import { CgNotes } from 'react-icons/cg';
 import {
   BsBookshelf,
   BsBoxSeam,
+  BsClipboardMinus,
   BsHddStackFill,
   BsListCheck,
   BsShop,
 } from 'react-icons/bs';
 import {
   MdNote,
+  MdOutlineAssignmentReturn,
   MdOutlinePrecisionManufacturing,
   MdUpload,
 } from 'react-icons/md';
@@ -172,6 +174,23 @@ export const sidebarLink: SidebarType[] = [
       //   label: 'Demand Note',
       //   icon: <MdNote />,
       // },
+    ],
+  },
+  {
+    label: 'Return',
+    hasChildren: true,
+    icon: <MdOutlineAssignmentReturn />,
+    children: [
+      {
+        href: '/dashboard/return',
+        label: 'Return',
+        icon: <BsClipboardMinus />,
+      },
+      {
+        href: '/dashboard/return/return_list',
+        label: 'Return List',
+        icon: <BiDetail />,
+      },
     ],
   },
   {
