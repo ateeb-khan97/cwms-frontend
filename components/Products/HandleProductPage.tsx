@@ -11,14 +11,13 @@ import {
   TextInput,
 } from '@mantine/core';
 import { ProductDropDownData } from 'modules/Products/productData';
-import React, { useEffect } from 'react';
+import React from 'react';
 import RichTextComponent from 'components/Shared/RichTextComponent';
 import { useRouter } from 'next/navigation';
 import axiosFunction from 'functions/axiosFunction';
 import DualListBoxComponent from 'components/Shared/DualListBoxComponent';
 import customNotification from 'functions/customNotification';
 import useProductData from 'modules/Products/useProductData';
-import Loader from 'components/Shared/Loader';
 //
 //
 export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
@@ -54,6 +53,7 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
     vendorFetcher();
   }, []);
   //
+  const [productImages, setProductImages]: any[] = React.useState([]);
   const [productTags, setProductTags]: any[] = React.useState([]);
   const [productGenericFormula, setProductGenericFormula]: any[] =
     React.useState([]);
@@ -112,6 +112,7 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
           margin: 0,
           purchasing_price: 0,
           productTags: [],
+          productImages: [],
           category: [],
           vendor: [],
           productGenericFormula: [],
@@ -673,6 +674,28 @@ export default function HandleProductPage({ isUpdate }: { isUpdate: boolean }) {
           }}
           {...form.getInputProps('productGenericFormula')}
         />
+
+        <MultiSelect
+          className="w-full"
+          size="md"
+          label="Product Images"
+          data={productImages}
+          placeholder="Select Product Tags"
+          searchable
+          creatable
+          required
+          withAsterisk
+          limit={3}
+          maxSelectedValues={3}
+          getCreateLabel={(query) => `+ Create ${query}`}
+          onCreate={(query) => {
+            const item = { value: query, label: query };
+            setProductImages((current: any) => [...current, item]);
+            return item;
+          }}
+          {...form.getInputProps('productImages')}
+        />
+
         <div className="w-[100%]">
           <label className="mantine-InputWrapper-label mantine-Select-label mantine-1js7218">
             SKU Description

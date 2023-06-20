@@ -17,6 +17,8 @@
     "singleQuote": true
   },
   "dependencies": {
+    "@ckeditor/ckeditor5-build-classic": "^38.0.1",
+    "@ckeditor/ckeditor5-react": "^6.0.0",
     "@emotion/react": "^11.11.0",
     "@emotion/server": "^11.11.0",
     "@mantine/core": "^6.0.13",
@@ -28,6 +30,7 @@
     "@mantine/notifications": "^6.0.13",
     "@mantine/rte": "5.10.4",
     "axios": "1.3.4",
+    "ckeditor5": "^38.0.1",
     "clsx": "1.2.1",
     "cookies-next": "2.1.1",
     "dayjs": "^1.11.8",

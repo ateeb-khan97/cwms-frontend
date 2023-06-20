@@ -1,23 +1,21 @@
 'use client';
-import dynamic from 'next/dynamic';
-const RichTextEditor = dynamic(() => import('@mantine/rte'), { ssr: false });
+import { CKEditor } from '@ckeditor/ckeditor5-react';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 //
-type Props = {
-  className?: string;
+interface PropsType {
   value: string;
-  onChange: (value: any) => void;
-};
+  onChange: (value: string) => void;
+}
 //
-export default function RichTextComponent(props: Props) {
+export default function RichTextComponent(props: PropsType) {
   return (
-    <RichTextEditor
-      {...props}
-      controls={[
-        ['bold', 'italic', 'underline'],
-        ['unorderedList', 'h1', 'h2', 'h3'],
-        ['sup', 'sub'],
-        ['alignLeft', 'alignCenter', 'alignRight'],
-      ]}
+    <CKEditor
+      editor={ClassicEditor}
+      data={props.value}
+      onChange={(event, editor) => {
+        const data = editor.getData();
+        props.onChange(data);
+      }}
     />
   );
 }
