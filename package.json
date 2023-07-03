@@ -2,7 +2,7 @@
   "private": true,
   "scripts": {
     "dev:start": "next dev --turbo",
-    "dev": "turbo dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "NODE_ENV=production node server.js",
     "start:prod": "next start",
