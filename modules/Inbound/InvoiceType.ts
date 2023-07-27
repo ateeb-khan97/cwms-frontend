@@ -14,4 +14,7 @@ export default interface GoodReceiveType {
   batch_number: string;
   batch_expiry: string;
   foc: boolean;
+  purchasing_price: string;
+  advance_income_tax: string;
+  gst_rate: string;
 }

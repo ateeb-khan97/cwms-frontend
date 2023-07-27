@@ -1,10 +1,10 @@
 import { Box, Button, Image, NavLink } from '@mantine/core';
 import { deleteCookie } from 'cookies-next';
+import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
-import { sidebarLink } from 'modules/Sidebar/sidebarLinks';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect } from 'react';
 //
 import { BiChevronRight } from 'react-icons/bi';
 // types
@@ -14,6 +14,15 @@ type PropType = {
 //
 function SidebarBody() {
   const [active, setActive] = React.useState<number>(0);
+  const [sidebarLink, setSidebarLink] = React.useState<any[]>([]);
+  async function sidebarDataFetch() {
+    const response = await axiosFunction({ urlPath: '/sidebar' });
+    setSidebarLink(response.data);
+  }
+  useEffect(() => {
+    sidebarDataFetch();
+  }, []);
+  //
   const data = sidebarLink.map((each_link, index) => {
     return each_link.hasChildren ? (
       <NavLink
@@ -25,7 +34,7 @@ function SidebarBody() {
         onClick={() => setActive(index)}
         color="indigo"
       >
-        {each_link.children!.map((each_child, child_index) => {
+        {each_link.children!.map((each_child: any, child_index: any) => {
           return (
             <Link key={child_index} href={each_child.href}>
               <NavLink label={each_child.label} icon={each_child.icon} />
