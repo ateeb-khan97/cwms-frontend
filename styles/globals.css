@@ -69,3 +69,7 @@
   border-radius: 4px;
   @apply scrollbar-thin;
 }
+
+.btn {
+  @apply rounded-md bg-red-500 px-5 py-1 text-white transition-all hover:bg-red-900;
+}

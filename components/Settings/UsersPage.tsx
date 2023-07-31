@@ -79,6 +79,21 @@ function Table() {
               width: '100px',
               center: true,
             },
+            {
+              cell: (row: any) => (
+                <>
+                  <Link
+                    className="btn"
+                    href={'/dashboard/users/update-user?id=' + row.id}
+                  >
+                    Edit
+                  </Link>
+                </>
+              ),
+              grow: 0,
+              width: '100px',
+              center: true,
+            },
           ]}
         />
       )}
@@ -96,8 +111,8 @@ export default function UsersPage() {
             Here you can manage your all Users!
           </p>
           <Link
-            className="rounded-md bg-red-500 py-2 px-5 text-white transition-all hover:scale-110 hover:bg-red-900"
-            href={'/dashboard/categories/add_category'}
+            className="rounded-md bg-red-500 px-5 py-2 text-white transition-all hover:scale-110 hover:bg-red-900"
+            href={'/dashboard/users/add-user'}
           >
             Add User
           </Link>
