@@ -89,7 +89,7 @@ export default function ProcessPickList() {
           <p>PickList - Date</p>
           <p>Location</p>
         </div>
-        <section className="flex max-h-56 w-full flex-col overflow-y-scroll scrollbar-none">
+        <section className="flex max-h-56 w-full flex-col overflow-y-scroll border border-gray-300 p-1 scrollbar-none">
           {pickListIds.length > 0 ? (
             pickListIds.map((each, key) => (
               <button
