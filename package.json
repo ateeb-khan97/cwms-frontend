@@ -37,7 +37,7 @@
     "moment": "2.29.4",
     "next": "latest",
     "react": "latest",
-    "react-barcode": "1.4.6",
+    "react-barcode": "^1.4.6",
     "react-data-table-component": "7.5.3",
     "react-dom": "latest",
     "react-dual-listbox": "5.0.2",

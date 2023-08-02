@@ -33,7 +33,12 @@ export default function BarcodeGenerator() {
         value.map((each_val: any, key: number) => {
           return (
             <div key={each_val + key}>
-              <Barcode value={each_val} />
+              <Barcode
+                value={each_val}
+                height={30}
+                width={1}
+                displayValue={false}
+              />
             </div>
           );
         })
