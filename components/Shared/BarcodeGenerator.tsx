@@ -33,8 +33,9 @@ export default function BarcodeGenerator() {
       ) : value.length > 0 ? (
         value.map((each_val: any, key: number) => {
           return (
-            <div key={each_val + key}>
+            <div className="mb-5 flex flex-col gap-2" key={each_val + key}>
               <QRCode value={each_val} height={30} width={0.8} />
+              <p>{each_val}</p>
             </div>
           );
         })
