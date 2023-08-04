@@ -42,6 +42,7 @@
     "react-dom": "latest",
     "react-dual-listbox": "5.0.2",
     "react-icons": "4.7.1",
+    "react-qr-code": "^2.0.11",
     "recoil": "0.7.6",
     "sharp": "0.31.3",
     "styled-components": "6.0.0-beta.2",

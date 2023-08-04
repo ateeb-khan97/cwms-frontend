@@ -3,6 +3,7 @@
 import React from 'react';
 import Barcode from 'react-barcode';
 import Loader from './Loader';
+import QRCode from 'react-qr-code';
 //
 export default function BarcodeGenerator() {
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -33,13 +34,7 @@ export default function BarcodeGenerator() {
         value.map((each_val: any, key: number) => {
           return (
             <div key={each_val + key}>
-              <Barcode
-                value={each_val}
-                height={30}
-                width={0.8}
-                textAlign="center"
-                fontOptions="10px"
-              />
+              <QRCode value={each_val} height={30} width={0.8} />
             </div>
           );
         })
