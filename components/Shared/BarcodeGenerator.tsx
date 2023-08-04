@@ -25,7 +25,7 @@ export default function BarcodeGenerator() {
   //
   //
   return (
-    <>
+    <section className="p-5">
       {loading ? (
         <div className="flex h-[150px] items-center justify-center">
           <Loader />
@@ -44,6 +44,6 @@ export default function BarcodeGenerator() {
       ) : (
         'Empty!'
       )}
-    </>
+    </section>
   );
 }
