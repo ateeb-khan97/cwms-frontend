@@ -35,7 +35,7 @@ export default function BarcodeGenerator() {
           return (
             <div className="mb-5 flex flex-col gap-2" key={each_val + key}>
               <QRCode value={each_val} height={30} width={0.8} />
-              <p>{each_val}</p>
+              <p className="text-center font-medium">{each_val}</p>
             </div>
           );
         })
