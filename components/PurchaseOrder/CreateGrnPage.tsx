@@ -7,7 +7,7 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import usePurchaseOrderData from 'modules/PurchaseOrder/usePurchaseOrder';
-import React from 'react';
+import React, { useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 
 //
@@ -135,6 +135,7 @@ function Table({
   tableData: any[];
   setTableData: Function;
 }) {
+  const [loading, setLoading] = useState<boolean>(false);
   //
   const { setPurchaseOrderData } = usePurchaseOrderData();
   type InputPropType = 'number' | 'double';
@@ -156,12 +157,15 @@ function Table({
   };
   //
   const submitHandler = async () => {
+    setLoading(true);
     const mrp_check = tableData.filter((each_data: any) => {
       return (
         each_data.maximum_retail_price == '' || each_data.trade_price == ''
       );
     });
     if (mrp_check.length > 0) {
+      setLoading(false);
+
       return customNotification({
         title: 'Failed',
         message: 'MRP and Trade Price cannot be zero or empty!',
@@ -186,6 +190,7 @@ function Table({
       message,
       title: response.status == 200 ? 'Success' : 'Failed',
     });
+    setLoading(false);
     setTableData([]);
     setPurchaseOrderData([]);
     //
@@ -380,7 +385,7 @@ function Table({
       />
       <div className="flex w-[100%] justify-end p-5">
         <Button
-          disabled={tableData.length == 0}
+          disabled={tableData.length == 0 || loading}
           className="bg-red-500 transition-all hover:scale-110 hover:bg-red-900"
           onClick={submitHandler}
         >
