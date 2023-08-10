@@ -35,15 +35,9 @@ async function DataFetcher() {
   const token = cookies().get('token')?.value;
   if (token) {
     const config: AxiosRequestConfig = {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'X-Custom-Header': JSON.stringify({
-          acc_no: cookies().get('acc_no')?.value,
-          loc_no: cookies().get('loc_no')?.value,
-          user_name: cookies().get('user_name')?.value,
-        }),
-      },
+      method: 'get',
+      headers: { Authorization: `Bearer ${token}` },
+      url: 'http://localhost:3001/api/inward/find_for_batch_report',
     };
     const response = await axios(config);
 
