@@ -1,7 +1,6 @@
 import StockBatchReport from 'components/Report/StockBatchReport';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 //
 
 function Header() {
@@ -36,7 +35,10 @@ async function DataFetcher() {
   if (token) {
     const response = await fetch(
       `http://localhost:3001/api/inward/find_for_batch_report`,
-      { cache: 'no-cache' },
+      {
+        cache: 'no-cache',
+        headers: { Authorization: 'Bearer' + token },
+      },
     );
     const json = await response.json();
     return json.data;
