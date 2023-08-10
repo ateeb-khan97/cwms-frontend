@@ -40,6 +40,8 @@ async function DataFetcher() {
         headers: { Authorization: 'Bearer' + token },
       },
     );
+    console.log(response);
+
     const json = await response.json();
     return json.data;
   }
