@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import StockBatchReport from 'components/Report/StockBatchReport';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import { cookies } from 'next/headers';
@@ -34,19 +34,18 @@ type TableType = {
 async function DataFetcher() {
   const token = cookies().get('token')?.value;
   if (token) {
-    const response = await axios(
-      `http://localhost:3001/api/inward/find_for_batch_report`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'X-Custom-Header': JSON.stringify({
-            acc_no: cookies().get('acc_no')?.value,
-            loc_no: cookies().get('loc_no')?.value,
-            user_name: cookies().get('user_name')?.value,
-          }),
-        },
+    const config: AxiosRequestConfig = {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'X-Custom-Header': JSON.stringify({
+          acc_no: cookies().get('acc_no')?.value,
+          loc_no: cookies().get('loc_no')?.value,
+          user_name: cookies().get('user_name')?.value,
+        }),
       },
-    );
+    };
+    const response = await axios(config);
 
     return response.data;
   }
