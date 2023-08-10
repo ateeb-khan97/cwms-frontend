@@ -45,6 +45,7 @@ async function DataFetcher() {
     const json = await response.json();
     return json.data;
   }
+  return [];
 }
 //
 export default async function Page() {
