@@ -39,9 +39,16 @@ async function DataFetcher() {
       headers: { Authorization: `Bearer ${token}` },
       url: 'http://localhost:3001/api/inward/find_for_batch_report',
     };
-    const response = await axios(config);
+    try {
+      const response = await axios(config);
+      console.log(response);
 
-    return response.data;
+      return response.data;
+    } catch (err) {
+      console.log(err);
+
+      return [];
+    }
   }
   return [];
 }
