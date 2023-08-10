@@ -1,3 +1,4 @@
+import axios from 'axios';
 import StockBatchReport from 'components/Report/StockBatchReport';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import { cookies } from 'next/headers';
@@ -33,17 +34,21 @@ type TableType = {
 async function DataFetcher() {
   const token = cookies().get('token')?.value;
   if (token) {
-    const response = await fetch(
+    const response = await axios(
       `http://localhost:3001/api/inward/find_for_batch_report`,
       {
-        cache: 'no-cache',
-        headers: { Authorization: 'Bearer' + token },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'X-Custom-Header': JSON.stringify({
+            acc_no: cookies().get('acc_no')?.value,
+            loc_no: cookies().get('loc_no')?.value,
+            user_name: cookies().get('user_name')?.value,
+          }),
+        },
       },
     );
-    console.log(response);
 
-    const json = await response.json();
-    return json.data;
+    return response.data;
   }
   return [];
 }
