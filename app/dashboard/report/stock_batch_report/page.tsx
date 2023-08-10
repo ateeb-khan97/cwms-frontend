@@ -43,7 +43,7 @@ async function DataFetcher() {
       const response = await axios(config);
       console.log(response);
 
-      return response.data;
+      return response.data.data;
     } catch (err) {
       console.log(err);
 
