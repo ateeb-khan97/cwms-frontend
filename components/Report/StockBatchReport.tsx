@@ -1,6 +1,8 @@
 'use client';
 
+import { Button } from '@mantine/core';
 import DataTableComponent from 'components/Shared/DataTableComponent';
+import axiosFunction from 'functions/axiosFunction';
 import moment from 'moment';
 //
 type TableType = {
@@ -29,6 +31,30 @@ export default function StockBatchReport({
 }) {
   return (
     <>
+      <div>
+        <Button
+          onClick={async () => {
+            await axiosFunction({
+              urlPath: '/inward/batch-report-download',
+              responseType: 'blob',
+            }).then((response: any) => {
+              console.log(response);
+
+              const url = window.URL.createObjectURL(new Blob([response]));
+              const link = document.createElement('a');
+              link.href = url;
+              link.setAttribute('download', 'barcode-detail.csv');
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+            });
+          }}
+          className="bg-red-500 transition-all hover:bg-red-900"
+          compact
+        >
+          Download
+        </Button>
+      </div>
       <DataTableComponent
         columns={[
           {
