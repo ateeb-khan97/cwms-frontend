@@ -1,9 +1,11 @@
 'use client';
 
-import { Button } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
 import moment from 'moment';
+import { useState } from 'react';
+import { MdDownload, MdSearch } from 'react-icons/md';
 //
 type TableType = {
   product_id: string;
@@ -22,16 +24,15 @@ type TableType = {
   aging_time: string;
 };
 //
-
-//
-export default function StockBatchReport({
-  tableData,
+const TableHeadComponent = ({
+  filterFunction,
 }: {
-  tableData: TableType[];
-}) {
+  filterFunction: (e: string) => void;
+}) => {
+  const [search, setSearch] = useState<string>('');
   return (
     <>
-      <div>
+      <div className="flex items-center gap-5">
         <Button
           onClick={async () => {
             await axiosFunction({
@@ -50,11 +51,51 @@ export default function StockBatchReport({
             });
           }}
           className="bg-red-500 transition-all hover:bg-red-900"
-          compact
+          leftIcon={<MdDownload />}
         >
           Download
         </Button>
+        <TextInput
+          icon={<MdSearch />}
+          value={search}
+          onChange={(e) => {
+            setSearch(e.target.value);
+            filterFunction(e.target.value);
+          }}
+          placeholder="Search"
+          className="w-56"
+        />
       </div>
+    </>
+  );
+};
+//
+export default function StockBatchReport({
+  tableData,
+}: {
+  tableData: TableType[];
+}) {
+  const [data, setData] = useState<TableType[]>(tableData);
+  const filterFunction = (search: string) => {
+    search = search.toLowerCase();
+    const filteredData = tableData.filter((each) => {
+      for (let key in each) {
+        if (
+          each[key as keyof TableType]
+            ?.toString()
+            ?.toLowerCase()
+            ?.includes(search)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+    setData(filteredData);
+  };
+  //
+  return (
+    <>
       <DataTableComponent
         columns={[
           {
@@ -144,8 +185,10 @@ export default function StockBatchReport({
             width: '170px',
           },
         ]}
-        data={tableData}
-      />
+        data={data}
+      >
+        <TableHeadComponent filterFunction={filterFunction} />
+      </DataTableComponent>
     </>
   );
 }
