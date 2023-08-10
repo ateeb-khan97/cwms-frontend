@@ -20,7 +20,7 @@ import Validator from 'functions/validationFunctions';
 import useVendorData from 'modules/Vendor/useVendorData';
 import { VendorDropDownValues } from 'modules/Vendor/vendorData';
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useState } from 'react';
 
 //
 function Header({ isUpdate }: { isUpdate: boolean }) {
@@ -38,6 +38,8 @@ function Header({ isUpdate }: { isUpdate: boolean }) {
 function Form({ isUpdate }: { isUpdate: boolean }) {
   const router = useRouter();
   //
+  const [withHoldTaxGroup, setWithHoldTaxGroup] = useState<any[]>([]);
+  const [withHoldTaxPercentage, setWithHoldTaxPercentage] = useState<any[]>([]);
   const { setVendorData } = useVendorData();
   const [manufacturerData, setManufacturerData] = React.useState<any[]>([]);
   const manufacturerFetcher = async () => {
@@ -46,8 +48,16 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     }).then((res) => res.data);
     setManufacturerData(manufacturer);
   };
+  const taxFetcher = async () => {
+    const tax = await axiosFunction({
+      urlPath: '/vendor/find_vendor_tax',
+    }).then((res) => res.data);
+    setWithHoldTaxGroup(tax.map((each) => each.tax_group));
+    setWithHoldTaxPercentage(tax.map((each) => each.percentage));
+  };
   React.useEffect(() => {
     manufacturerFetcher();
+    taxFetcher();
   }, []);
   //
   var localData: any = {};
@@ -342,7 +352,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         // withAsterisk
         searchable
         nothingFound="No options"
-        data={[]}
+        data={withHoldTaxGroup}
         {...form.getInputProps('with_hold_tax_group')}
       />
       <Select
@@ -354,7 +364,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
         // withAsterisk
         searchable
         nothingFound="No options"
-        data={[]}
+        data={withHoldTaxPercentage}
         {...form.getInputProps('with_hold_tax_percentage')}
       />
       <TextInput
