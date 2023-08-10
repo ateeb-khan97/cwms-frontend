@@ -1,7 +1,7 @@
 import StockBatchReport from 'components/Report/StockBatchReport';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
-import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 //
 
 function Header() {
@@ -14,9 +14,37 @@ function Header() {
   );
 }
 //
-
+type TableType = {
+  product_id: string;
+  batch_number: string;
+  manufacturer_name: string;
+  category_name: string;
+  product_name: string;
+  item_conversion: string;
+  total_inventory: string;
+  loc_name: string;
+  purchasing_price: string;
+  total_purchasing_price: string;
+  trade_price: string;
+  mrp_unit_price: string;
+  tax_code: string;
+  aging_time: string;
+};
+//
+async function DataFetcher() {
+  const token = cookies().get('token')?.value;
+  if (token) {
+    const response = await fetch(
+      `http://localhost:3001/api/inward/find_for_batch_report`,
+      { cache: 'no-cache' },
+    );
+    const json = await response.json();
+    return json.data;
+  }
+}
 //
 export default async function Page() {
+  const tableData: TableType[] = await DataFetcher();
   return (
     <>
       <section className="flex min-h-[100%] flex-col gap-10 p-7">
@@ -27,7 +55,7 @@ export default async function Page() {
               Here you can manage your all Stock Batch Report!
             </p>
           </div>
-          <StockBatchReport />
+          <StockBatchReport tableData={tableData} />
         </div>
       </section>
     </>
