@@ -44,7 +44,7 @@ const TableHeadComponent = ({
               const url = window.URL.createObjectURL(new Blob([response]));
               const link = document.createElement('a');
               link.href = url;
-              link.setAttribute('download', 'stock-report.csv');
+              link.setAttribute('download', 'stock-detail-report.csv');
               document.body.appendChild(link);
               link.click();
               document.body.removeChild(link);
