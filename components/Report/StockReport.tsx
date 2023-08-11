@@ -76,6 +76,7 @@ export default function StockReport() {
       urlPath: '/inward/find_for_report',
     }).then((res) => res.data);
     setReportData(data);
+    setTableData(data);
     setLoading(false);
   };
   React.useEffect(() => {

@@ -99,6 +99,7 @@ export default function StockDetailReport() {
       urlPath: '/inward/find_for_detail_report',
     });
     setTableData(response.data);
+    setFilteredData(response.data);
     setLoading(false);
   };
   useEffect(() => {
