@@ -1,12 +1,6 @@
-'use client';
-//
 import '@/styles/globals.css';
 import React from 'react';
-//
-import { RecoilRoot } from 'recoil';
-import { MantineProvider } from '@mantine/core';
-import { Notifications } from '@mantine/notifications';
-import { ModalsProvider } from '@mantine/modals';
+import ProviderWrapper from './ProviderWrapper';
 //
 export default function RootLayout({
   children,
@@ -15,14 +9,9 @@ export default function RootLayout({
 }) {
   return (
     <html>
-      <RecoilRoot>
-        <MantineProvider withNormalizeCSS withGlobalStyles>
-          <Notifications />
-          <ModalsProvider>
-            <body>{children}</body>
-          </ModalsProvider>
-        </MantineProvider>
-      </RecoilRoot>
+      <body>
+        <ProviderWrapper>{children}</ProviderWrapper>
+      </body>
     </html>
   );
 }
