@@ -167,7 +167,8 @@ function Table() {
             },
             {
               name: 'Batch. Exp.',
-              selector: (row: ReceiveType) => row.batch_expiry.substring(0, 10),
+              selector: (row: ReceiveType) =>
+                row.batch_expiry?.substring(0, 10) || '-',
               grow: 0,
               center: true,
             },
@@ -183,7 +184,7 @@ function Table() {
               center: true,
               grow: 0,
               cell: (row: ReceiveType) =>
-                row.inward_date?.toString().substring(0, 10) || '-',
+                row.inward_date?.toString()?.substring(0, 10) || '-',
             },
             {
               name: 'User ID',
