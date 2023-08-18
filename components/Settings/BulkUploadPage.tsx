@@ -121,6 +121,65 @@ const DemandNoteUpload = ({ loading, setLoading }: PropType) => {
   );
 };
 //
+const GrnUpload = ({ loading, setLoading }: PropType) => {
+  const [value, setValue] = React.useState<File | null>(null);
+  const submitHandler = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    //
+    setLoading(true);
+    const fileResponse = await uploadValidation(value);
+    if (!fileResponse.status) {
+      setLoading(false);
+      return customNotification({
+        title: 'Failed',
+        message: fileResponse.message,
+      });
+    }
+    const csv: string = fileResponse.base64String!;
+    const { status, message } = await axiosFunction({
+      urlPath: '/bulk_upload/grn',
+      method: 'POST',
+      data: { csv },
+    });
+    //
+    if (status != 200) {
+      setLoading(false);
+      return customNotification({
+        title: 'Failed',
+        message: 'Failed to upload!',
+      });
+    }
+    customNotification({ title: 'Success', message });
+    //
+    setLoading(false);
+  };
+  return (
+    <form onSubmit={submitHandler} className="flex items-end gap-5">
+      <FileInput
+        className="w-[100%]"
+        placeholder="Pick CSV File"
+        label="GRN Upload"
+        withAsterisk
+        value={value}
+        onChange={setValue}
+        icon={<HiUpload />}
+        accept=".csv"
+        disabled={loading}
+        clearable
+      />
+      <Button
+        loading={loading}
+        disabled={loading || value == null}
+        type={'submit'}
+        className="bg-red-500 transition hover:bg-red-900"
+        rightIcon={<HiUpload />}
+      >
+        Upload
+      </Button>
+    </form>
+  );
+};
+//
 const ProductUpload = ({ loading, setLoading }: PropType) => {
   const [value, setValue] = React.useState<File | null>(null);
   const submitHandler = async (e: React.SyntheticEvent) => {
@@ -426,6 +485,7 @@ export default function BulkUploadPage() {
       <VendorUpload loading={loading} setLoading={setLoading} />
       <PurchaseOrderUpload loading={loading} setLoading={setLoading} />
       <DemandNoteUpload loading={loading} setLoading={setLoading} />
+      <GrnUpload loading={loading} setLoading={setLoading} />
     </main>
   );
 }

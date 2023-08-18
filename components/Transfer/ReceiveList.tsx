@@ -1,10 +1,13 @@
 'use client';
 import { Button } from '@mantine/core';
+import { modals } from '@mantine/modals';
 //
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
+import { setCookie } from 'cookies-next';
 import axiosFunction from 'functions/axiosFunction';
 import TransferType from 'modules/Transfer/transfer.type';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import React from 'react';
 
@@ -30,6 +33,23 @@ export default function ReceiveList() {
     router.push('/dashboard/transfer/stock_receive');
   };
   //
+  const receiveAllHandler = async (row: TransferType) => {
+    modals.openConfirmModal({
+      title: 'Please confirm you action!',
+      labels: { confirm: 'Confirm', cancel: 'Cancel' },
+      confirmProps: { className: 'bg-red-500 hover:bg-red-900 transition-all' },
+      onConfirm: async () => {
+        const response = await axiosFunction({
+          urlPath: '/transfer/receive-all',
+          method: 'POST',
+          data: row,
+        });
+        if (response.status == 200) {
+          transferFetcher();
+        }
+      },
+    });
+  };
   // useEffect
   React.useEffect(() => {
     transferFetcher();
@@ -101,6 +121,49 @@ export default function ReceiveList() {
               },
               center: true,
               width: '100px',
+            },
+            {
+              name: 'Receive',
+              cell: (row: TransferType) => {
+                return (
+                  <>
+                    <Button
+                      disabled={row.transfer_status == 'Received'}
+                      onClick={() => receiveAllHandler(row)}
+                      compact
+                      className="bg-red-500 transition-all hover:bg-red-900"
+                    >
+                      Receive All
+                    </Button>
+                  </>
+                );
+              },
+              center: true,
+              width: '100px',
+            },
+            {
+              name: 'PDF',
+              cell: (row: TransferType) => {
+                return (
+                  <>
+                    <Link
+                      onClick={() => {
+                        localStorage.setItem(
+                          'invoice-receive',
+                          JSON.stringify(row),
+                        );
+                      }}
+                      target="_blank"
+                      href={'/invoice/receive-list'}
+                      className="rounded-md bg-red-500 px-3 py-1 text-white transition-all hover:bg-red-900"
+                    >
+                      PDF
+                    </Link>
+                  </>
+                );
+              },
+              center: true,
+              width: '80px',
             },
           ]}
         />
