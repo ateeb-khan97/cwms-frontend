@@ -58,12 +58,8 @@ export default function Form({
         foc: false,
         trade_price: each_prod.trade_price || '0',
         trade_discount: each_prod.discount || '0',
-        selling_unit:
-          each_prod.product_conversions[2]?.selling_unit ||
-          each_prod.product_conversions[1].selling_unit,
-        item_conversion:
-          each_prod.product_conversions[2]?.item_conversion ||
-          each_prod.product_conversions[1].item_conversion,
+        selling_unit: each_prod.product_conversions[1]?.selling_unit,
+        item_conversion: each_prod.product_conversions[1]?.item_conversion,
         manufacturer_name: each_prod.manufacturer.manufacturer_name,
         manufacturer_id: each_prod.manufacturer.id,
         required_quantity: each_prod.quantity == '' ? each_prod.quantity : '0',

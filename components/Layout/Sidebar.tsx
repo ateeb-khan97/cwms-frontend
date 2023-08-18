@@ -12,12 +12,16 @@ type PropType = {
   isActive: boolean;
 };
 //
-function SidebarBody() {
+function SidebarBody({ signOutHandler }: { signOutHandler: () => void }) {
   const [active, setActive] = React.useState<number>(0);
   const [sidebarLink, setSidebarLink] = React.useState<any[]>([]);
   async function sidebarDataFetch() {
     const response = await axiosFunction({ urlPath: '/sidebar' });
-    setSidebarLink(response.data);
+    if (response.status == 200) {
+      setSidebarLink(response.data);
+    } else {
+      signOutHandler();
+    }
   }
   useEffect(() => {
     sidebarDataFetch();
@@ -84,7 +88,7 @@ export default function Sidebar({ isActive }: PropType) {
             <Image src={'/pharm_logo.png'} />
           </div>
         </header>
-        <SidebarBody />
+        <SidebarBody signOutHandler={signOutHandler} />
         <footer className="flex h-[80px] items-center justify-center border">
           <Button
             onClick={signOutHandler}
