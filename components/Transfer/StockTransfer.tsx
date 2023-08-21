@@ -81,7 +81,6 @@ function Table({
   ScannedProducts: ScannedType[];
   removeFunction: (bar_code: string) => void;
 }) {
-  const router = useRouter();
   const [searchText, setSearchText] = React.useState<string>('');
   const [filteredData, setFilteredData] =
     React.useState<ScannedType[]>(ScannedProducts);
@@ -117,7 +116,10 @@ function Table({
           <Button
             disabled={ScannedProducts.length == 0}
             onClick={() => {
-              setCookie('transferData', JSON.stringify(ScannedProducts));
+              localStorage.setItem(
+                'transferData',
+                JSON.stringify(ScannedProducts),
+              );
             }}
             className="bg-red-500 transition-all hover:bg-red-900"
             leftIcon={<AiFillFilePdf />}
@@ -126,7 +128,7 @@ function Table({
           </Button>
         </Link>
         <TextInput
-          className="w-full"
+          className="w-56"
           placeholder="Search"
           value={searchText}
           onChange={handleInputChange}

@@ -1,14 +1,7 @@
 import Image from 'next/image';
-import { cookies } from 'next/headers';
-import { deleteCookie } from 'cookies-next';
+import TransferTable from './TransferTable';
 //
 export default async function Page() {
-  let tableData: any[] = [];
-  const cookieData = cookies().get('transferData')?.value;
-  if (cookieData) {
-    tableData = JSON.parse(cookieData);
-    deleteCookie('transferData');
-  }
   return (
     <>
       <section className="flex min-h-screen w-full items-center justify-center">
@@ -33,33 +26,7 @@ export default async function Page() {
           <h1 className="text-center text-3xl font-semibold text-gray-700">
             Transfer Note
           </h1>
-          <table className="mt-5 w-full ">
-            <thead>
-              <tr>
-                <th className="border border-black">Product ID</th>
-                <th className="border border-black">Product Name</th>
-                <th className="border border-black">Barcode</th>
-              </tr>
-            </thead>
-            <tbody>
-              {tableData.length > 0 &&
-                tableData.map((each: any, key: number) => {
-                  return (
-                    <tr key={key}>
-                      <td className="border border-black text-center">
-                        {each.product_id || ''}
-                      </td>
-                      <td className="border border-black text-center">
-                        {each.product_name || ''}
-                      </td>
-                      <td className="border border-black text-center">
-                        {each.inward_child || ''}
-                      </td>
-                    </tr>
-                  );
-                })}
-            </tbody>
-          </table>
+          <TransferTable />
         </main>
       </section>
     </>
