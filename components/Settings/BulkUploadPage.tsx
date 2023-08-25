@@ -97,8 +97,8 @@ const DemandNoteUpload = ({ loading, setLoading }: PropType) => {
   };
   const downloadHandler = () => {
     const link = document.createElement('a');
-    link.href = '/manufacturer.xlsx';
-    link.download = 'manufacturer.xlsx';
+    link.href = '/demand-note.xlsx';
+    link.download = 'demand-note.xlsx';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -172,8 +172,8 @@ const GrnUpload = ({ loading, setLoading }: PropType) => {
   };
   const downloadHandler = () => {
     const link = document.createElement('a');
-    link.href = '/manufacturer.xlsx';
-    link.download = 'manufacturer.xlsx';
+    link.href = '/grn.xlsx';
+    link.download = 'grn.xlsx';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -477,8 +477,8 @@ const VendorUpload = ({ loading, setLoading }: PropType) => {
   };
   const downloadHandler = () => {
     const link = document.createElement('a');
-    link.href = '/manufacturer.xlsx';
-    link.download = 'manufacturer.xlsx';
+    link.href = '/vendor.xlsx';
+    link.download = 'vendor.xlsx';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -552,8 +552,8 @@ const PurchaseOrderUpload = ({ loading, setLoading }: PropType) => {
   };
   const downloadHandler = () => {
     const link = document.createElement('a');
-    link.href = '/manufacturer.xlsx';
-    link.download = 'manufacturer.xlsx';
+    link.href = '/purchase-order.xlsx';
+    link.download = 'purchase-order.xlsx';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
