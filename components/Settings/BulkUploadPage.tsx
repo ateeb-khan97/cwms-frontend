@@ -129,7 +129,7 @@ const DemandNoteUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
@@ -204,7 +204,7 @@ const GrnUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
@@ -282,7 +282,7 @@ const ProductUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
@@ -358,7 +358,7 @@ const CategoryUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
@@ -434,7 +434,7 @@ const ManufacturerUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
@@ -509,7 +509,7 @@ const VendorUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
@@ -584,7 +584,7 @@ const PurchaseOrderUpload = ({ loading, setLoading }: PropType) => {
       <Button
         onClick={downloadHandler}
         rightIcon={<MdDownload />}
-        type="submit"
+        type="button"
         className="bg-blue-500 transition hover:bg-blue-900"
       >
         Template
