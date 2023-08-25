@@ -5,6 +5,7 @@ import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import React from 'react';
 import { HiUpload } from 'react-icons/hi';
+import { MdDownload } from 'react-icons/md';
 //
 interface PropType {
   loading: boolean;
@@ -94,6 +95,14 @@ const DemandNoteUpload = ({ loading, setLoading }: PropType) => {
     //
     setLoading(false);
   };
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/manufacturer.xlsx';
+    link.download = 'manufacturer.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
       <FileInput
@@ -116,6 +125,14 @@ const DemandNoteUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
@@ -153,6 +170,14 @@ const GrnUpload = ({ loading, setLoading }: PropType) => {
     //
     setLoading(false);
   };
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/manufacturer.xlsx';
+    link.download = 'manufacturer.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
       <FileInput
@@ -175,6 +200,14 @@ const GrnUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
@@ -201,6 +234,8 @@ const ProductUpload = ({ loading, setLoading }: PropType) => {
       data: { csv },
     });
     //
+
+    //
     if (status != 200) {
       setLoading(false);
       return customNotification({
@@ -211,6 +246,15 @@ const ProductUpload = ({ loading, setLoading }: PropType) => {
     customNotification({ title: 'Success', message: 'Successfully Uploaded!' });
     //
     setLoading(false);
+  };
+
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/product.xlsx';
+    link.download = 'product.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
@@ -234,6 +278,14 @@ const ProductUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
@@ -271,6 +323,15 @@ const CategoryUpload = ({ loading, setLoading }: PropType) => {
     //
     setLoading(false);
   };
+
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/category.xlsx';
+    link.download = 'category.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
       <FileInput
@@ -293,6 +354,14 @@ const CategoryUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
@@ -330,6 +399,15 @@ const ManufacturerUpload = ({ loading, setLoading }: PropType) => {
     //
     setLoading(false);
   };
+
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/manufacturer.xlsx';
+    link.download = 'manufacturer.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
       <FileInput
@@ -352,6 +430,14 @@ const ManufacturerUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
@@ -389,6 +475,14 @@ const VendorUpload = ({ loading, setLoading }: PropType) => {
     //
     setLoading(false);
   };
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/manufacturer.xlsx';
+    link.download = 'manufacturer.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
       <FileInput
@@ -411,6 +505,14 @@ const VendorUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
@@ -448,6 +550,14 @@ const PurchaseOrderUpload = ({ loading, setLoading }: PropType) => {
     //
     setLoading(false);
   };
+  const downloadHandler = () => {
+    const link = document.createElement('a');
+    link.href = '/manufacturer.xlsx';
+    link.download = 'manufacturer.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <form onSubmit={submitHandler} className="flex items-end gap-5">
       <FileInput
@@ -470,6 +580,14 @@ const PurchaseOrderUpload = ({ loading, setLoading }: PropType) => {
         rightIcon={<HiUpload />}
       >
         Upload
+      </Button>
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdDownload />}
+        type="submit"
+        className="bg-blue-500 transition hover:bg-blue-900"
+      >
+        Template
       </Button>
     </form>
   );
