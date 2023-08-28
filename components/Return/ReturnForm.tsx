@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, TextInput } from '@mantine/core';
+import { Button, Select, TextInput } from '@mantine/core';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import { useEffect, useRef, useState } from 'react';
@@ -12,8 +12,13 @@ interface TableType {
   inward_child: string;
 }
 //
-export default function ReturnForm() {
+export default function ReturnForm({
+  vendorDropDownData,
+}: {
+  vendorDropDownData: any[];
+}) {
   const [scannedProducts, setScannedProducts] = useState<TableType[]>([]);
+  const [vendorId, setVendorId] = useState<string>('');
   const inwardRef = useRef<HTMLInputElement>(null);
   //
   useEffect(() => {
@@ -65,10 +70,17 @@ export default function ReturnForm() {
   };
   //
   const returnHandler = async () => {
+    const vendor = vendorDropDownData.filter(
+      (each) => each.value == vendorId,
+    )[0];
     const response = await axiosFunction({
       urlPath: '/return/create',
       method: 'POST',
-      data: { inward_child: scannedProducts },
+      data: {
+        vendorName: vendor.label,
+        vendorId,
+        inward_child: scannedProducts,
+      },
     });
     customNotification({
       message: response.message,
@@ -78,9 +90,8 @@ export default function ReturnForm() {
   };
   //
   return (
-    <>
+    <section className="flex flex-col p-5">
       <form
-        className="p-5"
         onSubmit={(e) => {
           e.preventDefault();
           submitHandler();
@@ -95,6 +106,17 @@ export default function ReturnForm() {
           size="xs"
         />
       </form>
+      <div>
+        <Select
+          label="Vendor"
+          placeholder="Select Vendor"
+          size="xs"
+          className="w-1/3"
+          value={vendorId}
+          onChange={(e) => setVendorId(e!)}
+          data={vendorDropDownData}
+        />
+      </div>
       <div className="flex justify-end p-5">
         <Button
           onClick={returnHandler}
@@ -105,6 +127,6 @@ export default function ReturnForm() {
         </Button>
       </div>
       <ReturnTable tableData={scannedProducts} deleteHandler={deleteHandler} />
-    </>
+    </section>
   );
 }

@@ -85,6 +85,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
       title: response.status == 200 ? 'Success' : 'Failed',
     });
     setCategoryData([]);
+    router.refresh();
     router.push('/dashboard/categories');
     //
   }

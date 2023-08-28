@@ -1,0 +1,731 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model bin {
+  bin_id     String?  @db.VarChar(255)
+  rack_id    String?  @db.VarChar(255)
+  sorting    Int?
+  acc_no     String?  @db.VarChar(255)
+  loc_no     String?  @db.VarChar(255)
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+
+  @@index([bin_id], map: "bin_id")
+}
+
+model categories {
+  category_level       String?            @db.VarChar(255)
+  category_name        String?            @db.VarChar(255)
+  category_description String?            @db.VarChar(255)
+  sorting              Int?
+  category_image_url   String?            @db.VarChar(255)
+  comment              String?            @db.VarChar(255)
+  parent_id            Int?
+  id                   Int                @id @unique(map: "id") @default(autoincrement())
+  status               Boolean            @default(false)
+  created_at           DateTime           @db.DateTime(0)
+  updated_at           DateTime           @db.DateTime(0)
+  user_name            String?            @db.VarChar(255)
+  user_id              String?            @db.VarChar(255)
+  bv_id                String?            @db.VarChar(255)
+  product_category     product_category[]
+
+  @@index([category_level], map: "category_level")
+  @@index([category_name], map: "category_name")
+  @@index([parent_id], map: "parent_id")
+}
+
+model customers {
+  customer_name  String?     @db.VarChar(255)
+  account_number String?     @unique(map: "account_number") @db.VarChar(255)
+  city           String?     @db.VarChar(255)
+  owner_name     String?     @db.VarChar(255)
+  id             Int         @id @unique(map: "id") @default(autoincrement())
+  status         Boolean     @default(false)
+  created_at     DateTime    @db.DateTime(0)
+  updated_at     DateTime    @db.DateTime(0)
+  locations      locations[]
+}
+
+model demand_note {
+  location_from      String               @db.VarChar(255)
+  acc_no             String               @db.VarChar(255)
+  loc_no             String               @db.VarChar(255)
+  user_name          String               @db.VarChar(255)
+  demand_note_status String               @db.VarChar(255)
+  id                 Int                  @id @unique(map: "id") @default(autoincrement())
+  status             Boolean              @default(false)
+  created_at         DateTime             @db.DateTime(0)
+  updated_at         DateTime             @db.DateTime(0)
+  user_id            String?              @db.VarChar(255)
+  demand_note_detail demand_note_detail[]
+}
+
+model demand_note_detail {
+  product_id     Int
+  product_name   String       @db.VarChar(255)
+  quantity       String       @db.VarChar(255)
+  id             Int          @id @unique(map: "id") @default(autoincrement())
+  status         Boolean      @default(false)
+  created_at     DateTime     @db.DateTime(0)
+  updated_at     DateTime     @db.DateTime(0)
+  demand_note_id Int?
+  demand_note    demand_note? @relation(fields: [demand_note_id], references: [id], map: "demand_note_detail_ibfk_1")
+
+  @@index([demand_note_id], map: "demand_note_id")
+}
+
+model grn {
+  po_id                   Int?
+  percent_order_completed Int?
+  product_id              Int?
+  product_name            String?   @db.VarChar(255)
+  required_quantity       Int?
+  received_quantity       Int?
+  maximum_retail_price    Int?
+  trade_price             Float?    @db.Float
+  discount_percentage     Float?    @db.Float
+  batch_number            String?   @db.VarChar(255)
+  batch_expiry            DateTime? @db.DateTime(0)
+  comments                String?   @db.VarChar(255)
+  remaining_quantity      Int?
+  is_updatable            Boolean?
+  grn_status              String?   @db.VarChar(255)
+  foc                     Boolean?
+  qc_approved             Boolean?
+  uom                     String?   @db.VarChar(255)
+  po_status               String?   @db.VarChar(255)
+  location_id             String?   @db.VarChar(255)
+  account_number          String?   @db.VarChar(255)
+  id                      Int       @id @unique(map: "id") @default(autoincrement())
+  status                  Boolean   @default(false)
+  created_at              DateTime  @db.DateTime(0)
+  updated_at              DateTime  @db.DateTime(0)
+  user_name               String?   @db.VarChar(255)
+  user_id                 String?   @db.VarChar(255)
+  reject_comment          String?   @db.VarChar(255)
+  purchasing_price        String?   @db.VarChar(255)
+  gst_rate                String?   @db.VarChar(255)
+  advance_income_tax      String?   @db.VarChar(255)
+
+  @@index([account_number], map: "account_number")
+  @@index([location_id], map: "location_id")
+  @@index([po_id], map: "po_id")
+  @@index([product_id], map: "product_id")
+}
+
+model inward_detail {
+  inward_id            String?     @db.VarChar(255)
+  inward_child         String?     @db.VarChar(255)
+  product_id           String?     @db.VarChar(255)
+  second_level         String?     @db.VarChar(255)
+  third_level          String?     @db.VarChar(255)
+  bin_id               String?     @db.VarChar(255)
+  sku_date             DateTime?   @db.DateTime(0)
+  user_name            String?     @db.VarChar(255)
+  restack_date         String?     @db.VarChar(255)
+  pick_list_id         String?     @db.VarChar(255)
+  qc_status            Boolean?
+  qc_date              DateTime?   @db.DateTime(0)
+  location_id          String?     @db.VarChar(255)
+  account_number       String?     @db.VarChar(255)
+  is_received          Boolean     @default(true)
+  id                   Int         @id @unique(map: "id") @default(autoincrement())
+  status               Boolean     @default(false)
+  created_at           DateTime    @db.DateTime(0)
+  updated_at           DateTime    @db.DateTime(0)
+  inward_id_key        Int?
+  location_change_date DateTime?   @db.DateTime(0)
+  inward_sku           inward_sku? @relation(fields: [inward_id_key], references: [id], map: "inward_detail_ibfk_1")
+
+  @@index([account_number], map: "account_number")
+  @@index([bin_id], map: "bin_id")
+  @@index([inward_child], map: "inward_child")
+  @@index([inward_id], map: "inward_id")
+  @@index([inward_id_key], map: "inward_id_key")
+  @@index([is_received], map: "is_received")
+  @@index([location_change_date], map: "location_change_date")
+  @@index([location_id], map: "location_id")
+  @@index([product_id], map: "product_id")
+}
+
+model inward_master {
+  inward_id  String?  @db.VarChar(255)
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+
+  @@index([inward_id], map: "inward_id")
+}
+
+model inward_sku {
+  inward_id            String?         @unique(map: "inward_id") @db.VarChar(255)
+  inward_date          String?         @db.VarChar(255)
+  po_id                Int?
+  product_id           Int?
+  product_name         String?         @db.VarChar(255)
+  required_quantity    String?         @db.VarChar(255)
+  received_quantity    String?         @db.VarChar(255)
+  maximum_retail_price String?         @db.VarChar(255)
+  trade_price          String?         @db.VarChar(255)
+  discount_percentage  String?         @db.VarChar(255)
+  batch_number         String?         @db.VarChar(255)
+  batch_expiry         String?         @db.VarChar(255)
+  comments             String?         @db.VarChar(255)
+  foc                  Boolean?
+  uom                  String?         @db.VarChar(255)
+  location_id          String?         @db.VarChar(255)
+  account_number       String?         @db.VarChar(255)
+  id                   Int             @id @unique(map: "id") @default(autoincrement())
+  status               Boolean         @default(false)
+  created_at           DateTime        @db.DateTime(0)
+  updated_at           DateTime        @db.DateTime(0)
+  user_name            String?         @db.VarChar(255)
+  user_id              String?         @db.VarChar(255)
+  purchasing_price     String?         @db.VarChar(255)
+  gst_rate             String?         @db.VarChar(255)
+  advance_income_tax   String?         @db.VarChar(255)
+  inward_detail        inward_detail[]
+
+  @@index([account_number], map: "account_number")
+  @@index([inward_date], map: "inward_date")
+  @@index([inward_id], map: "inward_id_25")
+  @@index([location_id], map: "location_id")
+  @@index([po_id], map: "po_id")
+  @@index([product_id], map: "product_id")
+}
+
+model locations {
+  loc_code                 String?   @db.VarChar(255)
+  loc_name                 String?   @db.VarChar(255)
+  loc_address              String?   @db.VarChar(255)
+  loc_country              String?   @db.VarChar(255)
+  loc_city                 String?   @db.VarChar(255)
+  loc_contact_person       String?   @db.VarChar(255)
+  loc_contact_phone_number String?   @db.VarChar(255)
+  loc_telephone_number     String?   @db.VarChar(255)
+  loc_fax_number           String?   @db.VarChar(255)
+  loc_email                String?   @db.VarChar(255)
+  loc_type                 String?   @db.VarChar(255)
+  bv_id                    String?   @db.VarChar(255)
+  account_number           String    @db.VarChar(255)
+  id                       Int       @id @unique(map: "id") @default(autoincrement())
+  status                   Boolean   @default(false)
+  created_at               DateTime  @db.DateTime(0)
+  updated_at               DateTime  @db.DateTime(0)
+  customers                customers @relation(fields: [account_number], references: [account_number], onDelete: Cascade, map: "locations_ibfk_1")
+
+  @@index([account_number], map: "account_number")
+}
+
+model manufacturers {
+  manufacturer_name   String?               @db.VarChar(255)
+  line_of_business    String?               @db.VarChar(255)
+  comment             String?               @db.VarChar(255)
+  id                  Int                   @id @unique(map: "id") @default(autoincrement())
+  status              Boolean               @default(false)
+  created_at          DateTime              @db.DateTime(0)
+  updated_at          DateTime              @db.DateTime(0)
+  user_name           String?               @db.VarChar(255)
+  user_id             String?               @db.VarChar(255)
+  products            products[]
+  vendor_manufacturer vendor_manufacturer[]
+
+  @@index([manufacturer_name], map: "manufacturer_name")
+}
+
+model orderdetail {
+  productReference      String?      @db.VarChar(255)
+  skuId                 String?      @db.LongText
+  productId             String?      @db.VarChar(255)
+  productName           String?      @db.VarChar(255)
+  customerOrderQuantity Int?
+  itemConversion        String?      @db.VarChar(255)
+  conversionUnit        String?      @db.VarChar(255)
+  itemPrice             Int?
+  orderReferenceId      String?      @db.VarChar(255)
+  id                    Int          @id @unique(map: "id") @default(autoincrement())
+  created_at            DateTime     @db.DateTime(0)
+  updated_at            DateTime     @db.DateTime(0)
+  orderId               Int?
+  ordermaster           ordermaster? @relation(fields: [orderId], references: [id], map: "orderdetail_ibfk_1")
+
+  @@index([orderId], map: "orderId")
+}
+
+model orderlog {
+  payload    String   @db.LongText
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updatedAt  DateTime @db.DateTime(0)
+}
+
+model ordermaster {
+  orderId                 String        @unique(map: "orderId") @db.VarChar(255)
+  consignmentNumber       String?       @db.VarChar(255)
+  orderDate               DateTime?     @db.DateTime(0)
+  customerOrderDate       DateTime?     @db.DateTime(0)
+  customerBillingCity     String?       @db.VarChar(255)
+  customerShippingCity    String?       @db.VarChar(255)
+  customerBillingName     String?       @db.VarChar(255)
+  customerShippingName    String?       @db.VarChar(255)
+  customerEmail           String?       @db.VarChar(255)
+  customerPhone           String?       @db.VarChar(255)
+  customerBillingAddress  String?       @db.VarChar(255)
+  customerShippingAddress String?       @db.VarChar(255)
+  customerOrderReference  String?       @db.VarChar(255)
+  trackingStatus          String?       @db.VarChar(255)
+  picklistId              String?       @db.VarChar(255)
+  orderStatus             String?       @db.VarChar(255)
+  courierName             String?       @db.VarChar(255)
+  paymentType             String?       @db.VarChar(255)
+  orderTotal              String?       @db.VarChar(255)
+  totalQuantity           Int?
+  totalTax                Int?
+  totalDiscount           Int?
+  totalWeight             Int?
+  shippingCharges         Int?
+  userId                  String?       @db.VarChar(255)
+  userName                String?       @db.VarChar(255)
+  accountNumber           String?       @db.VarChar(255)
+  locationId              String?       @db.VarChar(255)
+  id                      Int           @id @unique(map: "id") @default(autoincrement())
+  status                  Boolean       @default(false)
+  created_at              DateTime      @db.DateTime(0)
+  updated_at              DateTime      @db.DateTime(0)
+  orderdetail             orderdetail[]
+}
+
+model path {
+  path_id    String?  @db.VarChar(255)
+  acc_no     String?  @db.VarChar(255)
+  loc_no     String?  @db.VarChar(255)
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+
+  @@index([path_id], map: "path_id")
+}
+
+model picklistmaster {
+  pickListDate         String?   @db.VarChar(255)
+  pickListTime         String?   @db.VarChar(255)
+  pickListCompleteTime DateTime? @db.DateTime(0)
+  locationId           String?   @db.VarChar(255)
+  userId               String?   @db.VarChar(255)
+  userName             String?   @db.VarChar(255)
+  accountNumber        String?   @db.VarChar(255)
+  id                   Int       @id @unique(map: "id") @default(autoincrement())
+  status               Boolean   @default(false)
+  created_at           DateTime  @db.DateTime(0)
+  updated_at           DateTime  @db.DateTime(0)
+
+  @@index([accountNumber], map: "accountNumber")
+  @@index([locationId], map: "locationId")
+  @@index([pickListDate], map: "pickListDate")
+  @@index([status], map: "status")
+}
+
+model product_category {
+  product_id  Int?
+  category_id Int?
+  id          Int         @id @unique(map: "id") @default(autoincrement())
+  created_at  DateTime    @db.DateTime(0)
+  updated_at  DateTime    @db.DateTime(0)
+  products    products?   @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "product_category_ibfk_61")
+  categories  categories? @relation(fields: [category_id], references: [id], onDelete: Cascade, map: "product_category_ibfk_62")
+
+  @@unique([product_id, category_id], map: "product_category_product_id_category_id_unique")
+  @@index([category_id], map: "category_id")
+}
+
+model product_conversion {
+  type            String?   @db.VarChar(255)
+  selling_unit    String?   @db.VarChar(255)
+  item_conversion String?   @db.VarChar(255)
+  sorting         Int?
+  id              Int       @id @unique(map: "id") @default(autoincrement())
+  created_at      DateTime  @db.DateTime(0)
+  updated_at      DateTime  @db.DateTime(0)
+  product_id      Int?
+  products        products? @relation(fields: [product_id], references: [id], map: "product_conversion_ibfk_1")
+
+  @@index([product_id], map: "product_id")
+  @@index([selling_unit], map: "selling_unit")
+}
+
+model product_generic_formula {
+  product_generic_formula String?   @db.VarChar(255)
+  id                      Int       @id @unique(map: "id") @default(autoincrement())
+  created_at              DateTime  @db.DateTime(0)
+  updated_at              DateTime  @db.DateTime(0)
+  product_id              Int?
+  products                products? @relation(fields: [product_id], references: [id], map: "product_generic_formula_ibfk_1")
+
+  @@index([product_id], map: "product_id")
+}
+
+model product_tag {
+  tag        String?   @db.VarChar(255)
+  id         Int       @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime  @db.DateTime(0)
+  updated_at DateTime  @db.DateTime(0)
+  product_id Int?
+  products   products? @relation(fields: [product_id], references: [id], map: "product_tag_ibfk_1")
+
+  @@index([product_id], map: "product_id")
+}
+
+model product_vendor {
+  product_id Int?
+  vendor_id  Int?
+  id         Int       @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime  @db.DateTime(0)
+  updated_at DateTime  @db.DateTime(0)
+  products   products? @relation(fields: [product_id], references: [id], onDelete: Cascade, map: "product_vendor_ibfk_57")
+  vendors    vendors?  @relation(fields: [vendor_id], references: [id], onDelete: Cascade, map: "product_vendor_ibfk_58")
+
+  @@unique([product_id, vendor_id], map: "product_vendor_product_id_vendor_id_unique")
+  @@index([vendor_id], map: "vendor_id")
+}
+
+model products {
+  product_name            String?                   @db.VarChar(255)
+  sku_description         String?                   @db.VarChar(6000)
+  sku_department          String?                   @db.VarChar(255)
+  item_nature             String?                   @db.VarChar(255)
+  tax_code                String?                   @db.VarChar(255)
+  purchasing_unit         String?                   @db.VarChar(255)
+  trade_price             String?                   @db.VarChar(255)
+  discounted_price        String?                   @db.VarChar(255)
+  maximum_retail_price    String?                   @db.VarChar(255)
+  minimum_retail_price    String?                   @db.VarChar(255)
+  margin                  String?                   @db.VarChar(255)
+  sku_minimum_level       String?                   @db.VarChar(255)
+  sku_maximum_level       String?                   @db.VarChar(255)
+  sku_reorder_level       String?                   @db.VarChar(255)
+  sku_warehouse_lead_time String?                   @db.VarChar(255)
+  item_release_level      String?                   @db.VarChar(255)
+  price_levels            String?                   @db.VarChar(255)
+  stock_nature            String?                   @db.VarChar(255)
+  bar_code                String?                   @db.VarChar(255)
+  item_storage_location   String?                   @db.VarChar(255)
+  selling_discount        String?                   @db.VarChar(255)
+  item_tracking_level     String?                   @db.VarChar(255)
+  product_lifecycle       String?                   @db.VarChar(255)
+  quantity                String?                   @db.VarChar(255)
+  pct_code                String?                   @db.VarChar(255)
+  prescription_required   Boolean?                  @default(false)
+  drap_id                 String?                   @db.VarChar(255)
+  side_effects            String?                   @db.VarChar(255)
+  sales_tax_group         String?                   @db.VarChar(255)
+  sales_tax_percentage    String?                   @db.VarChar(255)
+  dosage_instruction      String?                   @db.VarChar(255)
+  discount_type           String?                   @db.VarChar(255)
+  purchasing_price        Int?                      @default(0)
+  mrp_unit_price          Float?                    @db.Float
+  trade_discount          Int?
+  comment                 String?                   @db.VarChar(255)
+  bv_id                   String?                   @db.VarChar(255)
+  manufacturer_id         Int?
+  id                      Int                       @id @unique(map: "id") @default(autoincrement())
+  status                  Boolean                   @default(false)
+  created_at              DateTime                  @db.DateTime(0)
+  updated_at              DateTime                  @db.DateTime(0)
+  user_name               String?                   @db.VarChar(255)
+  user_id                 String?                   @db.VarChar(255)
+  mrp_update_date         DateTime?                 @db.DateTime(0)
+  product_category        product_category[]
+  product_conversion      product_conversion[]
+  product_generic_formula product_generic_formula[]
+  product_tag             product_tag[]
+  product_vendor          product_vendor[]
+  manufacturers           manufacturers?            @relation(fields: [manufacturer_id], references: [id], onDelete: Cascade, map: "products_ibfk_1")
+
+  @@index([manufacturer_id], map: "manufacturer_id")
+  @@index([mrp_update_date], map: "mrp_update_date")
+  @@index([product_name], map: "product_name")
+}
+
+model purchase_order_detail {
+  product_id                Int?
+  product_name              String?                @db.VarChar(255)
+  manufacturer_id           Int?
+  manufacturer_name         String?                @db.VarChar(255)
+  required_quantity         Int?
+  trade_price               Float?                 @db.Float
+  trade_discount_percentage Float?                 @db.Float
+  sales_tax_percentage      Float?                 @db.Float
+  gst_percentage            Float?                 @db.Float
+  uom                       String?                @db.VarChar(255)
+  foc                       Boolean?
+  item_conversion           String?                @db.VarChar(255)
+  id                        Int                    @id @unique(map: "id") @default(autoincrement())
+  status                    Boolean                @default(false)
+  created_at                DateTime               @db.DateTime(0)
+  updated_at                DateTime               @db.DateTime(0)
+  po_id                     Int?
+  purchase_order_master     purchase_order_master? @relation(fields: [po_id], references: [id], map: "purchase_order_detail_ibfk_1")
+
+  @@index([po_id], map: "po_id")
+}
+
+model purchase_order_master {
+  vendor_id              Int?
+  vendor_name            String?                           @db.VarChar(255)
+  address                String?                           @db.VarChar(255)
+  city                   String?                           @db.VarChar(255)
+  ntn                    String?                           @db.VarChar(255)
+  advance_income         String?                           @db.VarChar(255)
+  strn                   String?                           @db.VarChar(255)
+  payment_terms          String?                           @db.VarChar(255)
+  expected_delivery_date DateTime?                         @db.DateTime(0)
+  delivery_location      String?                           @db.VarChar(255)
+  po_type                String?                           @db.VarChar(255)
+  arrival_date           DateTime?                         @db.DateTime(0)
+  order_status           String?                           @db.VarChar(255)
+  order_type             purchase_order_master_order_type? @default(Normal)
+  total_amount           Float?                            @db.Float
+  total_discount         Float?                            @db.Float
+  sales_tax              Float?                            @db.Float
+  net_amount             Float?                            @db.Float
+  comment                String?                           @db.VarChar(255)
+  user_name              String?                           @db.VarChar(255)
+  acc_no                 String?                           @db.VarChar(255)
+  loc_no                 String?                           @db.VarChar(255)
+  is_cancelled           Boolean?                          @default(false)
+  id                     Int                               @id @unique(map: "id") @default(autoincrement())
+  status                 Boolean                           @default(false)
+  created_at             DateTime                          @db.DateTime(0)
+  updated_at             DateTime                          @db.DateTime(0)
+  additional_terms       String?                           @db.VarChar(255)
+  user_id                String?                           @db.VarChar(255)
+  purchase_order_detail  purchase_order_detail[]
+
+  @@index([order_status], map: "order_status")
+  @@index([vendor_id], map: "vendor_id")
+}
+
+model rack {
+  rack_id    String?  @db.VarChar(255)
+  side_id    String?  @db.VarChar(255)
+  acc_no     String?  @db.VarChar(255)
+  loc_no     String?  @db.VarChar(255)
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+}
+
+/// This model has been renamed to 'Renamedreturn' during introspection, because the original name 'return' is reserved.
+model Renamedreturn {
+  user_name   String   @db.VarChar(255)
+  acc_no      String   @db.VarChar(255)
+  loc_no      String   @db.VarChar(255)
+  user_id     String?  @db.VarChar(255)
+  picklist_id Int      @id @unique(map: "picklist_id") @default(autoincrement())
+  status      Boolean  @default(false)
+  created_at  DateTime @db.DateTime(0)
+  updated_at  DateTime @db.DateTime(0)
+  vendorId    String   @db.VarChar(255)
+  vendorName  String   @db.VarChar(255)
+
+  @@map("return")
+}
+
+model return_order {
+  customerOrderId String   @db.VarChar(255)
+  orderId         String   @db.VarChar(255)
+  skuChild        String   @db.VarChar(255)
+  returnBatch     String   @db.VarChar(255)
+  pickListId      String   @db.VarChar(255)
+  id              Int      @id @unique(map: "id") @default(autoincrement())
+  status          Boolean  @default(false)
+  created_at      DateTime @db.DateTime(0)
+  updated_at      DateTime @db.DateTime(0)
+
+  @@map("return-order")
+}
+
+model side {
+  side_id    String?  @db.VarChar(255)
+  path_id    String?  @db.VarChar(255)
+  acc_no     String?  @db.VarChar(255)
+  loc_no     String?  @db.VarChar(255)
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+}
+
+model sidebar {
+  label         String         @db.VarChar(255)
+  href          String         @db.VarChar(255)
+  hasChildren   Boolean        @default(false)
+  icons         String         @default("0") @db.VarChar(255)
+  parent_id     Int?
+  id            Int            @id @default(autoincrement())
+  status        Boolean        @default(true)
+  created_at    DateTime       @db.DateTime(0)
+  updated_at    DateTime       @db.DateTime(0)
+  sorting       Int?
+  show          Boolean?       @default(true)
+  sidebar       sidebar?       @relation("sidebarTosidebar", fields: [parent_id], references: [id], map: "sidebar_ibfk_1")
+  other_sidebar sidebar[]      @relation("sidebarTosidebar")
+  sidebar_user  sidebar_user[]
+
+  @@index([parent_id], map: "parent_id")
+}
+
+model sidebar_user {
+  user_id    Int?
+  sidebar_id Int?
+  id         Int      @id @default(autoincrement())
+  status     Boolean  @default(true)
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+  users      users?   @relation(fields: [user_id], references: [id], onDelete: Cascade, map: "sidebar_user_ibfk_19")
+  sidebar    sidebar? @relation(fields: [sidebar_id], references: [id], onDelete: Cascade, map: "sidebar_user_ibfk_20")
+
+  @@unique([user_id, sidebar_id], map: "sidebar_user_sidebar_id_user_id_unique")
+  @@index([sidebar_id], map: "sidebar_id")
+}
+
+model transfer_detail {
+  product_id      Int?
+  product_name    String?          @db.VarChar(255)
+  sku_child       String?          @db.VarChar(255)
+  is_received     Boolean?         @default(false)
+  id              Int              @id @unique(map: "id") @default(autoincrement())
+  status          Boolean          @default(false)
+  created_at      DateTime         @db.DateTime(0)
+  updated_at      DateTime         @db.DateTime(0)
+  transfer_id     Int?
+  transfer_master transfer_master? @relation(fields: [transfer_id], references: [id], map: "transfer_detail_ibfk_1")
+
+  @@index([transfer_id], map: "transfer_id")
+}
+
+model transfer_master {
+  location_from         String            @db.VarChar(255)
+  location_to           String            @db.VarChar(255)
+  expected_arrival_date DateTime          @db.DateTime(0)
+  transfer_status       String            @db.VarChar(255)
+  stock_receive_date    DateTime?         @db.DateTime(0)
+  user_name             String            @db.VarChar(255)
+  acc_no                String            @db.VarChar(255)
+  loc                   String            @db.VarChar(255)
+  id                    Int               @id @unique(map: "id") @default(autoincrement())
+  status                Boolean           @default(false)
+  created_at            DateTime          @db.DateTime(0)
+  updated_at            DateTime          @db.DateTime(0)
+  user_id               String?           @db.VarChar(255)
+  transfer_detail       transfer_detail[]
+}
+
+model users {
+  user_id        String?        @db.VarChar(255)
+  email          String?        @unique(map: "email") @db.VarChar(255)
+  password       String?        @db.VarChar(255)
+  user_name      String?        @db.VarChar(255)
+  phone_number   String?        @unique(map: "phone_number") @db.VarChar(255)
+  type           String?        @db.VarChar(255)
+  loc_code       String?        @db.VarChar(255)
+  account_number String         @db.VarChar(255)
+  id             Int            @id @unique(map: "id") @default(autoincrement())
+  status         Boolean        @default(false)
+  created_at     DateTime       @db.DateTime(0)
+  updated_at     DateTime       @db.DateTime(0)
+  sidebar_user   sidebar_user[]
+}
+
+model users_designation {
+  designation String   @db.VarChar(255)
+  user_id     Int
+  id          Int      @id @unique(map: "id") @default(autoincrement())
+  status      Boolean  @default(false)
+  created_at  DateTime @db.DateTime(0)
+  updated_at  DateTime @db.DateTime(0)
+}
+
+model vendor_manufacturer {
+  id              Int            @id @unique(map: "id") @default(autoincrement())
+  manufacturer_id Int?
+  vendor_id       Int?
+  created_at      DateTime       @db.DateTime(0)
+  updated_at      DateTime       @db.DateTime(0)
+  manufacturers   manufacturers? @relation(fields: [manufacturer_id], references: [id], onDelete: Cascade, map: "vendor_manufacturer_ibfk_69")
+  vendors         vendors?       @relation(fields: [vendor_id], references: [id], onDelete: Cascade, map: "vendor_manufacturer_ibfk_70")
+
+  @@unique([manufacturer_id, vendor_id], map: "vendor_manufacturer_vendor_id_manufacturer_id_unique")
+  @@index([vendor_id], map: "vendor_id")
+}
+
+model vendor_tax {
+  tax_group  String?  @db.VarChar(255)
+  percentage String?  @db.VarChar(255)
+  type       String?  @db.VarChar(255)
+  id         Int      @id @unique(map: "id") @default(autoincrement())
+  created_at DateTime @db.DateTime(0)
+  updated_at DateTime @db.DateTime(0)
+}
+
+model vendors {
+  vendor_name              String?               @db.VarChar(255)
+  procurement_category     String?               @db.VarChar(255)
+  vendor_classification    String?               @db.VarChar(255)
+  ntn                      String?               @db.VarChar(255)
+  cnic                     String?               @db.VarChar(255)
+  cnic_expiry_date         DateTime?             @db.DateTime(0)
+  strn                     String?               @db.VarChar(255)
+  drug_license_no          String?               @db.VarChar(255)
+  tax_status               String?               @db.VarChar(255)
+  drug_sales_license       String?               @db.VarChar(255)
+  tax_exemption            String?               @db.VarChar(255)
+  contact_person           String?               @db.VarChar(255)
+  poc_phone_number         String?               @db.VarChar(255)
+  poc_email                String?               @db.VarChar(255)
+  business_address         String?               @db.VarChar(255)
+  city                     String?               @db.VarChar(255)
+  business_phone_number    String?               @db.VarChar(255)
+  email_address            String?               @db.VarChar(255)
+  payment_terms            String?               @db.VarChar(255)
+  payment_method           String?               @db.VarChar(255)
+  vendor_credit_limit      String?               @db.VarChar(255)
+  delivery_lead_time       String?               @db.VarChar(255)
+  bank_name                String?               @db.VarChar(255)
+  bank_branch_code         String?               @db.VarChar(255)
+  branch_city              String?               @db.VarChar(255)
+  account_ibn_number       String?               @db.VarChar(255)
+  vendor_wise_discount     String?               @db.VarChar(255)
+  stock_return_policy      String?               @db.VarChar(255)
+  advance_income_tax       String?               @db.VarChar(255)
+  gst                      String?               @db.VarChar(255)
+  minimum_order_quantity   String?               @db.VarChar(255)
+  with_hold_tax_group      String?               @db.VarChar(255)
+  with_hold_tax_percentage String?               @db.VarChar(255)
+  sales_tax_group          String?               @db.VarChar(255)
+  sales_tax_percentage     String?               @db.VarChar(255)
+  line_of_business         String?               @db.VarChar(255)
+  tax_exemption_validity   DateTime?             @db.DateTime(0)
+  comment                  String?               @db.VarChar(255)
+  file_attachment_path     String?               @db.VarChar(255)
+  id                       Int                   @id @unique(map: "id") @default(autoincrement())
+  status                   Boolean               @default(false)
+  created_at               DateTime              @db.DateTime(0)
+  updated_at               DateTime              @db.DateTime(0)
+  user_name                String?               @db.VarChar(255)
+  user_id                  String?               @db.VarChar(255)
+  product_vendor           product_vendor[]
+  vendor_manufacturer      vendor_manufacturer[]
+}
+
+enum purchase_order_master_order_type {
+  Normal
+  Advance
+}

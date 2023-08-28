@@ -1,5 +1,18 @@
 import ReturnForm from 'components/Return/ReturnForm';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
+import prisma from '../../../config/prisma';
+//
+async function getVendorDropDownData() {
+  const vendor = await prisma.vendors.findMany({
+    select: { id: true, vendor_name: true },
+  });
+  return vendor.map((each) => ({
+    value: each.id.toString(),
+    label: each.vendor_name,
+  }));
+}
+//
+//
 
 function Header() {
   return (
@@ -10,7 +23,9 @@ function Header() {
     </header>
   );
 }
-export default function Page() {
+export default async function Page() {
+  const vendorDropDownData = await getVendorDropDownData();
+
   return (
     <>
       <section className="flex min-h-[100%] flex-col gap-10 p-7">
@@ -21,7 +36,7 @@ export default function Page() {
               Here you can manage your all Returns!
             </p>
           </div>
-          <ReturnForm />
+          <ReturnForm vendorDropDownData={vendorDropDownData} />
         </div>
       </section>
     </>
