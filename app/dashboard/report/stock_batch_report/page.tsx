@@ -32,6 +32,7 @@ type TableType = {
 };
 //
 async function DataFetcher() {
+  'use server';
   await prisma.$queryRawUnsafe('SET SQL_MODE = "";');
   const loc = cookies().get('loc_no')?.value;
   const type = cookies().get('type')?.value;
@@ -82,7 +83,6 @@ ${type == 'admin' ? adminQuery : userQuery}`)) as TableType[];
 }
 //
 export default async function Page() {
-  const tableData: TableType[] = await DataFetcher();
   return (
     <>
       <section className="flex min-h-[100%] flex-col gap-10 p-7">
@@ -93,7 +93,7 @@ export default async function Page() {
               Here you can manage your all Stock Batch Report!
             </p>
           </div>
-          <StockBatchReport tableData={tableData} />
+          <StockBatchReport tableData={DataFetcher} />
         </div>
       </section>
     </>
