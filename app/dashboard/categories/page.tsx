@@ -4,6 +4,7 @@ import prisma from 'config/prisma';
 import Link from 'next/link';
 //
 async function getCategoryData() {
+  'use server';
   return await prisma.categories.findMany({
     select: {
       id: true,
