@@ -38,6 +38,8 @@ export default function Form({
     const location = await axiosFunction({ urlPath: '/location/find' }).then(
       (res) => res.data,
     );
+    console.log('Location', location);
+
     setLocationData(location);
   };
   const productFetcher = async (ids: any[]) => {
