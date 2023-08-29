@@ -135,7 +135,6 @@ export default function Form({
           })}
           value={formData.delivery_location}
           onChange={(value) => inputHandler('delivery_location', value!)}
-          disabled
         />
         <Select
           className="w-[47%]"
