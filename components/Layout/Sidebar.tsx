@@ -84,8 +84,8 @@ export default function Sidebar({ isActive }: PropType) {
     <>
       <div className={`overflow-hidden transition-all ${classString}`}>
         <header className="flex h-[80px] items-center justify-center border">
-          <div className="w-48">
-            <Image src={'/pharm_logo.png'} />
+          <div className="w-24">
+            <Image className="w-full" src={'/pharm_logo.png'} />
           </div>
         </header>
         <SidebarBody signOutHandler={signOutHandler} />
