@@ -81,7 +81,10 @@ export default function ReceiveList() {
             {
               name: 'Expected Delivery Date',
               cell: (row: TransferType) => (
-                <>{row.expected_arrival_date.toString().substring(0, 10)}</>
+                <>
+                  {row.expected_arrival_date?.toString()?.substring(0, 10) ||
+                    '-'}
+                </>
               ),
               center: true,
               grow: 0,
@@ -90,7 +93,7 @@ export default function ReceiveList() {
             {
               name: 'Created At',
               cell: (row: TransferType) => (
-                <>{row.created_at?.toString().substring(0, 10)}</>
+                <>{row.created_at?.toString()?.substring(0, 10) || '-'}</>
               ),
               center: true,
               grow: 0,
