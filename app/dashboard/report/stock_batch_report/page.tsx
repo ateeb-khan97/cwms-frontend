@@ -37,8 +37,8 @@ async function DataFetcher() {
   const loc = cookies().get('loc_no')?.value;
   const type = cookies().get('type')?.value;
   //
-  const userQuery = ` WHERE ind.location_id = ${loc} AND ind.bin_id IS NOT NULL AND ind.pick_list_id IS NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
-  const adminQuery = ` WHERE ind.bin_id IS NOT NULL AND ind.pick_list_id IS NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
+  const userQuery = ` WHERE ind.location_id = ${loc} AND ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
+  const adminQuery = ` WHERE ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
   //
   return (await prisma.$queryRawUnsafe(`SELECT ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
     products.manufacturer_id = manufacturers.id WHERE products.id = ind.product_id) AS manufacturer_name,
@@ -51,7 +51,7 @@ async function DataFetcher() {
     product_category.product_id = ind.product_id) AS category_name,
   p.product_name,
   ind.third_level as item_conversion,
-  (COUNT(ind.inward_id)) AS total_inventory,
+  (SUM(ind.third_level)) AS total_inventory,
   loc.loc_name,
   p.purchasing_price,
   (COUNT(ind.inward_id)) * p.purchasing_price AS total_purchasing_price,
