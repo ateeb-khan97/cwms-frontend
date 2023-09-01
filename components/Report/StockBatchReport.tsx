@@ -8,7 +8,7 @@ import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { MdDownload, MdSearch } from 'react-icons/md';
 //
-type TableType = {
+interface TableType {
   product_id: string;
   batch_number: string;
   manufacturer_name: string;
@@ -23,7 +23,7 @@ type TableType = {
   mrp_unit_price: string;
   tax_code: string;
   aging_time: string;
-};
+}
 //
 const TableHeadComponent = ({
   filterFunction,
@@ -40,8 +40,6 @@ const TableHeadComponent = ({
               urlPath: '/inward/batch-report-download',
               responseType: 'blob',
             }).then((response: any) => {
-              console.log(response);
-
               const url = window.URL.createObjectURL(new Blob([response]));
               const link = document.createElement('a');
               link.href = url;

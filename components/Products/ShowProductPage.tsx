@@ -3,9 +3,7 @@ import { Button, TextInput } from '@mantine/core';
 import { useDebouncedState } from '@mantine/hooks';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
-import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
-import useProductData from 'modules/Products/useProductData';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 //
