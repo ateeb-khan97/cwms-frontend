@@ -5,7 +5,7 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import { useRef, useState } from 'react';
-import { MdClear } from 'react-icons/md';
+import { MdClear, MdDelete } from 'react-icons/md';
 
 //
 export default function ReturnOrder() {
@@ -141,6 +141,29 @@ export default function ReturnOrder() {
             grow: 1,
             cell(row, rowIndex, column, id) {
               return orderId;
+            },
+          },
+          {
+            compact: true,
+            name: 'Delete',
+            grow: 0,
+            width: '70px',
+            center: true,
+            cell(row, rowIndex, column, id) {
+              return (
+                <Button
+                  onClick={() => {
+                    const filteredData = inwardChild.filter(
+                      (each) => each != row,
+                    );
+                    setInwardChild(filteredData);
+                  }}
+                  className="btn flex aspect-square items-center justify-center"
+                  compact
+                >
+                  <MdDelete />
+                </Button>
+              );
             },
           },
         ]}
