@@ -42,7 +42,7 @@ export default function SkuChildReport({ getTableData }: IPropType) {
       if (container) {
         container.scrollIntoView({ behavior: 'smooth', block: 'end' });
       }
-    }, 100);
+    }, 10);
   }
   useEffect(() => {
     getData();
