@@ -38,9 +38,11 @@
     "file-saver": "2.0.5",
     "moment": "2.29.4",
     "next": "latest",
+    "papaparse": "5.4.1",
     "prisma": "5.2.0",
     "react": "latest",
     "react-barcode": "^1.4.6",
+    "react-data-export": "0.6.0",
     "react-data-table-component": "7.5.3",
     "react-dom": "latest",
     "react-dual-listbox": "5.0.2",
@@ -50,11 +52,13 @@
     "sharp": "0.31.3",
     "styled-components": "6.0.0-beta.2",
     "styled-jsx": "5.1.0",
-    "use-count-up": "3.0.1"
+    "use-count-up": "3.0.1",
+    "xlsx": "0.18.5"
   },
   "devDependencies": {
     "@types/file-saver": "2.0.5",
     "@types/node": "18.0.3",
+    "@types/papaparse": "5.3.8",
     "@types/react": "18.0.15",
     "@types/react-dom": "18.0.6",
     "@types/react-dual-listbox": "2.2.2",

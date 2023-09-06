@@ -6,7 +6,8 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-//
+import { saveAs } from 'file-saver';
+import Papa from 'papaparse';
 import React from 'react';
 import { AiFillEdit, AiOutlineSearch } from 'react-icons/ai';
 import { MdFileDownload } from 'react-icons/md';
@@ -24,24 +25,9 @@ function Header() {
 type FilterProps = {
   value: string;
   setValue: (value: string) => void;
+  downloadHandler: () => {};
 };
-const FilterComponent = ({ setValue, value }: FilterProps) => {
-  async function downloadHandler() {
-    await axiosFunction({
-      urlPath: '/product/download',
-      responseType: 'blob',
-    }).then((response: any) => {
-      console.log(response);
-
-      const url = window.URL.createObjectURL(new Blob([response]));
-      const link = document.createElement('a');
-      link.href = url;
-      link.setAttribute('download', 'product-data.csv');
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  }
+const FilterComponent = ({ setValue, value, downloadHandler }: FilterProps) => {
   return (
     <div className="flex gap-5">
       <Button
@@ -62,7 +48,7 @@ const FilterComponent = ({ setValue, value }: FilterProps) => {
   );
 };
 //
-function Table() {
+function Table({ downloadHandler }: { downloadHandler: () => {} }) {
   const router = useRouter();
   // const { productData, loading } = useProductData();
   const [value, setValue] = useDebouncedState('', 200);
@@ -331,13 +317,28 @@ function Table() {
           },
         ]}
       >
-        <FilterComponent setValue={setValue} value={value} />
+        <FilterComponent
+          downloadHandler={downloadHandler}
+          setValue={setValue}
+          value={value}
+        />
       </DataTableComponent>
     </>
   );
 }
 //
-export default function ShowProductPage() {
+export default function ShowProductPage({
+  getDownloadData,
+}: {
+  getDownloadData: () => Promise<any[]>;
+}) {
+  async function downloadHandler() {
+    const downloadData = await getDownloadData();
+    const csvData = Papa.unparse(downloadData);
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+    saveAs(blob, 'data.csv');
+  }
   return (
     <section className="flex min-h-[100%] flex-col gap-10 p-7">
       <Header />
@@ -353,7 +354,7 @@ export default function ShowProductPage() {
             Add Product
           </Link>
         </div>
-        <Table />
+        <Table downloadHandler={downloadHandler} />
       </div>
     </section>
   );
