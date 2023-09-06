@@ -57,6 +57,13 @@ async function getTableData() {
   };
 }
 //
+async function getDownloadData() {
+  'use server';
+  return (await prisma.$queryRawUnsafe(
+    `select id.id, id.bin_id , id.second_level, id.third_level, id.inward_id, id.inward_child , id.is_received , id.user_name , CAST(Date(id.created_at) as CHAR) as created_at , CAST(Date(id.location_change_date) as CHAR) as location_change_date , id.pick_list_id , l.loc_name from inward_detail id left join locations l on l.loc_code = location_id;`,
+  )) as any[];
+}
+//
 export default function Page(prop: IPropType) {
   return (
     <>
@@ -68,7 +75,10 @@ export default function Page(prop: IPropType) {
               Here you can manage your all SKU Child Report!
             </p>
           </div>
-          <SkuChildReport getTableData={getTableData} />
+          <SkuChildReport
+            getTableData={getTableData}
+            getDownloadData={getDownloadData}
+          />
         </div>
       </section>
     </>

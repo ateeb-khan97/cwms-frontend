@@ -4,6 +4,9 @@ import Search from 'app/dashboard/report/sku-child-report/Search';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
+import { Button } from '@mantine/core';
+import { MdDownload } from 'react-icons/md';
+import { saveAs } from 'file-saver';
 //
 interface ITableType {
   id: string;
@@ -21,18 +24,23 @@ interface ITableType {
 }
 //
 interface IPropType {
+  getDownloadData: () => Promise<any[]>;
   getTableData: () => Promise<{
     totalCount: string;
     tableData: any[];
   }>;
 }
 //
-export default function SkuChildReport({ getTableData }: IPropType) {
+export default function SkuChildReport({
+  getTableData,
+  getDownloadData,
+}: IPropType) {
   const divRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const search = useSearchParams();
   const [tableData, setTableData] = useState<ITableType[]>([]);
   const [totalRows, setTotalRows] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   async function getData() {
     const data = await getTableData();
     setTableData(data.tableData);
@@ -51,6 +59,23 @@ export default function SkuChildReport({ getTableData }: IPropType) {
     search.get('search'),
     search.get('currentRowsPerPage'),
   ]);
+  //
+  async function downloadHandler() {
+    setIsLoading(true);
+    const downloadData = await getDownloadData();
+    const csvData = [
+      Object.keys(downloadData[0]).join(','),
+      ...downloadData.map((item) => Object.values(item).join(',')),
+    ].join('\n');
+
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+
+    // Trigger the download using the file-saver library
+    saveAs(blob, 'data.csv');
+    setIsLoading(false);
+  }
+
   return (
     <div ref={divRef}>
       <DataTableComponent
@@ -217,7 +242,19 @@ export default function SkuChildReport({ getTableData }: IPropType) {
         ]}
         data={tableData}
       >
-        <Search />
+        <div className="flex items-center justify-end gap-5">
+          <Button
+            disabled={isLoading}
+            loading={isLoading}
+            onClick={downloadHandler}
+            size="xs"
+            className="btn"
+            leftIcon={<MdDownload />}
+          >
+            Download
+          </Button>
+          <Search />
+        </div>
       </DataTableComponent>
     </div>
   );
