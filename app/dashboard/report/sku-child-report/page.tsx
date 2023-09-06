@@ -37,7 +37,7 @@ async function getTableData() {
   if (referer) {
     const url = new URL(referer);
     page = url.searchParams.get('page') || '1';
-    currentRowsPerPage = url.searchParams.get('currentRowsPerPage') || '1';
+    currentRowsPerPage = url.searchParams.get('currentRowsPerPage') || '10';
     search = url.searchParams.get('search') || '';
   }
   //
