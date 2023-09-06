@@ -12,9 +12,20 @@ export default function Search({ query }: { query?: string }) {
   const [debounced] = useDebouncedValue(value, 500);
   //
   useShallowEffect(() => {
-    let url = new URL(`${window.location.origin}${window.location.pathname}`);
-    url.searchParams.append('search', debounced);
-    router.push(url.toString());
+    const searchParams = new URLSearchParams(window.location.search);
+    if (searchParams.has('search')) {
+      searchParams.set('search', debounced);
+    } else {
+      searchParams.append('search', debounced);
+    }
+    if (searchParams.has('page')) {
+      searchParams.set('page', '1');
+    } else {
+      searchParams.append('page', '1');
+    }
+    const updatedQueryString = searchParams.toString();
+    const url = `${window.location.pathname}?${updatedQueryString}`;
+    router.push(url);
   }, [debounced]);
   //
   return (
