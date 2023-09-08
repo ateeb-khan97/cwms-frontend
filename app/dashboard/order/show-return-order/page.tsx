@@ -16,7 +16,7 @@ async function getTableData() {
   'use server';
   await prisma.$queryRawUnsafe(`set sql_mode = "";`);
   return prisma.$queryRawUnsafe(
-    'select ro.id as return_id, ro.customerOrderId, ro.orderId, id.product_id, is2.product_name, CAST(COUNT(*) as CHAR) as quantity from `return-order` ro left join inward_detail id on id.inward_child =ro.skuChild left join inward_sku is2 on is2.inward_id = id.inward_id group by is2.po_id;',
+    'select ro.id as return_id, ro.customerOrderId, ro.orderId, id.product_id, is2.product_name, CAST(COUNT(*) as CHAR) as quantity, group_concat(distinct ro.skuChild) as skuChilds from `return-order` ro left join inward_detail id on id.inward_child = ro.skuChild left join inward_sku is2 on is2.inward_id = id.inward_id group by is2.po_id;',
   );
 }
 //

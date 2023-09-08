@@ -5,6 +5,7 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import { useEffect, useState } from 'react';
 import { MdDownload, MdSearch } from 'react-icons/md';
 import { saveAs } from 'file-saver';
+import Papa from 'papaparse';
 //
 interface TableType {
   customerOrderId: string;
@@ -21,17 +22,11 @@ const TableHeadComponent = ({
   data: TableType[];
 }) => {
   const [search, setSearch] = useState<string>('');
-  function downloadHandler() {
-    const csvData = [
-      Object.keys(data[0]).join(','),
-      ...data.map((item) => Object.values(item).join(',')),
-    ].join('\n');
-
+  async function downloadHandler() {
+    const csvData = Papa.unparse(data);
     // Create a Blob containing the CSV data
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
-
-    // Trigger the download using the file-saver library
-    saveAs(blob, 'data.csv');
+    saveAs(blob, 'return-order.csv');
   }
   return (
     <>
@@ -116,6 +111,7 @@ export default function ShowReturnOrder({
               compact: true,
               grow: 0,
             },
+
             {
               name: 'Product ID',
               cell(row: TableType, rowIndex, column, id) {
@@ -132,6 +128,13 @@ export default function ShowReturnOrder({
                 return row.product_name || '';
               },
               grow: 2,
+            },
+            {
+              name: 'Order #',
+              cell(row, rowIndex, column, id) {
+                return row.customerOrderId;
+              },
+              grow: 1,
             },
             {
               name: 'Quantity',

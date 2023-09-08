@@ -7,7 +7,7 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import usePurchaseOrderData from 'modules/PurchaseOrder/usePurchaseOrder';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { AiOutlineSearch } from 'react-icons/ai';
 
 //
@@ -135,6 +135,8 @@ function Table({
   tableData: any[];
   setTableData: Function;
 }) {
+  const invoiceNumberRef = useRef<HTMLInputElement>(null);
+  const advanceIncomeRef = useRef<HTMLInputElement>(null);
   const [loading, setLoading] = useState<boolean>(false);
   //
   const { setPurchaseOrderData } = usePurchaseOrderData();
@@ -157,6 +159,19 @@ function Table({
   };
   //
   const submitHandler = async () => {
+    const invoiceNumber = invoiceNumberRef.current?.value;
+    const advanceIncome = advanceIncomeRef.current?.value;
+    //
+    if (
+      invoiceNumber == '' ||
+      invoiceNumber == null ||
+      invoiceNumber == undefined
+    ) {
+      return customNotification({
+        message: 'Invoice Number cannot be empty!',
+        title: 'Failed',
+      });
+    }
     setLoading(true);
     const mrp_check = tableData.filter((each_data: any) => {
       return (
@@ -176,6 +191,8 @@ function Table({
       urlPath: '/grn/create/',
       method: 'POST',
       data: {
+        invoiceNumber,
+        advanceIncome,
         po_id: tableData[0].po_id,
         grn_data: tableData,
       },
@@ -190,6 +207,8 @@ function Table({
       message,
       title: response.status == 200 ? 'Success' : 'Failed',
     });
+    invoiceNumberRef.current!.value = '';
+    advanceIncomeRef.current!.value = '';
     setLoading(false);
     setTableData([]);
     setPurchaseOrderData([]);
@@ -198,6 +217,22 @@ function Table({
   //
   return (
     <section>
+      <div className="w-72 p-5">
+        <TextInput
+          required
+          ref={invoiceNumberRef}
+          label="Invoice No"
+          placeholder="Enter Invoice No"
+          size="xs"
+        />
+        <TextInput
+          defaultValue={0}
+          ref={advanceIncomeRef}
+          label="Advance Income Tax"
+          placeholder="Enter Advance Income Tax"
+          size="xs"
+        />
+      </div>
       <DataTableComponent
         data={tableData}
         columns={[
