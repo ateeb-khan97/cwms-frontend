@@ -35,7 +35,15 @@ function Header({ isUpdate }: { isUpdate: boolean }) {
   );
 }
 //
-function Form({ isUpdate }: { isUpdate: boolean }) {
+function Form({
+  isUpdate,
+  venData,
+  manData,
+}: {
+  isUpdate: boolean;
+  venData: any;
+  manData: any[];
+}) {
   const router = useRouter();
   //
   const [withHoldTaxGroup, setWithHoldTaxGroup] = useState<any[]>([]);
@@ -55,10 +63,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     setWithHoldTaxGroup(tax.map((each) => each.tax_group));
     setWithHoldTaxPercentage(tax.map((each) => each.percentage));
   };
-  React.useEffect(() => {
-    manufacturerFetcher();
-    taxFetcher();
-  }, []);
+
   //
   var localData: any = {};
   if (typeof window != 'undefined' && isUpdate) {
@@ -66,55 +71,49 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
   }
   const form = useForm({
     validateInputOnChange: true,
-    initialValues: isUpdate
-      ? {
-          ...localData,
-          tax_exemption_validity: new Date(localData?.tax_exemption_validity),
-          cnic_expiry_date: new Date(localData?.cnic_expiry_date),
-        }
-      : {
-          status: false,
-          vendor_name: '',
-          procurement_category: [],
-          vendor_classification: '',
-          manufacturer: [],
-          ntn: '',
-          cnic: '',
-          cnic_expiry_date: new Date(),
-          line_of_business: '',
-          tax_exemption_validity: new Date(),
-          with_hold_tax_group: '',
-          with_hold_tax_percentage: '',
-          sales_tax_group: '',
-          sales_tax_percentage: '',
-          strn: '',
-          drug_license_no: '',
-          tax_status: 'filer',
-          drug_sales_license: 'yes',
-          tax_exemption: 'yes',
-          contact_person: '',
-          poc_phone_number: '',
-          poc_email: '',
-          business_address: '',
-          city: '',
-          business_phone_number: '',
-          email_address: '',
-          payment_terms: '',
-          payment_method: '',
-          vendor_credit_limit: '',
-          delivery_lead_time: '',
-          bank_name: '',
-          bank_branch_code: '',
-          branch_city: '',
-          account_ibn_number: '',
-          vendor_wise_discount: '',
-          stock_return_policy: '',
-          advance_income_tax: '',
-          gst: '',
-          minimum_order_quantity: '',
-          file_attachment: null,
-          comment: '',
-        },
+    initialValues: {
+      status: false,
+      vendor_name: '',
+      procurement_category: [],
+      vendor_classification: '',
+      manufacturer: isUpdate ? manData : [],
+      ntn: '',
+      cnic: '',
+      cnic_expiry_date: new Date(),
+      line_of_business: '',
+      tax_exemption_validity: new Date(),
+      with_hold_tax_group: '',
+      with_hold_tax_percentage: '',
+      sales_tax_group: '',
+      sales_tax_percentage: '',
+      strn: '',
+      drug_license_no: '',
+      tax_status: 'filer',
+      drug_sales_license: 'yes',
+      tax_exemption: 'yes',
+      contact_person: '',
+      poc_phone_number: '',
+      poc_email: '',
+      business_address: '',
+      city: '',
+      business_phone_number: '',
+      email_address: '',
+      payment_terms: '',
+      payment_method: '',
+      vendor_credit_limit: '',
+      delivery_lead_time: '',
+      bank_name: '',
+      bank_branch_code: '',
+      branch_city: '',
+      account_ibn_number: '',
+      vendor_wise_discount: '',
+      stock_return_policy: '',
+      advance_income_tax: '',
+      gst: '',
+      minimum_order_quantity: '',
+      file_attachment: null,
+      comment: '',
+    },
     // validate: (values: any) => {
     //   return {
     //     vendor_credit_limit: Validator.formValidator({
@@ -165,6 +164,15 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     //   };
     // },
   });
+  console.log(form.values.manufacturer);
+
+  React.useEffect(() => {
+    if (isUpdate) {
+      form.setValues(venData);
+    }
+    manufacturerFetcher();
+    taxFetcher();
+  }, []);
   //
   async function submitHandler(values: any) {
     if (values.manufacturer.length === 0) {
@@ -180,10 +188,7 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
     //
     const vendor_id_response = await axiosFunction({
       urlPath: url_temp,
-      data: {
-        ...values,
-        procurement_category,
-      },
+      data: { ...values, procurement_category },
       method: 'POST',
     });
 
@@ -577,7 +582,15 @@ function Form({ isUpdate }: { isUpdate: boolean }) {
   );
 }
 //
-export default function HandleVendorsPage({ isUpdate }: { isUpdate: boolean }) {
+export default function HandleVendorsPage({
+  vendorData,
+  manufacturerData,
+  isUpdate,
+}: {
+  vendorData: any;
+  manufacturerData: any[];
+  isUpdate: boolean;
+}) {
   return (
     <section className="flex min-h-[100%] flex-col gap-5 p-7">
       <Header isUpdate={isUpdate} />
@@ -587,7 +600,11 @@ export default function HandleVendorsPage({ isUpdate }: { isUpdate: boolean }) {
             Here you can manage your all Add and Update Vendors!
           </p>
         </div>
-        <Form isUpdate={isUpdate} />
+        <Form
+          manData={manufacturerData}
+          venData={vendorData}
+          isUpdate={isUpdate}
+        />
       </div>
     </section>
   );

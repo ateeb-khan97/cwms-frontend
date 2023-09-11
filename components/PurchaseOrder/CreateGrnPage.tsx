@@ -136,7 +136,7 @@ function Table({
   setTableData: Function;
 }) {
   const invoiceNumberRef = useRef<HTMLInputElement>(null);
-  const advanceIncomeRef = useRef<HTMLInputElement>(null);
+  const [advanceIncome, setAdvanceIncome] = useState('0');
   const [loading, setLoading] = useState<boolean>(false);
   //
   const { setPurchaseOrderData } = usePurchaseOrderData();
@@ -160,7 +160,6 @@ function Table({
   //
   const submitHandler = async () => {
     const invoiceNumber = invoiceNumberRef.current?.value;
-    const advanceIncome = advanceIncomeRef.current?.value;
     //
     if (
       invoiceNumber == '' ||
@@ -169,6 +168,16 @@ function Table({
     ) {
       return customNotification({
         message: 'Invoice Number cannot be empty!',
+        title: 'Failed',
+      });
+    }
+    if (
+      advanceIncome == '' ||
+      advanceIncome == null ||
+      advanceIncome == undefined
+    ) {
+      return customNotification({
+        message: 'Advance Income cannot be empty!',
         title: 'Failed',
       });
     }
@@ -208,7 +217,7 @@ function Table({
       title: response.status == 200 ? 'Success' : 'Failed',
     });
     invoiceNumberRef.current!.value = '';
-    advanceIncomeRef.current!.value = '';
+    setAdvanceIncome('0');
     setLoading(false);
     setTableData([]);
     setPurchaseOrderData([]);
@@ -226,8 +235,13 @@ function Table({
           size="xs"
         />
         <TextInput
-          defaultValue={0}
-          ref={advanceIncomeRef}
+          value={advanceIncome}
+          onChange={(event) => {
+            const newValue =
+              event.target.value.trim() === '' ? '0' : event.target.value;
+            setAdvanceIncome(newValue);
+          }}
+          required
           label="Advance Income Tax"
           placeholder="Enter Advance Income Tax"
           size="xs"

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, TextInput } from '@mantine/core';
+import { Button, Skeleton, TextInput } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
@@ -12,6 +12,8 @@ import { BsPrinter } from 'react-icons/bs';
 import { modals } from '@mantine/modals';
 import { useEffect, useRef, useState } from 'react';
 import { MdDownload, MdSearch } from 'react-icons/md';
+import { useRouter, useSearchParams } from 'next/navigation';
+import Search from 'app/dashboard/report/sku-child-report/Search';
 //
 function Header() {
   return (
@@ -69,25 +71,14 @@ const TableHeadComponent = ({
   );
 };
 //
-function Table() {
-  const { loading, receiveData, setReceiveData } = useReceiveData();
-  const [tableData, setTableData] = useState<any[]>([]);
-  useEffect(() => {
-    setTableData(receiveData);
-  }, []);
-  //
-  const filterFunction = (search: string) => {
-    search = search.toLowerCase();
-    const filteredDataTemp = receiveData.filter((each: any) => {
-      for (let key in each) {
-        if (each[key]?.toString()?.toLowerCase()?.includes(search)) {
-          return true;
-        }
-      }
-      return false;
-    });
-    setTableData(filteredDataTemp);
-  };
+function Table({
+  tableData,
+  totalRows,
+}: {
+  tableData: any[];
+  totalRows: number;
+}) {
+  const router = useRouter();
   //
   async function receiveHandler(id: number) {
     const response = await axiosFunction({
@@ -95,7 +86,7 @@ function Table() {
       method: 'POST',
       data: { id },
     }).then((res) => {
-      setReceiveData([]);
+      router.refresh();
       return res;
     });
     const message = response.status == 200 ? 'Success' : 'Failed';
@@ -167,154 +158,227 @@ function Table() {
       >
         Print
       </Button>
-      {loading ? (
-        <div className="flex w-[100%] justify-center p-28">
-          <Loader />
-        </div>
-      ) : (
-        <DataTableComponent
-          data={tableData.length == 0 ? receiveData : tableData}
-          columns={[
-            {
-              name: 'PO. ID',
-              selector: (row: ReceiveType) => row.po_id,
-              grow: 0,
-              center: true,
-              width: '70px',
-            },
-            {
-              name: 'Prod. ID',
-              selector: (row: ReceiveType) => row.product_id,
-              grow: 0,
-              center: true,
-              width: '70px',
-            },
-            {
-              name: 'Prod. Name',
-              selector: (row: ReceiveType) => row.product_name,
-              grow: 1,
-            },
-            {
-              name: 'Rec. Qty',
-              selector: (row: ReceiveType) => row.received_quantity,
-              grow: 0,
-              center: true,
-              width: '80px',
-            },
-            {
-              name: 'MRP',
-              selector: (row: ReceiveType) => row.maximum_retail_price,
-              grow: 0,
-              center: true,
-              width: '80px',
-            },
-            {
-              name: 'T. P.',
-              selector: (row: ReceiveType) => row.trade_price,
-              grow: 0,
-              center: true,
-              width: '80px',
-            },
-            {
-              name: 'Disc. %',
-              selector: (row: ReceiveType) => row.discount_percentage,
-              grow: 0,
-              center: true,
-              width: '80px',
-            },
-            {
-              name: 'Batch. No.',
-              selector: (row: ReceiveType) =>
-                row.batch_number ? row.batch_number : '-',
-              grow: 0,
-              center: true,
-            },
-            {
-              name: 'Batch. Exp.',
-              selector: (row: ReceiveType) =>
-                row.batch_expiry?.substring(0, 10) || '-',
-              grow: 0,
-              center: true,
-            },
-            {
-              name: 'FOC',
-              selector: (row: ReceiveType) => (row.foc ? 'Yes' : 'No'),
-              grow: 0,
-              center: true,
-              width: '70px',
-            },
-            {
-              name: 'Inward Date',
-              center: true,
-              grow: 0,
-              cell: (row: ReceiveType) =>
-                row.inward_date?.toString()?.substring(0, 10) || '-',
-            },
-            {
-              name: 'User ID',
-              center: true,
-              grow: 0,
-              cell: (row: ReceiveType) => row.user_id || '-',
-            },
-            {
-              name: 'User Name',
-              center: true,
-              grow: 0,
-              cell: (row: ReceiveType) => row.user_name || '-',
-            },
-            {
-              name: 'Actions',
-              cell: (row: ReceiveType) => (
-                <>
-                  {row.inward_id == null ? (
-                    <Button
-                      className="bg-red-500 transition-all hover:bg-red-900"
-                      compact
-                      onClick={() => receiveHandler(row.id)}
-                    >
-                      Receive
-                    </Button>
-                  ) : (
-                    <>{row.inward_id}</>
-                  )}
-                </>
-              ),
-              ignoreRowClick: true,
-              allowOverflow: true,
-              center: true,
-              width: '150px',
-              grow: 0,
-            },
-            {
-              name: 'Barcode',
-              cell: (row: ReceiveType) => (
-                <>
+      <DataTableComponent
+        paginationServer={true}
+        paginationTotalRows={totalRows}
+        onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
+          const searchParams = new URLSearchParams(window.location.search);
+          if (searchParams.has('currentRowsPerPage')) {
+            searchParams.set(
+              'currentRowsPerPage',
+              currentRowsPerPage.toString(),
+            );
+          } else {
+            searchParams.append(
+              'currentRowsPerPage',
+              currentRowsPerPage.toString(),
+            );
+          }
+          if (searchParams.has('currentPage')) {
+            searchParams.set('currentPage', currentPage.toString());
+          } else {
+            searchParams.append('currentPage', currentPage.toString());
+          }
+          const updatedQueryString = searchParams.toString();
+          const url = `${window.location.pathname}?${updatedQueryString}`;
+          router.push(url);
+          router.refresh();
+        }}
+        onChangePage={(page, totalRows) => {
+          const searchParams = new URLSearchParams(window.location.search);
+          if (searchParams.has('page')) {
+            searchParams.set('page', page.toString());
+          } else {
+            searchParams.append('page', page.toString());
+          }
+          if (searchParams.has('totalRows')) {
+            searchParams.set('totalRows', totalRows.toString());
+          } else {
+            searchParams.append('totalRows', totalRows.toString());
+          }
+          const updatedQueryString = searchParams.toString();
+          const url = `${window.location.pathname}?${updatedQueryString}`;
+          router.push(url);
+          router.refresh();
+        }}
+        data={tableData}
+        columns={[
+          {
+            name: 'PO. ID',
+            selector: (row: ReceiveType) => row.po_id,
+            grow: 0,
+            center: true,
+            width: '70px',
+          },
+          {
+            name: 'Prod. ID',
+            selector: (row: ReceiveType) => row.product_id,
+            grow: 0,
+            center: true,
+            width: '70px',
+          },
+          {
+            name: 'Prod. Name',
+            selector: (row: ReceiveType) => row.product_name,
+            grow: 1,
+          },
+          {
+            name: 'Rec. Qty',
+            selector: (row: ReceiveType) => row.received_quantity,
+            grow: 0,
+            center: true,
+            width: '80px',
+          },
+          {
+            name: 'MRP',
+            selector: (row: ReceiveType) => row.maximum_retail_price,
+            grow: 0,
+            center: true,
+            width: '80px',
+          },
+          {
+            name: 'T. P.',
+            selector: (row: ReceiveType) => row.trade_price,
+            grow: 0,
+            center: true,
+            width: '80px',
+          },
+          {
+            name: 'Disc. %',
+            selector: (row: ReceiveType) => row.discount_percentage,
+            grow: 0,
+            center: true,
+            width: '80px',
+          },
+          {
+            name: 'Batch. No.',
+            selector: (row: ReceiveType) =>
+              row.batch_number ? row.batch_number : '-',
+            grow: 0,
+            center: true,
+          },
+          {
+            name: 'Batch. Exp.',
+            selector: (row: ReceiveType) =>
+              row.batch_expiry?.substring(0, 10) || '-',
+            grow: 0,
+            center: true,
+          },
+          {
+            name: 'FOC',
+            selector: (row: ReceiveType) => (row.foc ? 'Yes' : 'No'),
+            grow: 0,
+            center: true,
+            width: '70px',
+          },
+          {
+            name: 'Inward Date',
+            center: true,
+            grow: 0,
+            cell: (row: ReceiveType) =>
+              row.inward_date?.toString()?.substring(0, 10) || '-',
+          },
+          {
+            name: 'User ID',
+            center: true,
+            grow: 0,
+            cell: (row: ReceiveType) => row.user_id || '-',
+          },
+          {
+            name: 'User Name',
+            center: true,
+            grow: 0,
+            cell: (row: ReceiveType) => row.user_name || '-',
+          },
+          {
+            name: 'Actions',
+            cell: (row: ReceiveType) => (
+              <>
+                {row.inward_id == null ? (
                   <Button
-                    onClick={() => qrGenerateFunction(row)}
-                    disabled={row.inward_id == null}
                     className="bg-red-500 transition-all hover:bg-red-900"
                     compact
+                    onClick={() => receiveHandler(row.id)}
                   >
-                    QR Gen.
+                    Receive
                   </Button>
-                </>
-              ),
-              ignoreRowClick: true,
-              allowOverflow: true,
-              center: true,
-              width: '100px',
-              grow: 0,
-            },
-          ]}
-        >
-          <TableHeadComponent filterFunction={filterFunction} />
-        </DataTableComponent>
-      )}
+                ) : (
+                  <>{row.inward_id}</>
+                )}
+              </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            center: true,
+            width: '150px',
+            grow: 0,
+          },
+          {
+            name: 'Barcode',
+            cell: (row: ReceiveType) => (
+              <>
+                <Button
+                  onClick={() => qrGenerateFunction(row)}
+                  disabled={row.inward_id == null}
+                  className="bg-red-500 transition-all hover:bg-red-900"
+                  compact
+                >
+                  QR Gen.
+                </Button>
+              </>
+            ),
+            ignoreRowClick: true,
+            allowOverflow: true,
+            center: true,
+            width: '100px',
+            grow: 0,
+          },
+        ]}
+      >
+        <div className="flex items-center justify-end gap-5">
+          <Button
+            // onClick={downloadHandler}
+            size="xs"
+            className="btn"
+            leftIcon={<MdDownload />}
+          >
+            Download
+          </Button>
+          <Search />
+        </div>
+      </DataTableComponent>
     </section>
   );
 }
 //
-export default function ReceiveItemsPage() {
+interface IPropType {
+  getTableData: () => Promise<any[]>;
+  getCount: () => Promise<number>;
+}
+//
+export default function ReceiveItemsPage({
+  getCount,
+  getTableData,
+}: IPropType) {
+  //
+  const [totalRows, setTotalRows] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [tableData, setTableData] = useState<any[]>([]);
+  const search = useSearchParams();
+  async function dataSetter() {
+    setTotalRows(await getCount());
+    setTableData(await getTableData());
+  }
+  useEffect(() => {
+    setIsLoading(true);
+    dataSetter();
+    setIsLoading(false);
+  }, [
+    search.get('page'),
+    search.get('search'),
+    search.get('currentRowsPerPage'),
+  ]);
+  //
   return (
     <>
       <section className="flex min-h-[100%] flex-col gap-10 p-7">
@@ -325,7 +389,13 @@ export default function ReceiveItemsPage() {
               Here you can manage your all Receive Items!
             </p>
           </div>
-          <Table />
+          {isLoading ? (
+            <div className="flex h-56 w-full scale-[0.5] items-center justify-center">
+              <Loader />
+            </div>
+          ) : (
+            <Table totalRows={totalRows} tableData={tableData} />
+          )}
         </div>
       </section>
     </>

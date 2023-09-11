@@ -4,10 +4,8 @@ import { Button } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
-import axiosFunction from 'functions/axiosFunction';
 import useVendorData from 'modules/Vendor/useVendorData';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { AiFillEdit } from 'react-icons/ai';
 
 //
@@ -22,21 +20,7 @@ function Header() {
 }
 //
 function Table() {
-  const router = useRouter();
   const { loading, vendorData } = useVendorData();
-  //
-  const updateHandler = async (id: number) => {
-    const [filtered_vendor] = await axiosFunction({
-      urlPath: '/vendor/find',
-      method: 'POST',
-      data: { id },
-    }).then((res) => res.data);
-    //
-    localStorage.setItem('vendor_data', JSON.stringify(filtered_vendor));
-    //
-    router.push('/dashboard/vendors/update_vendor');
-  };
-  //
   return (
     <>
       {loading ? (
@@ -142,13 +126,11 @@ function Table() {
               name: 'Action',
               cell: (row: any) => (
                 <>
-                  <Button
-                    compact
-                    className="h-6 w-6 bg-[#002884] p-0"
-                    onClick={() => updateHandler(row.id)}
-                  >
-                    <AiFillEdit className="text-white" />
-                  </Button>
+                  <Link href={`/dashboard/vendors/update_vendor?id=${row.id}`}>
+                    <Button compact className="h-6 w-6 bg-[#002884] p-0">
+                      <AiFillEdit className="text-white" />
+                    </Button>
+                  </Link>
                 </>
               ),
               ignoreRowClick: true,
