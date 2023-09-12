@@ -281,8 +281,9 @@ const DataTableComponent = ({
         progressPending={progressPending}
         sortFunction={sortFunction}
         progressComponent={
-          <div className="flex h-[150px] items-center justify-center">
-            <Loader />
+          <div className="flex h-[388px] flex-col items-center justify-center gap-5">
+            <Loader className="scale-[0.5]" />
+            <h1 className="scale-1">Loading</h1>
           </div>
         }
       />

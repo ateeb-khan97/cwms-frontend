@@ -1,19 +1,19 @@
 'use client';
 
-import { Button, Skeleton, TextInput } from '@mantine/core';
+import { Button, TextInput } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import { ReceiveType } from 'modules/Inbound/receiveType';
-import useReceiveData from 'modules/Inbound/useReceivedData';
 import { BsPrinter } from 'react-icons/bs';
 import { modals } from '@mantine/modals';
 import { useEffect, useRef, useState } from 'react';
 import { MdDownload, MdSearch } from 'react-icons/md';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Search from 'app/dashboard/report/sku-child-report/Search';
+import { saveAs } from 'file-saver';
 //
 function Header() {
   return (
@@ -24,59 +24,20 @@ function Header() {
     </header>
   );
 }
-//
-const TableHeadComponent = ({
-  filterFunction,
-}: {
-  filterFunction: (e: string) => void;
-}) => {
-  const [search, setSearch] = useState<string>('');
-  return (
-    <>
-      <div className="flex items-center gap-5">
-        <Button
-          onClick={async () => {
-            await axiosFunction({
-              urlPath: '/inward/receive-inward-download/',
-              responseType: 'blob',
-            }).then((response: any) => {
-              console.log(response);
 
-              const url = window.URL.createObjectURL(new Blob([response]));
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute('download', 'inward-receive-report.csv');
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            });
-          }}
-          className="bg-red-500 transition-all hover:bg-red-900"
-          leftIcon={<MdDownload />}
-        >
-          Download
-        </Button>
-        <TextInput
-          icon={<MdSearch />}
-          value={search}
-          onChange={(e) => {
-            setSearch(e.target.value);
-            filterFunction(e.target.value);
-          }}
-          placeholder="Search"
-          className="w-56"
-        />
-      </div>
-    </>
-  );
-};
 //
 function Table({
+  isLoading,
+  btnDisable,
   tableData,
   totalRows,
+  downloadHandler,
 }: {
+  isLoading: boolean;
+  btnDisable: boolean;
   tableData: any[];
   totalRows: number;
+  downloadHandler: () => void;
 }) {
   const router = useRouter();
   //
@@ -86,7 +47,6 @@ function Table({
       method: 'POST',
       data: { id },
     }).then((res) => {
-      router.refresh();
       return res;
     });
     const message = response.status == 200 ? 'Success' : 'Failed';
@@ -148,6 +108,7 @@ function Table({
       poIdRef.current?.focus();
     }, 100);
   };
+
   //
   return (
     <section>
@@ -159,6 +120,7 @@ function Table({
         Print
       </Button>
       <DataTableComponent
+        progressPending={isLoading}
         paginationServer={true}
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
@@ -182,7 +144,6 @@ function Table({
           const updatedQueryString = searchParams.toString();
           const url = `${window.location.pathname}?${updatedQueryString}`;
           router.push(url);
-          router.refresh();
         }}
         onChangePage={(page, totalRows) => {
           const searchParams = new URLSearchParams(window.location.search);
@@ -199,7 +160,6 @@ function Table({
           const updatedQueryString = searchParams.toString();
           const url = `${window.location.pathname}?${updatedQueryString}`;
           router.push(url);
-          router.refresh();
         }}
         data={tableData}
         columns={[
@@ -337,7 +297,9 @@ function Table({
       >
         <div className="flex items-center justify-end gap-5">
           <Button
-            // onClick={downloadHandler}
+            loading={btnDisable}
+            disabled={btnDisable}
+            onClick={downloadHandler}
             size="xs"
             className="btn"
             leftIcon={<MdDownload />}
@@ -353,26 +315,46 @@ function Table({
 //
 interface IPropType {
   getTableData: () => Promise<any[]>;
+  getDownloadData: () => Promise<any[]>;
   getCount: () => Promise<number>;
 }
 //
 export default function ReceiveItemsPage({
   getCount,
   getTableData,
+  getDownloadData,
 }: IPropType) {
   //
   const [totalRows, setTotalRows] = useState<number>(0);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [btnDisable, setBtnDisable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any[]>([]);
   const search = useSearchParams();
   async function dataSetter() {
+    setIsLoading(true);
     setTotalRows(await getCount());
     setTableData(await getTableData());
-  }
-  useEffect(() => {
-    setIsLoading(true);
-    dataSetter();
     setIsLoading(false);
+  }
+  //
+  const downloadHandler = async () => {
+    setBtnDisable(true);
+    const downloadData = await getDownloadData();
+    const csvData = [
+      Object.keys(downloadData[0]).join(','),
+      ...downloadData.map((item) => Object.values(item).join(',')),
+    ].join('\n');
+
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+
+    // Trigger the download using the file-saver library
+    saveAs(blob, 'receive-items.csv');
+    setBtnDisable(false);
+  };
+  //
+  useEffect(() => {
+    dataSetter();
   }, [
     search.get('page'),
     search.get('search'),
@@ -389,13 +371,14 @@ export default function ReceiveItemsPage({
               Here you can manage your all Receive Items!
             </p>
           </div>
-          {isLoading ? (
-            <div className="flex h-56 w-full scale-[0.5] items-center justify-center">
-              <Loader />
-            </div>
-          ) : (
-            <Table totalRows={totalRows} tableData={tableData} />
-          )}
+
+          <Table
+            isLoading={isLoading}
+            btnDisable={btnDisable}
+            downloadHandler={downloadHandler}
+            totalRows={totalRows}
+            tableData={tableData}
+          />
         </div>
       </section>
     </>

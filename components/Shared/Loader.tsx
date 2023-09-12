@@ -1,3 +1,3 @@
-export default function Loader() {
-  return <span className="custom_loader" />;
+export default function Loader({ className }: { className?: string }) {
+  return <span className={`custom_loader ${className}`} />;
 }

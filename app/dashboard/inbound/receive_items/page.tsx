@@ -128,7 +128,43 @@ async function getTableData() {
         },
   });
 }
+async function getDownloadData() {
+  'use server';
+  const type = cookies().get('type')?.value;
+  const acc_no = cookies().get('acc_no')?.value;
+  const loc_no = cookies().get('loc_no')?.value;
+  const isAdmin = type == 'admin';
+
+  return await prisma.inward_sku.findMany({
+    select: {
+      id: true,
+      po_id: true,
+      product_id: true,
+      product_name: true,
+      received_quantity: true,
+      maximum_retail_price: true,
+      trade_price: true,
+      discount_percentage: true,
+      batch_number: true,
+      batch_expiry: true,
+      foc: true,
+      inward_id: true,
+      inward_date: true,
+      user_id: true,
+      user_name: true,
+    },
+    where: isAdmin
+      ? undefined
+      : { account_number: acc_no, location_id: loc_no },
+  });
+}
 //
 export default async function Page() {
-  return <ReceiveItemsPage getCount={getCount} getTableData={getTableData} />;
+  return (
+    <ReceiveItemsPage
+      getDownloadData={getDownloadData}
+      getCount={getCount}
+      getTableData={getTableData}
+    />
+  );
 }
