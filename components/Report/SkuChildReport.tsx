@@ -245,11 +245,7 @@ export default function SkuChildReport({
       >
         <div className="flex items-center justify-end gap-5">
           <Button
-            onClick={async (e) => {
-              e.currentTarget.disabled = true;
-              await downloadHandler();
-              e.currentTarget.disabled = false;
-            }}
+            onClick={downloadHandler}
             size="xs"
             className="btn"
             leftIcon={<MdDownload />}
