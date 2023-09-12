@@ -72,6 +72,7 @@ async function getTableData() {
   const isAdmin = type == 'admin';
   //
   return await prisma.inward_sku.findMany({
+    orderBy: [{ id: 'desc' }],
     take: +currentRowsPerPage,
     skip: (Number(page) - 1) * Number(currentRowsPerPage),
     select: {
