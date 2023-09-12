@@ -40,17 +40,17 @@ export default function SkuChildReport({
   const search = useSearchParams();
   const [tableData, setTableData] = useState<ITableType[]>([]);
   const [totalRows, setTotalRows] = useState<number>(0);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   async function getData() {
+    setIsLoading(true);
     const data = await getTableData();
     setTableData(data.tableData);
     setTotalRows(+data.totalCount);
-    setTimeout(() => {
-      const container = divRef.current;
-      if (container) {
-        container.scrollIntoView({ behavior: 'smooth', block: 'end' });
-      }
-    }, 10);
+    const container = divRef.current;
+    if (container) {
+      container.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    }
+    setIsLoading(false);
   }
   useEffect(() => {
     getData();
@@ -61,7 +61,6 @@ export default function SkuChildReport({
   ]);
   //
   async function downloadHandler() {
-    setIsLoading(true);
     const downloadData = await getDownloadData();
     const csvData = [
       Object.keys(downloadData[0]).join(','),
@@ -73,15 +72,16 @@ export default function SkuChildReport({
 
     // Trigger the download using the file-saver library
     saveAs(blob, 'data.csv');
-    setIsLoading(false);
   }
 
   return (
     <div ref={divRef}>
       <DataTableComponent
+        progressPending={isLoading}
         paginationServer={true}
         paginationTotalRows={totalRows}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
+          setIsLoading(true);
           const searchParams = new URLSearchParams(window.location.search);
           if (searchParams.has('currentRowsPerPage')) {
             searchParams.set(
@@ -104,6 +104,7 @@ export default function SkuChildReport({
           router.push(url);
         }}
         onChangePage={(page, totalRows) => {
+          setIsLoading(true);
           const searchParams = new URLSearchParams(window.location.search);
           if (searchParams.has('page')) {
             searchParams.set('page', page.toString());
@@ -244,9 +245,11 @@ export default function SkuChildReport({
       >
         <div className="flex items-center justify-end gap-5">
           <Button
-            disabled={isLoading}
-            loading={isLoading}
-            onClick={downloadHandler}
+            onClick={async (e) => {
+              e.currentTarget.disabled = true;
+              await downloadHandler();
+              e.currentTarget.disabled = false;
+            }}
             size="xs"
             className="btn"
             leftIcon={<MdDownload />}

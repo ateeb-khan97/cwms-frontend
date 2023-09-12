@@ -4,7 +4,7 @@
     "dev:start": "next dev --turbo",
     "dev": "next dev",
     "build": "next build",
-    "start": "NODE_ENV=production node server.js",
+    "start": "node --max-old-space-size=1024 server.js",
     "start:prod": "next start",
     "start:windows": "set NODE_ENV=production && node server.js",
     "lint": "next lint",
