@@ -1,6 +1,7 @@
 export default interface GoodReceiveType {
   vendor_name: string;
   payment_terms: string;
+  sales_tax: string;
   po_id: string;
   po_date: string;
   delivery_location: string;

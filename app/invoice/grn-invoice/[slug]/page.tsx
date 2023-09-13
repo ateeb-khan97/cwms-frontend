@@ -20,10 +20,16 @@ export default async function Page({ params }: { params: PropType }) {
   let totalRecQty = 0;
   let totalGSTValue = 0;
   let totalStockValue = 0;
+  let purchasingPrice = 0;
   if (token) {
     const response = await fetchData(params.slug, token);
     tableData = response.data;
     for (let each of tableData) {
+      const discountedTradePrice =
+        +each.trade_price -
+        (+each.discount_percentage / 100) * +each.trade_price;
+      purchasingPrice =
+        discountedTradePrice + (+each.sales_tax / 100) * discountedTradePrice;
       totalRecQty += +each.received_quantity;
       totalGSTValue +=
         +(+(each.purchasing_price || 0) * +(each.gst_rate || 0)) / 100;
@@ -155,12 +161,12 @@ export default async function Page({ params }: { params: PropType }) {
                             {each_elem.gst_rate || '0'}%
                           </td>
                           <td className="border border-black text-center">
-                            {(+(each_elem.purchasing_price || 0) *
+                            {(+(purchasingPrice || 0) *
                               +(each_elem.gst_rate || 0)) /
                               100}
                           </td>
                           <td className="border border-black text-center">
-                            {+(each_elem.purchasing_price || 0) *
+                            {+(purchasingPrice || 0) *
                               +each_elem.received_quantity}
                           </td>
                         </tr>
@@ -193,8 +199,12 @@ export default async function Page({ params }: { params: PropType }) {
                     <td />
                     <td />
                     <td />
-                    <td className="text-center">{totalGSTValue || 0}</td>
-                    <td className="text-center">{totalStockValue || 0}</td>
+                    <td className="text-center">
+                      {totalGSTValue.toFixed(3) || 0}
+                    </td>
+                    <td className="text-center">
+                      {totalStockValue.toFixed(3) || 0}
+                    </td>
                   </tr>
                 </tbody>
               </table>
