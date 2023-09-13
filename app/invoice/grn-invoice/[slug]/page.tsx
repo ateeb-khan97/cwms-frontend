@@ -20,20 +20,10 @@ export default async function Page({ params }: { params: PropType }) {
   let totalRecQty = 0;
   let totalGSTValue = 0;
   let totalStockValue = 0;
-  let purchasingPrice = 0;
   if (token) {
     const response = await fetchData(params.slug, token);
     tableData = response.data;
     for (let each of tableData) {
-      const discountedTradePrice =
-        +each.trade_price -
-        (+each.discount_percentage / 100) * +each.trade_price;
-      console.log('Disc', discountedTradePrice);
-
-      purchasingPrice =
-        discountedTradePrice + (+each.sales_tax / 100) * discountedTradePrice;
-      console.log('Sales, ', +each.sales_tax);
-
       totalRecQty += +each.received_quantity;
       totalGSTValue +=
         +(+(each.purchasing_price || 0) * +(each.gst_rate || 0)) / 100;
@@ -126,6 +116,18 @@ export default async function Page({ params }: { params: PropType }) {
                 <tbody>
                   {tableData.length > 0 &&
                     tableData.map((each_elem, key) => {
+                      let purchasingPrice = 0;
+
+                      const discountedTradePrice =
+                        +each_elem.trade_price -
+                        (+each_elem.discount_percentage / 100) *
+                          +each_elem.trade_price;
+                      console.log('Disc', discountedTradePrice);
+
+                      purchasingPrice =
+                        discountedTradePrice +
+                        (+each_elem.sales_tax / 100) * discountedTradePrice;
+                      console.log('Sales, ', +each_elem.sales_tax);
                       return (
                         <tr key={key}>
                           <td className="border border-black text-center">
@@ -171,15 +173,10 @@ export default async function Page({ params }: { params: PropType }) {
                               100
                             ).toFixed(3)}
                           </td>
-                          {/* <td className="border border-black text-center">
+                          <td className="border border-black text-center">
                             {(
                               +purchasingPrice * +each_elem.received_quantity
                             ).toFixed(3)}
-                          </td> */}
-                          <td className="border border-black text-center">
-                            {purchasingPrice +
-                              '-' +
-                              each_elem.received_quantity}
                           </td>
                         </tr>
                       );
