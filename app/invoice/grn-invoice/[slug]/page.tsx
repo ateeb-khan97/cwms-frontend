@@ -122,12 +122,6 @@ export default async function Page({ params }: { params: PropType }) {
                 <tbody>
                   {tableData.length > 0 &&
                     tableData.map((each_elem, key) => {
-                      console.log('Purchasing Price', purchasingPrice);
-                      console.log('Qty', each_elem.received_quantity);
-                      console.log(
-                        +purchasingPrice * +each_elem.received_quantity,
-                      );
-
                       return (
                         <tr key={key}>
                           <td className="border border-black text-center">
@@ -173,10 +167,15 @@ export default async function Page({ params }: { params: PropType }) {
                               100
                             ).toFixed(3)}
                           </td>
-                          <td className="border border-black text-center">
+                          {/* <td className="border border-black text-center">
                             {(
                               +purchasingPrice * +each_elem.received_quantity
                             ).toFixed(3)}
+                          </td> */}
+                          <td className="border border-black text-center">
+                            {purchasingPrice +
+                              '-' +
+                              each_elem.received_quantity}
                           </td>
                         </tr>
                       );
