@@ -28,8 +28,12 @@ export default async function Page({ params }: { params: PropType }) {
       const discountedTradePrice =
         +each.trade_price -
         (+each.discount_percentage / 100) * +each.trade_price;
+      console.log('Disc', discountedTradePrice);
+
       purchasingPrice =
         discountedTradePrice + (+each.sales_tax / 100) * discountedTradePrice;
+      console.log('Sales, ', +each.sales_tax);
+
       totalRecQty += +each.received_quantity;
       totalGSTValue +=
         +(+(each.purchasing_price || 0) * +(each.gst_rate || 0)) / 100;
