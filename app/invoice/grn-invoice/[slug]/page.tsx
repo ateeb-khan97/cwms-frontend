@@ -24,10 +24,17 @@ export default async function Page({ params }: { params: PropType }) {
     const response = await fetchData(params.slug, token);
     tableData = response.data;
     for (let each of tableData) {
+      let purchasingPrice = 0;
+
+      const discountedTradePrice =
+        +each.trade_price -
+        (+each.discount_percentage / 100) * +each.trade_price;
+
+      purchasingPrice =
+        discountedTradePrice + (+each.sales_tax / 100) * discountedTradePrice;
       totalRecQty += +each.received_quantity;
-      totalGSTValue +=
-        +(+(each.purchasing_price || 0) * +(each.gst_rate || 0)) / 100;
-      totalStockValue += +each.purchasing_price * +each.received_quantity;
+      totalGSTValue += +(+(purchasingPrice || 0) * +(each.gst_rate || 0)) / 100;
+      totalStockValue += +purchasingPrice * +each.received_quantity;
     }
     message = response.status == 200 ? '' : response.message;
   }
