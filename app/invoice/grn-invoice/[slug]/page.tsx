@@ -169,8 +169,7 @@ export default async function Page({ params }: { params: PropType }) {
                           </td>
                           <td className="border border-black text-center">
                             {(
-                              +(purchasingPrice || 0) *
-                              +each_elem.received_quantity
+                              +purchasingPrice * +each_elem.received_quantity
                             ).toFixed(3)}
                           </td>
                         </tr>
