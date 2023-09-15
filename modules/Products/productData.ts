@@ -19,7 +19,7 @@ const data = {
     'IMPORTED',
   ],
   item_nature: ['Refrigerator', 'Room Temperature', 'Narcotics'],
-  tax_code: ['GST 15%', 'GST 17%', 'Advance WHT'],
+  tax_code: ['GST 15%', 'GST 17%', 'GST 5%', 'GST 22%', 'Advance WHT'],
   purchasing_unit: ['Carton'],
   selling_unit: [['Carton'], ['Box', 'Pieces'], ['Pieces', 'Strips']],
   item_release_level: ['POS', 'ECOM', 'Both'],
@@ -32,11 +32,13 @@ const data = {
     '0% GST',
     '1% GST',
     '4% GST',
+    '5% GST',
     '17% GST',
     '18% GST',
     '19% GST',
     '20% GST',
     '21% GST',
+    '22% GST',
   ],
 };
 //
