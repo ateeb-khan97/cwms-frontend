@@ -71,14 +71,6 @@ export default function StockBatchTable({ getTableData }: IPropType) {
               grow: 0,
               width: '100px',
             },
-
-            {
-              name: 'T.P',
-              selector: (row: any) => (row.trade_price ? row.trade_price : '-'),
-              center: true,
-              grow: 0,
-              width: '80px',
-            },
             {
               name: 'MRP',
               selector: (row: any) =>

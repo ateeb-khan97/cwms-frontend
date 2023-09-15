@@ -35,7 +35,6 @@ async function getTableData() {
   ind.third_level as item_conversion,
   (SUM(ind.third_level)) AS total_inventory,
   loc.loc_name,
-  p.trade_price,
   p.mrp_unit_price
 from
   inward_detail ind
