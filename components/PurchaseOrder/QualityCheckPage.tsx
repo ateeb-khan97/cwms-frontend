@@ -179,7 +179,7 @@ function Table({
             },
             {
               name: 'Batch Expiry',
-              selector: (row: any) => row.batch_expiry?.substring(0, 10) || '-',
+              selector: (row: any) => row.batch_expiry,
               grow: 0,
               center: true,
               width: '120px',
