@@ -268,6 +268,8 @@ export default function QualityCheckPage({ getDownloadData }: IProp) {
   async function dataSetter() {
     setIsLoading(true);
     const temp = await getDownloadData();
+    console.log(temp);
+
     setData(temp);
     setIsLoading(false);
   }
