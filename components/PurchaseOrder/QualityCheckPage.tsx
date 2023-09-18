@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, TextInput } from '@mantine/core';
+import { Button, Skeleton, TextInput } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
@@ -8,7 +8,7 @@ import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
 import useReceiveData from 'modules/Inbound/useReceivedData';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
 import Papa from 'papaparse';
 import { MdDownload } from 'react-icons/md';
@@ -25,24 +25,18 @@ function Header() {
 }
 //
 var loading = false;
-function Table({ downloadHandler }: { downloadHandler: () => void }) {
+function Table({
+  downloadHandler,
+  grnData,
+  dataSetter,
+}: {
+  downloadHandler: () => void;
+  grnData: any[];
+  dataSetter: () => void;
+}) {
   const commentRef = useRef<HTMLInputElement>(null);
-
-  const { setReceiveData } = useReceiveData();
-  const [grnData, setGrnData] = React.useState<any[]>([]);
   const [btnDisable, setBtnDisable] = React.useState<boolean>(false);
   //
-  const grnFetcher = async () => {
-    loading = true;
-    const grn = await axiosFunction({ urlPath: '/grn/find_for_qc' }).then(
-      (res) => res.data,
-    );
-    setGrnData(grn);
-    loading = false;
-  };
-  React.useEffect(() => {
-    grnFetcher();
-  }, []);
   // functions
   const actionHandler = async (row: any, status: boolean) => {
     setBtnDisable(true);
@@ -57,9 +51,8 @@ function Table({ downloadHandler }: { downloadHandler: () => void }) {
     customNotification({
       message: status ? 'Successfully Approved!' : 'Successfully Rejected!',
     });
-    grnFetcher();
     setBtnDisable(false);
-    status ? setReceiveData([]) : null;
+    dataSetter();
   };
   //
   function RejectSubmit(row: any) {
@@ -269,13 +262,25 @@ interface IProp {
 }
 //
 export default function QualityCheckPage({ getDownloadData }: IProp) {
+  const [data, setData] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  //
+  async function dataSetter() {
+    setIsLoading(true);
+    const temp = await getDownloadData();
+    setData(temp);
+    setIsLoading(false);
+  }
   async function downloadHandler() {
-    const data = await getDownloadData();
     const csvData = Papa.unparse(data);
-    // Create a Blob containing the CSV data
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
     saveAs(blob, 'qc_approve.csv');
   }
+  //
+  useEffect(() => {
+    dataSetter();
+  }, []);
+  //
   return (
     <section className="flex min-h-[100%] flex-col gap-10 p-7">
       <Header />
@@ -285,7 +290,19 @@ export default function QualityCheckPage({ getDownloadData }: IProp) {
             Here you can manage your all quality checks!
           </p>
         </div>
-        <Table downloadHandler={downloadHandler} />
+        {isLoading ? (
+          <div className="w-full p-5">
+            <Skeleton height={8} radius="xl" />
+            <Skeleton height={8} mt={6} radius="xl" />
+            <Skeleton height={8} mt={6} width="70%" radius="xl" />
+          </div>
+        ) : (
+          <Table
+            grnData={data}
+            downloadHandler={downloadHandler}
+            dataSetter={dataSetter}
+          />
+        )}
       </div>
     </section>
   );
