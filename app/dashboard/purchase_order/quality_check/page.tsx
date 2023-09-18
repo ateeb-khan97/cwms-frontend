@@ -4,28 +4,9 @@ import prisma from 'config/prisma';
 async function getDownloadData() {
   'use server';
   //
-  return await prisma.grn.findMany({
-    where: { qc_approved: false, grn_status: { not: 'D' } },
-    select: {
-      discount_percentage: true,
-      batch_expiry: true,
-      advance_income_tax: true,
-      batch_number: true,
-      comments: true,
-      created_at: true,
-      foc: true,
-      gst_rate: true,
-      maximum_retail_price: true,
-      product_name: true,
-      product_id: true,
-      purchasing_price: true,
-      uom: true,
-      trade_price: true,
-      required_quantity: true,
-      received_quantity: true,
-      po_id: true,
-    },
-  });
+  return (await prisma.$queryRawUnsafe(
+    `SELECT po_id, product_id, product_name, required_quantity, received_quantity, maximum_retail_price, trade_price, discount_percentage, batch_number, DATE(batch_expiry) as batch_expiry, foc, uom, purchasing_price, gst_rate, advance_income_tax, invoiceNumber, advanceIncome FROM grn WHERE qc_approved = false AND grn_status != "D";`,
+  )) as any[];
 }
 //
 export default function Page() {
