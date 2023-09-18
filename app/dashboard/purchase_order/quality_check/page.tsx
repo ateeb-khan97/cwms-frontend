@@ -7,6 +7,8 @@ async function getDownloadData() {
   return await prisma.grn.findMany({
     where: { qc_approved: false, grn_status: { not: 'D' } },
     select: {
+      discount_percentage: true,
+      batch_expiry: true,
       advance_income_tax: true,
       batch_number: true,
       comments: true,
