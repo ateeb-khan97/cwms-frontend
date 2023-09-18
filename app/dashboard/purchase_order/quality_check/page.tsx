@@ -8,7 +8,6 @@ async function getDownloadData() {
     where: { qc_approved: false, grn_status: { not: 'D' } },
     select: {
       advance_income_tax: true,
-      batch_expiry: true,
       batch_number: true,
       comments: true,
       created_at: true,
