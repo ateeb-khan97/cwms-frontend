@@ -7,9 +7,11 @@ import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
-import useGrnData from 'modules/Grn/useGrnData';
 import useReceiveData from 'modules/Inbound/useReceivedData';
 import React, { useRef } from 'react';
+import { saveAs } from 'file-saver';
+import Papa from 'papaparse';
+import { MdDownload } from 'react-icons/md';
 
 //
 function Header() {
@@ -23,7 +25,7 @@ function Header() {
 }
 //
 var loading = false;
-function Table() {
+function Table({ downloadHandler }: { downloadHandler: () => void }) {
   const commentRef = useRef<HTMLInputElement>(null);
 
   const { setReceiveData } = useReceiveData();
@@ -246,13 +248,34 @@ function Table() {
               width: '100px',
             },
           ]}
-        />
+        >
+          <div className="flex items-center gap-5">
+            <Button
+              onClick={downloadHandler}
+              className="btn"
+              leftIcon={<MdDownload />}
+            >
+              Download
+            </Button>
+          </div>
+        </DataTableComponent>
       )}
     </>
   );
 }
 //
-export default function QualityCheckPage() {
+interface IProp {
+  getDownloadData: () => Promise<any[]>;
+}
+//
+export default function QualityCheckPage({ getDownloadData }: IProp) {
+  async function downloadHandler() {
+    const data = await getDownloadData();
+    const csvData = Papa.unparse(data);
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+    saveAs(blob, 'qc_approve.csv');
+  }
   return (
     <section className="flex min-h-[100%] flex-col gap-10 p-7">
       <Header />
@@ -262,7 +285,7 @@ export default function QualityCheckPage() {
             Here you can manage your all quality checks!
           </p>
         </div>
-        <Table />
+        <Table downloadHandler={downloadHandler} />
       </div>
     </section>
   );
