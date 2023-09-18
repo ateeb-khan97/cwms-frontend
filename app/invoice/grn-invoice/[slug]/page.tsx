@@ -123,6 +123,10 @@ export default async function Page({ params }: { params: PropType }) {
                 <tbody>
                   {tableData.length > 0 &&
                     tableData.map((each_elem, key) => {
+                      let gstValue =
+                        (+each_elem.trade_price -
+                          +each_elem.discount_percentage / 100) *
+                        (+each_elem.sales_tax / 100);
                       let purchasingPrice = 0;
 
                       const discountedTradePrice =
@@ -174,11 +178,7 @@ export default async function Page({ params }: { params: PropType }) {
                             {each_elem.sales_tax || '0'}%
                           </td>
                           <td className="border border-black text-center">
-                            {(
-                              (+(purchasingPrice || 0) *
-                                +(each_elem.sales_tax || 0)) /
-                              100
-                            ).toFixed(3)}
+                            {gstValue.toFixed(3)}
                           </td>
                           <td className="border border-black text-center">
                             {(
