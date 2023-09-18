@@ -123,9 +123,7 @@ export default async function Page({ params }: { params: PropType }) {
                 <tbody>
                   {tableData.length > 0 &&
                     tableData.map((each_elem, key) => {
-                      let gstValue =
-                        +each_elem.trade_price -
-                        +each_elem.discount_percentage / 100;
+                      let gstValue = +each_elem.discount_percentage / 100;
                       // gstValue = gstValue * (+each_elem.sales_tax / 100);
                       let purchasingPrice = 0;
 
