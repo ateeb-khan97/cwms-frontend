@@ -171,12 +171,12 @@ export default async function Page({ params }: { params: PropType }) {
                           </td>
 
                           <td className="border border-black text-center">
-                            {each_elem.gst_rate || '0'}%
+                            {each_elem.sales_tax || '0'}%
                           </td>
                           <td className="border border-black text-center">
                             {(
                               (+(purchasingPrice || 0) *
-                                +(each_elem.gst_rate || 0)) /
+                                +(each_elem.sales_tax || 0)) /
                               100
                             ).toFixed(3)}
                           </td>
