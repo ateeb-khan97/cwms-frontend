@@ -4,15 +4,49 @@ import { Button, Skeleton, TextInput } from '@mantine/core';
 import { modals } from '@mantine/modals';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
-import Loader from 'components/Shared/Loader';
 import axiosFunction from 'functions/axiosFunction';
 import customNotification from 'functions/customNotification';
-import useReceiveData from 'modules/Inbound/useReceivedData';
 import React, { useEffect, useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
 import Papa from 'papaparse';
-import { MdDownload } from 'react-icons/md';
-
+import { MdDownload, MdFileDownload, MdSearch } from 'react-icons/md';
+import { AiOutlineSearch } from 'react-icons/ai';
+//
+type FilterProps = {
+  value: string;
+  setValue: (value: string) => void;
+  downloadHandler: () => void;
+  filterFunction: (value: string) => void;
+};
+const FilterComponent = ({
+  setValue,
+  value,
+  downloadHandler,
+  filterFunction,
+}: FilterProps) => {
+  return (
+    <div className="flex gap-5">
+      <Button
+        onClick={downloadHandler}
+        rightIcon={<MdFileDownload />}
+        className="bg-red-500 transition-all hover:bg-red-900"
+      >
+        Download
+      </Button>
+      <TextInput
+        icon={<AiOutlineSearch />}
+        type="text"
+        placeholder={`Search`}
+        defaultValue={value}
+        onChange={(event) => {
+          filterFunction(event.currentTarget.value);
+          setValue(event.currentTarget.value);
+        }}
+      />
+    </div>
+  );
+};
+//
 //
 function Header() {
   return (
@@ -23,8 +57,6 @@ function Header() {
     </header>
   );
 }
-//
-var loading = false;
 function Table({
   downloadHandler,
   grnData,
@@ -36,6 +68,22 @@ function Table({
 }) {
   const commentRef = useRef<HTMLInputElement>(null);
   const [btnDisable, setBtnDisable] = React.useState<boolean>(false);
+  const [tableData, setTableData] = useState<any[]>(grnData);
+  const [search, setSearch] = useState<string>('');
+  const filterFunction = (search: string) => {
+    search = search.toLowerCase();
+    const filteredData = grnData.filter((each) => {
+      for (let key in each) {
+        if (
+          each[key as keyof any]?.toString()?.toLowerCase()?.includes(search)
+        ) {
+          return true;
+        }
+      }
+      return false;
+    });
+    setTableData(filteredData);
+  };
   //
   // functions
   const actionHandler = async (row: any, status: boolean) => {
@@ -99,160 +147,150 @@ function Table({
   //
   return (
     <>
-      {loading ? (
-        <div className="flex w-[100%] justify-center p-28">
-          <Loader />
-        </div>
-      ) : (
-        <DataTableComponent
-          data={grnData}
-          columns={[
-            {
-              name: 'PO. ID',
-              selector: (row: any) => row.po_id,
-              grow: 0,
-              center: true,
-              width: '70px',
-            },
-            {
-              name: 'Prod. ID',
-              selector: (row: any) => row.product_id,
-              grow: 0,
-              center: true,
-              width: '80px',
-            },
-            {
-              name: 'Product Name',
-              selector: (row: any) => row.product_name,
-              grow: 2,
-              sortable: true,
-            },
-            {
-              name: 'UOM',
-              selector: (row: any) => row.uom,
-              grow: 0,
-              center: true,
-              width: '80px',
-            },
-            {
-              name: 'Req. Qty',
-              selector: (row: any) => row.required_quantity,
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'Rec. Qty',
-              selector: (row: any) => row.received_quantity,
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'MRP.',
-              selector: (row: any) => row.maximum_retail_price,
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'T.P',
-              selector: (row: any) => row.trade_price,
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'Disc %',
-              selector: (row: any) => row.discount_percentage,
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'Batch No.',
-              selector: (row: any) =>
-                row.batch_number ? row.batch_number : '-',
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'Batch Expiry',
-              selector: (row: any) => row.batch_expiry,
-              grow: 0,
-              center: true,
-              width: '120px',
-            },
+      <DataTableComponent
+        data={tableData}
+        columns={[
+          {
+            name: 'PO. ID',
+            selector: (row: any) => row.po_id,
+            grow: 0,
+            center: true,
+            width: '70px',
+          },
+          {
+            name: 'Prod. ID',
+            selector: (row: any) => row.product_id,
+            grow: 0,
+            center: true,
+            width: '80px',
+          },
+          {
+            name: 'Product Name',
+            selector: (row: any) => row.product_name,
+            grow: 2,
+            sortable: true,
+          },
+          {
+            name: 'UOM',
+            selector: (row: any) => row.uom,
+            grow: 0,
+            center: true,
+            width: '80px',
+          },
+          {
+            name: 'Req. Qty',
+            selector: (row: any) => row.required_quantity,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Rec. Qty',
+            selector: (row: any) => row.received_quantity,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'MRP.',
+            selector: (row: any) => row.maximum_retail_price,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'T.P',
+            selector: (row: any) => row.trade_price,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Disc %',
+            selector: (row: any) => row.discount_percentage,
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Batch No.',
+            selector: (row: any) => (row.batch_number ? row.batch_number : '-'),
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'Batch Expiry',
+            selector: (row: any) => row.batch_expiry,
+            grow: 0,
+            center: true,
+            width: '120px',
+          },
 
-            {
-              name: 'Comments',
-              selector: (row: any) => (row.comments ? row.comments : '-'),
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              name: 'FOC',
-              selector: (row: any) => (row.foc ? 'Yes' : 'No'),
-              grow: 0,
-              center: true,
-              width: '100px',
-            },
-            {
-              cell: (row: any) => (
-                <>
-                  <Button
-                    disabled={btnDisable}
-                    className="bg-green-500 transition-all hover:bg-green-900"
-                    radius={'xs'}
-                    color={'green'}
-                    compact
-                    onClick={() => actionHandler(row, true)}
-                  >
-                    Approve
-                  </Button>
-                </>
-              ),
+          {
+            name: 'Comments',
+            selector: (row: any) => (row.comments ? row.comments : '-'),
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            name: 'FOC',
+            selector: (row: any) => (row.foc ? 'Yes' : 'No'),
+            grow: 0,
+            center: true,
+            width: '100px',
+          },
+          {
+            cell: (row: any) => (
+              <>
+                <Button
+                  disabled={btnDisable}
+                  className="bg-green-500 transition-all hover:bg-green-900"
+                  radius={'xs'}
+                  color={'green'}
+                  compact
+                  onClick={() => actionHandler(row, true)}
+                >
+                  Approve
+                </Button>
+              </>
+            ),
 
-              grow: 0,
-              button: true,
-              center: true,
-              width: '100px',
-            },
-            {
-              cell: (row: any) => (
-                <>
-                  <Button
-                    disabled={btnDisable}
-                    className="bg-red-500 transition-all hover:bg-red-900"
-                    radius={'xs'}
-                    color={'red'}
-                    compact
-                    onClick={() => openRejectModal(row)}
-                  >
-                    Reject
-                  </Button>
-                </>
-              ),
-              grow: 0,
-              button: true,
-              center: true,
-              width: '100px',
-            },
-          ]}
-        >
-          <div className="flex items-center gap-5">
-            <Button
-              onClick={downloadHandler}
-              className="btn"
-              leftIcon={<MdDownload />}
-            >
-              Download
-            </Button>
-          </div>
-        </DataTableComponent>
-      )}
+            grow: 0,
+            button: true,
+            center: true,
+            width: '100px',
+          },
+          {
+            cell: (row: any) => (
+              <>
+                <Button
+                  disabled={btnDisable}
+                  className="bg-red-500 transition-all hover:bg-red-900"
+                  radius={'xs'}
+                  color={'red'}
+                  compact
+                  onClick={() => openRejectModal(row)}
+                >
+                  Reject
+                </Button>
+              </>
+            ),
+            grow: 0,
+            button: true,
+            center: true,
+            width: '100px',
+          },
+        ]}
+      >
+        <FilterComponent
+          downloadHandler={downloadHandler}
+          filterFunction={filterFunction}
+          setValue={setSearch}
+          value={search}
+        />
+      </DataTableComponent>
     </>
   );
 }
