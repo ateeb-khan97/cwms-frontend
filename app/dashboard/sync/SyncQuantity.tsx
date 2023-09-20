@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Select, Button } from '@mantine/core';
 import axiosFunction from 'functions/axiosFunction';
+import customNotification from 'functions/customNotification';
 //
 interface IProp {
   getLocation: () => Promise<any[]>;
@@ -22,6 +23,10 @@ export default function SyncQuantity({ getLocation }: IProp) {
       urlPath: '/sync/quantity',
       method: 'POST',
       data: { locationId: location },
+    });
+    customNotification({
+      message: response.message,
+      title: response.status == 200 ? 'Success' : 'Failed',
     });
     setIsLoading(false);
   }
