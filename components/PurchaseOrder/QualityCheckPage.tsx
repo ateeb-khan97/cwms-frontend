@@ -9,7 +9,7 @@ import customNotification from 'functions/customNotification';
 import React, { useEffect, useRef, useState } from 'react';
 import { saveAs } from 'file-saver';
 import Papa from 'papaparse';
-import { MdDownload, MdFileDownload, MdSearch } from 'react-icons/md';
+import { MdFileDownload } from 'react-icons/md';
 import { AiOutlineSearch } from 'react-icons/ai';
 //
 type FilterProps = {
