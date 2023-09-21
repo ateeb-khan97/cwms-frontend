@@ -1,6 +1,5 @@
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import CreateGRN from './CreateGRN';
-import CreateGrnPage from 'components/PurchaseOrder/CreateGrnPage';
 //
 function Header() {
   return (
@@ -22,7 +21,7 @@ export default function Page() {
             Here you can manage your all Create GRN!
           </p>
         </div>
-        <CreateGrnPage />
+        <CreateGRN />
       </div>
     </section>
   );

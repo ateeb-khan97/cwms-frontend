@@ -448,5 +448,10 @@ function Table({
 //
 export default function CreateGrnPage() {
   const [tableData, setTableData] = React.useState<any[]>([]);
-  return <Table tableData={tableData} setTableData={setTableData} />;
+  return (
+    <>
+      <Form setTableData={setTableData} />
+      <Table tableData={tableData} setTableData={setTableData} />
+    </>
+  );
 }
