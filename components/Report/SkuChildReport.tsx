@@ -69,7 +69,7 @@ export default function SkuChildReport({
       const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
       saveAs(blob, 'sku_child.csv');
     } catch (err) {
-      console.log('Error');
+      console.log(err);
     }
   }
 
