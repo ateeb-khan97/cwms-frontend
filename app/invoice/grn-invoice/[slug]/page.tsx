@@ -33,7 +33,6 @@ export default async function Page({ params }: { params: PropType }) {
       purchasingPrice =
         discountedTradePrice + (+each.sales_tax / 100) * discountedTradePrice;
       totalRecQty += +each.received_quantity;
-      totalGSTValue += +(+(purchasingPrice || 0) * +(each.gst_rate || 0)) / 100;
       totalStockValue += +purchasingPrice * +each.received_quantity;
     }
     message = response.status == 200 ? '' : response.message;
@@ -128,6 +127,10 @@ export default async function Page({ params }: { params: PropType }) {
                         +each_elem.trade_price;
                       gstValue = +each_elem.trade_price - gstValue;
                       gstValue = gstValue * (+each_elem.sales_tax / 100);
+                      gstValue = gstValue * +each_elem.received_quantity;
+                      //
+                      totalGSTValue += gstValue;
+                      //
                       let purchasingPrice = 0;
 
                       const discountedTradePrice =

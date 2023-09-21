@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Button } from '@mantine/core';
 import { MdDownload } from 'react-icons/md';
 import { saveAs } from 'file-saver';
+import Papa from 'papaparse';
 //
 interface ITableType {
   id: string;
@@ -61,17 +62,15 @@ export default function SkuChildReport({
   ]);
   //
   async function downloadHandler() {
-    const downloadData = await getDownloadData();
-    const csvData = [
-      Object.keys(downloadData[0]).join(','),
-      ...downloadData.map((item) => Object.values(item).join(',')),
-    ].join('\n');
-
-    // Create a Blob containing the CSV data
-    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
-
-    // Trigger the download using the file-saver library
-    saveAs(blob, 'data.csv');
+    try {
+      const downloadData = await getDownloadData();
+      const csvData = Papa.unparse(downloadData);
+      // Create a Blob containing the CSV data
+      const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+      saveAs(blob, 'sku_child.csv');
+    } catch (err) {
+      console.log('Error');
+    }
   }
 
   return (
