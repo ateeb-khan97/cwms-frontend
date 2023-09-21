@@ -333,8 +333,8 @@ export default function ShowProductPage({
   getDownloadData: () => Promise<any[]>;
 }) {
   async function downloadHandler() {
-    const downloadData = await getDownloadData();
-    const csvData = Papa.unparse(downloadData);
+    const downloadData = new Set(await getDownloadData());
+    const csvData = Papa.unparse(Array.from(downloadData));
     // Create a Blob containing the CSV data
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
     saveAs(blob, 'data.csv');
