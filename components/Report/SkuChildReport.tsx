@@ -64,6 +64,8 @@ export default function SkuChildReport({
   async function downloadHandler() {
     try {
       const downloadData = await getDownloadData();
+      console.log(downloadData);
+
       const csvData = Papa.unparse(downloadData);
       // Create a Blob containing the CSV data
       const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
