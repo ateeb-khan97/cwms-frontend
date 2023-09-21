@@ -448,18 +448,5 @@ function Table({
 //
 export default function CreateGrnPage() {
   const [tableData, setTableData] = React.useState<any[]>([]);
-  return (
-    <section className="flex min-h-[100%] flex-col gap-10 p-7">
-      <Header />
-      <div className="rounded-md border border-gray-100 bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b-[1px] p-5">
-          <p className="py-2 font-semibold text-gray-500">
-            Here you can manage your all GRN!
-          </p>
-        </div>
-        <Form setTableData={setTableData} />
-        <Table tableData={tableData} setTableData={setTableData} />
-      </div>
-    </section>
-  );
+  return <Table tableData={tableData} setTableData={setTableData} />;
 }
