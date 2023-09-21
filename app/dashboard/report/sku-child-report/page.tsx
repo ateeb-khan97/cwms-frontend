@@ -61,7 +61,7 @@ async function getDownloadData() {
   'use server';
   try {
     const data = (await prisma.$queryRawUnsafe(
-      `select id.id, id.bin_id , id.second_level, id.third_level, id.inward_id, id.inward_child , id.is_received , id.user_name , CAST(Date(id.created_at) as CHAR) as created_at , CAST(Date(id.location_change_date) as CHAR) as location_change_date , id.pick_list_id , l.loc_name from inward_detail id left join locations l on l.loc_code = location_id;`,
+      `select id.id, id.bin_id , id.second_level, id.third_level, id.inward_id, id.inward_child , id.is_received , id.user_name , CAST(Date(id.created_at) as CHAR) as created_at , CAST(Date(id.location_change_date) as CHAR) as location_change_date , id.pick_list_id , l.loc_name from inward_detail id left join locations l on l.loc_code = location_id order by id desc limit 1000;`,
     )) as any[];
     console.log(data[0]);
     return data;
