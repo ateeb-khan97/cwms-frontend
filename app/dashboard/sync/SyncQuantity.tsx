@@ -25,6 +25,7 @@ export default function SyncQuantity({ getLocation }: IProp) {
       data: { locationId: location },
     });
     customNotification({
+      autoClose: false,
       message: response.message,
       title: response.status == 200 ? 'Success' : 'Failed',
     });

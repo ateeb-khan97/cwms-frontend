@@ -7,11 +7,13 @@ type TitleType = 'Success' | 'Failed';
 type NotificationType = {
   title?: TitleType;
   message: string;
+  autoClose?: boolean;
 };
 //
 export default function customNotification({
   message,
   title = 'Success',
+  autoClose = true,
 }: NotificationType) {
   //
   const isSuccess: boolean = title == 'Success';
@@ -19,7 +21,7 @@ export default function customNotification({
   return notifications.show({
     message: message,
     title: title,
-    autoClose: 3000,
+    autoClose: autoClose ? 3000 : undefined,
     color: isSuccess ? 'green' : 'red',
     icon: isSuccess ? <MdCheck /> : <MdClose />,
   });
