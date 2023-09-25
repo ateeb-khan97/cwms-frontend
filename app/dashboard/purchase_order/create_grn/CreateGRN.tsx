@@ -6,6 +6,7 @@ import { searchPo } from './grnFunctions';
 import customNotification from 'functions/customNotification';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 //
+//
 export default function CreateGRN() {
   const [tableData, setTableData] = useState<any[]>([]);
   const [poId, setPoId] = useState<string>('');
@@ -21,6 +22,14 @@ export default function CreateGRN() {
     });
     setPoSearching(false);
   }
+  //
+  function inputHandler(value: string, index: number, name: string) {
+    const clonedData = [...tableData];
+    const ind = clonedData.findIndex((each) => each.index === index);
+    clonedData[ind][name] = value;
+    setTableData(clonedData);
+  }
+  //
   return (
     <>
       <section className="p-5">
@@ -84,7 +93,116 @@ export default function CreateGRN() {
                   return (
                     <>
                       <input
+                        onChange={(e) =>
+                          inputHandler(
+                            e.currentTarget.value,
+                            row.index,
+                            'received_quantity',
+                          )
+                        }
                         value={row.received_quantity}
+                        type="text"
+                        className="block h-full border outline-none"
+                      />
+                    </>
+                  );
+                },
+              },
+              {
+                name: 'MRP',
+                compact: true,
+                width: '70px',
+                center: true,
+                cell(row, rowIndex, column, id) {
+                  return (
+                    <>
+                      <input
+                        value={row.maximum_retail_price}
+                        type="text"
+                        className="block h-full border outline-none"
+                      />
+                    </>
+                  );
+                },
+              },
+              {
+                name: 'T.P',
+                compact: true,
+                width: '70px',
+                center: true,
+                cell(row, rowIndex, column, id) {
+                  return (
+                    <>
+                      <input
+                        value={row.trade_price}
+                        type="text"
+                        className="block h-full border outline-none"
+                      />
+                    </>
+                  );
+                },
+              },
+              {
+                name: 'Disc.%',
+                compact: true,
+                width: '70px',
+                center: true,
+                cell(row, rowIndex, column, id) {
+                  return (
+                    <>
+                      <input
+                        value={row.discount_percentage}
+                        type="text"
+                        className="block h-full border outline-none"
+                      />
+                    </>
+                  );
+                },
+              },
+              {
+                name: 'Batch.#',
+                compact: true,
+                width: '70px',
+                center: true,
+                cell(row, rowIndex, column, id) {
+                  return (
+                    <>
+                      <input
+                        value={row.batch_number}
+                        type="text"
+                        className="block h-full border outline-none"
+                      />
+                    </>
+                  );
+                },
+              },
+              {
+                name: 'Batch.Exp',
+                compact: true,
+                width: '150px',
+                center: true,
+                cell(row, rowIndex, column, id) {
+                  return (
+                    <>
+                      <input
+                        value={row.batch_expiry}
+                        type="date"
+                        className="block h-full border outline-none"
+                      />
+                    </>
+                  );
+                },
+              },
+              {
+                name: 'Comments',
+                compact: true,
+                width: '80px',
+                center: true,
+                cell(row, rowIndex, column, id) {
+                  return (
+                    <>
+                      <input
+                        value={row.comments}
                         type="text"
                         className="block h-full border outline-none"
                       />

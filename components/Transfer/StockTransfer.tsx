@@ -183,6 +183,7 @@ function Table({
 function From() {
   // Refs
   // const [locationFrom, setLocationFrom] = React.useState<string | null>('');
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [locationTo, setLocationTo] = React.useState<string | null>('');
   const expectedDeliveryRef = React.useRef<HTMLInputElement>(null);
   const scanProductsRef = React.useRef<HTMLInputElement>(null);
@@ -286,6 +287,7 @@ function From() {
     ]);
   };
   const submitHandler = async (e: React.SyntheticEvent) => {
+    setIsLoading(true);
     e.preventDefault();
     const location_from = getCookie('loc_no');
     const location_to = locationTo;
@@ -319,6 +321,9 @@ function From() {
     setLocationTo('');
     expectedDeliveryRef.current!.value = '';
     scanProductsRef.current!.value = '';
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
   };
   return (
     <section className="flex justify-between">
@@ -389,7 +394,7 @@ function From() {
         <div className="flex p-5">
           <Button
             type={'submit'}
-            disabled={scannedProducts.length == 0}
+            disabled={scannedProducts.length == 0 || isLoading}
             className="ml-auto w-56 bg-red-500 transition-all hover:bg-red-500"
           >
             Transfer

@@ -22,6 +22,7 @@ export default function Page() {
             Here you can manage your all Create GRN!
           </p>
         </div>
+        {/* <CreateGRN /> */}
         <CreateGrnPage />
       </div>
     </section>
