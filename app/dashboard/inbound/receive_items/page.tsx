@@ -90,10 +90,14 @@ async function getTableData() {
   ];
   //
   if (filter != '') {
-    if (isReceived) {
-      OR.push({ inward_id: { not: null } });
+    if (OR.length == 7) {
+      if (isReceived) {
+        OR.push({ inward_id: { not: null } });
+      } else {
+        OR.push({ inward_id: null });
+      }
     } else {
-      OR.push({ inward_id: null });
+      OR.pop();
     }
   }
   //
