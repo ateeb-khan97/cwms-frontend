@@ -21,6 +21,7 @@ interface TableType {
   total_purchasing_price: string;
   trade_price: string;
   mrp_unit_price: string;
+  second_level: string;
   tax_code: string;
   aging_time: string;
 }
@@ -149,12 +150,20 @@ export default function StockBatchReport({
               width: '150px',
             },
             {
+              name: 'Box Qty',
+              selector: (row: TableType) => row.second_level,
+              center: true,
+              grow: 0,
+              width: '100px',
+            },
+            {
               name: 'Inventory',
               selector: (row: TableType) => row.total_inventory,
               center: true,
               grow: 0,
               width: '100px',
             },
+
             {
               name: 'Pur.Price',
               selector: (row: TableType) => row.purchasing_price,

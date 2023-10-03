@@ -86,13 +86,6 @@ export default function StockBatchTable({ getTableData }: IPropType) {
               width: '150px',
             },
             {
-              name: 'Inventory',
-              selector: (row: any) => row.total_inventory,
-              center: true,
-              grow: 0,
-              width: '100px',
-            },
-            {
               name: 'MRP',
               selector: (row: any) =>
                 row.mrp_unit_price ? row.mrp_unit_price : '-',

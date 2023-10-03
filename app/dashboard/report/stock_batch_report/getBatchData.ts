@@ -18,6 +18,7 @@ type TableType = {
   mrp_unit_price: string;
   tax_code: string;
   aging_time: string;
+  second_level: string;
 };
 //
 export default async function getBatchData() {
@@ -39,6 +40,7 @@ export default async function getBatchData() {
     product_category.product_id = ind.product_id) AS category_name,
   p.product_name,
   ind.third_level as item_conversion,
+  (SUM(ind.second_level)) AS second_level,
   (SUM(ind.third_level)) AS total_inventory,
   loc.loc_name,
   p.purchasing_price,

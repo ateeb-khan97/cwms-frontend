@@ -33,7 +33,6 @@ async function getTableData() {
     product_category.product_id = ind.product_id) AS category_name,
   p.product_name,
   ind.third_level as item_conversion,
-  (SUM(ind.third_level)) AS total_inventory,
   loc.loc_name,
   p.mrp_unit_price
 from
