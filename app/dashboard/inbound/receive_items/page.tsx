@@ -57,6 +57,7 @@ async function getTableData() {
   let page = '1';
   let currentRowsPerPage = '1';
   let search = '';
+  let filter = '';
   //
   const referer = headers().get('referer');
   if (referer) {
@@ -64,7 +65,9 @@ async function getTableData() {
     page = url.searchParams.get('page') || '1';
     currentRowsPerPage = url.searchParams.get('currentRowsPerPage') || '10';
     search = url.searchParams.get('search') || '';
+    filter = url.searchParams.get('filter') || '';
   }
+  const isReceived = filter == 'Received';
   //
   const type = cookies().get('type')?.value;
   const acc_no = cookies().get('acc_no')?.value;

@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, TextInput } from '@mantine/core';
+import { Button, Select, TextInput } from '@mantine/core';
 import BreadcrumbComponent from 'components/Shared/BreadcrumbComponent';
 import DataTableComponent from 'components/Shared/DataTableComponent';
 import Loader from 'components/Shared/Loader';
@@ -295,18 +295,36 @@ function Table({
           },
         ]}
       >
-        <div className="flex items-center justify-end gap-5">
-          <Button
-            loading={btnDisable}
-            disabled={btnDisable}
-            onClick={downloadHandler}
+        <div className="flex items-center justify-between">
+          <Select
+            data={['Received', 'Not-Received']}
+            placeholder="Filter"
             size="xs"
-            className="btn"
-            leftIcon={<MdDownload />}
-          >
-            Download
-          </Button>
-          <Search />
+            onChange={(e) => {
+              const searchParams = new URLSearchParams(window.location.search);
+              if (searchParams.has('filter')) {
+                searchParams.set('filter', e!);
+              } else {
+                searchParams.append('filter', e!);
+              }
+              const updatedQueryString = searchParams.toString();
+              const url = `${window.location.pathname}?${updatedQueryString}`;
+              router.push(url);
+            }}
+          />
+          <div className="flex gap-5">
+            <Button
+              loading={btnDisable}
+              disabled={btnDisable}
+              onClick={downloadHandler}
+              size="xs"
+              className="btn"
+              leftIcon={<MdDownload />}
+            >
+              Download
+            </Button>
+            <Search />
+          </div>
         </div>
       </DataTableComponent>
     </section>
@@ -359,6 +377,7 @@ export default function ReceiveItemsPage({
     search.get('page'),
     search.get('search'),
     search.get('currentRowsPerPage'),
+    search.get('filter'),
   ]);
   //
   return (
