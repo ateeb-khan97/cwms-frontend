@@ -72,6 +72,20 @@ export default function StockBatchTable({ getTableData }: IPropType) {
               width: '150px',
             },
             {
+              name: 'Box Qty',
+              selector: (row: any) => row.second_level,
+              center: true,
+              grow: 0,
+              width: '150px',
+            },
+            {
+              name: 'Box Unit Qty',
+              selector: (row: any) => row.third_level,
+              center: true,
+              grow: 0,
+              width: '150px',
+            },
+            {
               name: 'Inventory',
               selector: (row: any) => row.total_inventory,
               center: true,

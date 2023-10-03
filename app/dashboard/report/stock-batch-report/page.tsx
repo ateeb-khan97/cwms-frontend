@@ -22,7 +22,7 @@ async function getTableData() {
   const userQuery = ` WHERE ind.location_id = ${loc} AND ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
   const adminQuery = ` WHERE ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
 
-  return (await prisma.$queryRawUnsafe(`SELECT isku.batch_expiry, ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
+  return (await prisma.$queryRawUnsafe(`SELECT SUM(ind.second_level) as second_level,SUM(ind.third_level) as third_level, isku.batch_expiry, ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
     products.manufacturer_id = manufacturers.id WHERE products.id = ind.product_id) AS manufacturer_name,
   (SELECT group_concat(category_name)
   FROM
