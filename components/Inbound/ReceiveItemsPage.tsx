@@ -295,7 +295,7 @@ function Table({
           },
         ]}
       >
-        <div className="flex items-center justify-between">
+        <div className="flex w-full items-center justify-between">
           <Select
             data={['Received', 'Not-Received']}
             placeholder="Filter"

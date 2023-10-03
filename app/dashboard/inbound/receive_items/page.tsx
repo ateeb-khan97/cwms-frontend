@@ -89,7 +89,13 @@ async function getTableData() {
     { user_name: { contains: search } },
   ];
   //
-  if (isReceived) OR.push({ inward_id: { not: null } });
+  if (filter != '') {
+    if (isReceived) {
+      OR.push({ inward_id: { not: null } });
+    } else {
+      OR.push({ inward_id: null });
+    }
+  }
   //
   return await prisma.inward_sku.findMany({
     orderBy: [{ id: 'desc' }],
