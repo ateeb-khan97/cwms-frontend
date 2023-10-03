@@ -74,6 +74,23 @@ async function getTableData() {
   const loc_no = cookies().get('loc_no')?.value;
   const isAdmin = type == 'admin';
   //
+  const OR: any[] = [
+    { product_name: { contains: search } },
+    { received_quantity: { contains: search } },
+    { received_quantity: { contains: search } },
+    { maximum_retail_price: { contains: search } },
+    { trade_price: { contains: search } },
+    { discount_percentage: { contains: search } },
+    { batch_number: { contains: search } },
+    { batch_expiry: { contains: search } },
+    { inward_id: { contains: search } },
+    { inward_date: { contains: search } },
+    { user_id: { contains: search } },
+    { user_name: { contains: search } },
+  ];
+  //
+  if (isReceived) OR.push({ inward_id: { not: null } });
+  //
   return await prisma.inward_sku.findMany({
     orderBy: [{ id: 'desc' }],
     take: +currentRowsPerPage,
@@ -96,39 +113,11 @@ async function getTableData() {
       user_name: true,
     },
     where: isAdmin
-      ? {
-          OR: [
-            { product_name: { contains: search } },
-            { received_quantity: { contains: search } },
-            { received_quantity: { contains: search } },
-            { maximum_retail_price: { contains: search } },
-            { trade_price: { contains: search } },
-            { discount_percentage: { contains: search } },
-            { batch_number: { contains: search } },
-            { batch_expiry: { contains: search } },
-            { inward_id: { contains: search } },
-            { inward_date: { contains: search } },
-            { user_id: { contains: search } },
-            { user_name: { contains: search } },
-          ],
-        }
+      ? { OR }
       : {
           account_number: acc_no,
           location_id: loc_no,
-          OR: [
-            { product_name: { contains: search } },
-            { received_quantity: { contains: search } },
-            { received_quantity: { contains: search } },
-            { maximum_retail_price: { contains: search } },
-            { trade_price: { contains: search } },
-            { discount_percentage: { contains: search } },
-            { batch_number: { contains: search } },
-            { batch_expiry: { contains: search } },
-            { inward_id: { contains: search } },
-            { inward_date: { contains: search } },
-            { user_id: { contains: search } },
-            { user_name: { contains: search } },
-          ],
+          OR,
         },
   });
 }
