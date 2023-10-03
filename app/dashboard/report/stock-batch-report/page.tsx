@@ -7,8 +7,8 @@ function Header() {
   return (
     <header className="select-none text-[#3b3e66]">
       <BreadcrumbComponent />
-      <h1 className="text-3xl font-semibold ">Stock Batch Report</h1>
-      <p>Please see Stock Batch Report below all connected channels</p>
+      <h1 className="text-3xl font-semibold ">Branch Level Report</h1>
+      <p>Please see Branch Level Report below all connected channels</p>
     </header>
   );
 }
@@ -22,7 +22,7 @@ async function getTableData() {
   const userQuery = ` WHERE ind.location_id = ${loc} AND ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
   const adminQuery = ` WHERE ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
 
-  return (await prisma.$queryRawUnsafe(`SELECT ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
+  return (await prisma.$queryRawUnsafe(`SELECT isku.batch_expiry, ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
     products.manufacturer_id = manufacturers.id WHERE products.id = ind.product_id) AS manufacturer_name,
   (SELECT group_concat(category_name)
   FROM
@@ -56,7 +56,7 @@ export default function Page() {
         <div className="rounded-md border border-gray-100 bg-white shadow-xl">
           <div className="flex items-center justify-between border-b-[1px] p-5">
             <p className="py-2 font-semibold text-gray-500">
-              Here you can manage your all Stock Batch Report!
+              Here you can manage your all Branch Level Report!
             </p>
           </div>
           <StockBatchTable getTableData={getTableData} />

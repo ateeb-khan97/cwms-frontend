@@ -65,6 +65,13 @@ export default function StockBatchTable({ getTableData }: IPropType) {
               width: '150px',
             },
             {
+              name: 'Batch Expiry',
+              selector: (row: any) => row.batch_expiry,
+              center: true,
+              grow: 0,
+              width: '150px',
+            },
+            {
               name: 'Inventory',
               selector: (row: any) => row.total_inventory,
               center: true,
