@@ -3,8 +3,8 @@ import prisma from 'config/prisma';
 import { cookies, headers } from 'next/headers';
 //
 async function getCount() {
+  'use server';
   try {
-    ('use server');
     let search = '';
     let filter = '';
     //
