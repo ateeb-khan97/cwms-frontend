@@ -413,6 +413,8 @@ export default function ReceiveItemsPage({
     search.get('search'),
     search.get('currentRowsPerPage'),
     search.get('filter'),
+    search.get('column'),
+    search.get('sorting'),
   ]);
   //
   return (
