@@ -56,16 +56,15 @@ async function getCount() {
     return 0;
   }
 }
-interface IProp {
-  colName?: string;
-  sorting?: string;
-}
-async function getTableData({ colName = 'id', sorting = 'desc' }: IProp) {
+
+async function getTableData() {
   'use server';
   let page = '1';
   let currentRowsPerPage = '1';
   let search = '';
   let filter = '';
+  let column = 'id';
+  let sorting = 'desc';
   //
   const referer = headers().get('referer');
   if (referer) {
@@ -74,6 +73,8 @@ async function getTableData({ colName = 'id', sorting = 'desc' }: IProp) {
     currentRowsPerPage = url.searchParams.get('currentRowsPerPage') || '10';
     search = url.searchParams.get('search') || '';
     filter = url.searchParams.get('filter') || '';
+    column = url.searchParams.get('column') || '';
+    sorting = url.searchParams.get('sorting') || '';
   }
   const isReceived = filter == 'Received';
   //
@@ -110,7 +111,7 @@ async function getTableData({ colName = 'id', sorting = 'desc' }: IProp) {
   FROM inward_sku
   WHERE
       ${searchTerms}
-  ORDER BY ${colName} ${sorting}
+  ORDER BY ${column} ${sorting}
   LIMIT ${currentRowsPerPage} OFFSET ${
     (Number(page) - 1) * Number(currentRowsPerPage)
   };

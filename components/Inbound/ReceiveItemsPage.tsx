@@ -31,14 +31,12 @@ function Table({
   btnDisable,
   tableData,
   totalRows,
-  sortingFunction,
   downloadHandler,
 }: {
   isLoading: boolean;
   btnDisable: boolean;
   tableData: any[];
   totalRows: number;
-  sortingFunction: (col: any, sorting: any) => void;
   downloadHandler: () => void;
 }) {
   const router = useRouter();
@@ -125,7 +123,22 @@ function Table({
         progressPending={isLoading}
         paginationServer={true}
         paginationTotalRows={totalRows}
-        onSort={sortingFunction}
+        onSort={(column, sorting) => {
+          const searchParams = new URLSearchParams(window.location.search);
+          if (searchParams.has('column')) {
+            searchParams.set('column', column.id.toString());
+          } else {
+            searchParams.append('column', column.id.toString());
+          }
+          if (searchParams.has('sorting')) {
+            searchParams.set('sorting', sorting.toString());
+          } else {
+            searchParams.append('sorting', sorting.toString());
+          }
+          const updatedQueryString = searchParams.toString();
+          const url = `${window.location.pathname}?${updatedQueryString}`;
+          router.push(url);
+        }}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
           const searchParams = new URLSearchParams(window.location.search);
           if (searchParams.has('currentRowsPerPage')) {
@@ -355,7 +368,7 @@ function Table({
 }
 //
 interface IPropType {
-  getTableData: (val: any) => Promise<any[]>;
+  getTableData: () => Promise<any[]>;
   getDownloadData: () => Promise<any[]>;
   getCount: () => Promise<number>;
 }
@@ -371,17 +384,12 @@ export default function ReceiveItemsPage({
   const [btnDisable, setBtnDisable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any[]>([]);
   const search = useSearchParams();
-  async function dataSetter(data: any) {
+  async function dataSetter() {
     setIsLoading(true);
     setTotalRows(await getCount());
-    setTableData(await getTableData(data));
+    setTableData(await getTableData());
     setIsLoading(false);
   }
-  //
-  function sortingFunction(col: any, sorting: any) {
-    dataSetter({ col, sorting });
-  }
-  //
   const downloadHandler = async () => {
     setBtnDisable(true);
     const downloadData = await getDownloadData();
@@ -399,7 +407,7 @@ export default function ReceiveItemsPage({
   };
   //
   useEffect(() => {
-    dataSetter({});
+    dataSetter();
   }, [
     search.get('page'),
     search.get('search'),
@@ -421,7 +429,6 @@ export default function ReceiveItemsPage({
           <Table
             isLoading={isLoading}
             btnDisable={btnDisable}
-            sortingFunction={sortingFunction}
             downloadHandler={downloadHandler}
             totalRows={totalRows}
             tableData={tableData}
