@@ -229,7 +229,7 @@ const DataTableComponent = ({
   //
   const subHeaderComponentMemo = React.useMemo(() => {
     return (
-      <section className="flex gap-5">
+      <section className="flex w-full gap-5">
         {children ? (
           children
         ) : (
