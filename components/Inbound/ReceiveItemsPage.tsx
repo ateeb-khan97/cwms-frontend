@@ -124,7 +124,7 @@ function Table({
         paginationServer={true}
         paginationTotalRows={totalRows}
         onSort={(col, orderBy) => {
-          console.log(col);
+          console.log(col.id);
           console.log(orderBy);
         }}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
@@ -173,6 +173,7 @@ function Table({
             center: true,
             width: '70px',
             sortable: true,
+            id: 'po_id',
             cell(row, rowIndex, column, id) {
               return row.po_id;
             },
@@ -184,12 +185,14 @@ function Table({
             center: true,
             width: '70px',
             sortable: true,
+            id: 'product_id',
           },
           {
             name: 'Prod. Name',
             selector: (row: ReceiveType) => row.product_name,
             grow: 1,
             sortable: true,
+            id: 'product_name',
           },
           {
             name: 'Rec. Qty',
@@ -198,6 +201,7 @@ function Table({
             center: true,
             width: '80px',
             sortable: true,
+            id: 'received_quantity',
           },
           {
             name: 'MRP',
@@ -206,6 +210,7 @@ function Table({
             center: true,
             width: '80px',
             sortable: true,
+            id: 'maximum_retail_price',
           },
           {
             name: 'T. P.',
@@ -214,6 +219,7 @@ function Table({
             center: true,
             width: '80px',
             sortable: true,
+            id: 'trade_price',
           },
           {
             name: 'Disc. %',
@@ -222,6 +228,7 @@ function Table({
             center: true,
             width: '80px',
             sortable: true,
+            id: 'discount_percentage',
           },
           {
             name: 'Batch. No.',
@@ -230,6 +237,7 @@ function Table({
             grow: 0,
             center: true,
             sortable: true,
+            id: 'batch_number',
           },
           {
             name: 'Batch. Exp.',
@@ -238,6 +246,7 @@ function Table({
             grow: 0,
             center: true,
             sortable: true,
+            id: 'batch_expiry',
           },
           {
             name: 'FOC',
