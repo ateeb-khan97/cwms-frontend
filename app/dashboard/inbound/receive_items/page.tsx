@@ -47,7 +47,7 @@ async function getCount() {
     }
     //
     const response = (await prisma.$queryRawUnsafe(
-      `SELECT COUNT(*) as count FROM inward_sku WHERE ${searchTerms};`,
+      `SELECT CAST(COUNT(*) AS CHAR) as count FROM inward_sku WHERE ${searchTerms};`,
     )) as any[];
     const totalRows: number = response[0].count;
     return +totalRows;
