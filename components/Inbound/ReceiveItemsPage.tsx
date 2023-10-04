@@ -169,11 +169,13 @@ function Table({
         columns={[
           {
             name: 'PO. ID',
-            selector: (row: ReceiveType) => row.po_id,
             grow: 0,
             center: true,
             width: '70px',
             sortable: true,
+            cell(row, rowIndex, column, id) {
+              return row.po_id;
+            },
           },
           {
             name: 'Prod. ID',
