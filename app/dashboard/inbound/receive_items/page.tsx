@@ -73,8 +73,8 @@ async function getTableData() {
     currentRowsPerPage = url.searchParams.get('currentRowsPerPage') || '10';
     search = url.searchParams.get('search') || '';
     filter = url.searchParams.get('filter') || '';
-    column = url.searchParams.get('column') || '';
-    sorting = url.searchParams.get('sorting') || '';
+    column = url.searchParams.get('column') || 'id';
+    sorting = url.searchParams.get('sorting') || 'desc';
   }
   const isReceived = filter == 'Received';
   //
