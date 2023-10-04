@@ -3,53 +3,58 @@ import prisma from 'config/prisma';
 import { cookies, headers } from 'next/headers';
 //
 async function getCount() {
-  'use server';
-  let search = '';
-  let filter = '';
-  //
-  const referer = headers().get('referer');
-  if (referer) {
-    const url = new URL(referer);
-    search = url.searchParams.get('search') || '';
-    filter = url.searchParams.get('filter') || '';
-  }
-  //
-  const type = cookies().get('type')?.value;
-  const loc_no = cookies().get('loc_no')?.value;
-  //
-  const isAdmin = type == 'admin';
-  const isReceived = filter == 'Received';
-  //
-  const searchTermsArray = [
-    `(product_name LIKE "%${search}%"`,
-    `received_quantity LIKE "%${search}%"`,
-    `maximum_retail_price LIKE "%${search}%"`,
-    `trade_price LIKE "%${search}%"`,
-    `discount_percentage LIKE "%${search}%"`,
-    `batch_number LIKE "%${search}%"`,
-    `batch_expiry LIKE "%${search}%"`,
-    `inward_id LIKE "%${search}%"`,
-    `inward_date LIKE "%${search}%"`,
-    `user_id LIKE "%${search}%"`,
-    `user_name LIKE "%${search}%")`,
-  ];
-  let searchTerms = searchTermsArray.join(' OR ');
-  //
-  if (isAdmin) searchTerms += ` AND location_id = ${loc_no} `;
-  //
-  if (filter != '') {
-    if (isReceived) {
-      searchTerms += ` AND inward_id IS NOT NULL `;
-    } else {
-      searchTerms += ` AND inward_id IS NULL `;
+  try {
+    ('use server');
+    let search = '';
+    let filter = '';
+    //
+    const referer = headers().get('referer');
+    if (referer) {
+      const url = new URL(referer);
+      search = url.searchParams.get('search') || '';
+      filter = url.searchParams.get('filter') || '';
     }
+    //
+    const type = cookies().get('type')?.value;
+    const loc_no = cookies().get('loc_no')?.value;
+    //
+    const isAdmin = type == 'admin';
+    const isReceived = filter == 'Received';
+    //
+    const searchTermsArray = [
+      `(product_name LIKE "%${search}%"`,
+      `received_quantity LIKE "%${search}%"`,
+      `maximum_retail_price LIKE "%${search}%"`,
+      `trade_price LIKE "%${search}%"`,
+      `discount_percentage LIKE "%${search}%"`,
+      `batch_number LIKE "%${search}%"`,
+      `batch_expiry LIKE "%${search}%"`,
+      `inward_id LIKE "%${search}%"`,
+      `inward_date LIKE "%${search}%"`,
+      `user_id LIKE "%${search}%"`,
+      `user_name LIKE "%${search}%")`,
+    ];
+    let searchTerms = searchTermsArray.join(' OR ');
+    //
+    if (isAdmin) searchTerms += ` AND location_id = ${loc_no} `;
+    //
+    if (filter != '') {
+      if (isReceived) {
+        searchTerms += ` AND inward_id IS NOT NULL `;
+      } else {
+        searchTerms += ` AND inward_id IS NULL `;
+      }
+    }
+    //
+    const response = (await prisma.$queryRawUnsafe(
+      `SELECT COUNT(*) as count FROM inward_sku WHERE ${searchTerms};`,
+    )) as any[];
+    const totalRows: number = response[0].count;
+    return +totalRows;
+  } catch (err) {
+    console.log(err);
+    return 0;
   }
-  //
-  const response = (await prisma.$queryRawUnsafe(
-    `SELECT COUNT(*) as count FROM inward_sku WHERE ${searchTerms};`,
-  )) as any[];
-  const totalRows: number = response[0].count;
-  return +totalRows;
 }
 async function getTableData() {
   'use server';
