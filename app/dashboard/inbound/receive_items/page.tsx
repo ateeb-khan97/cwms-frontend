@@ -5,52 +5,51 @@ import { cookies, headers } from 'next/headers';
 async function getCount() {
   'use server';
   let search = '';
+  let filter = '';
+  //
   const referer = headers().get('referer');
   if (referer) {
     const url = new URL(referer);
     search = url.searchParams.get('search') || '';
+    filter = url.searchParams.get('filter') || '';
   }
+  //
   const type = cookies().get('type')?.value;
-  const acc_no = cookies().get('acc_no')?.value;
   const loc_no = cookies().get('loc_no')?.value;
+  //
   const isAdmin = type == 'admin';
-  return await prisma.inward_sku.count({
-    where: isAdmin
-      ? {
-          OR: [
-            { product_name: { contains: search } },
-            { received_quantity: { contains: search } },
-            { received_quantity: { contains: search } },
-            { maximum_retail_price: { contains: search } },
-            { trade_price: { contains: search } },
-            { discount_percentage: { contains: search } },
-            { batch_number: { contains: search } },
-            { batch_expiry: { contains: search } },
-            { inward_id: { contains: search } },
-            { inward_date: { contains: search } },
-            { user_id: { contains: search } },
-            { user_name: { contains: search } },
-          ],
-        }
-      : {
-          account_number: acc_no,
-          location_id: loc_no,
-          OR: [
-            { product_name: { contains: search } },
-            { received_quantity: { contains: search } },
-            { received_quantity: { contains: search } },
-            { maximum_retail_price: { contains: search } },
-            { trade_price: { contains: search } },
-            { discount_percentage: { contains: search } },
-            { batch_number: { contains: search } },
-            { batch_expiry: { contains: search } },
-            { inward_id: { contains: search } },
-            { inward_date: { contains: search } },
-            { user_id: { contains: search } },
-            { user_name: { contains: search } },
-          ],
-        },
-  });
+  const isReceived = filter == 'Received';
+  //
+  const searchTermsArray = [
+    `(product_name LIKE "%${search}%"`,
+    `received_quantity LIKE "%${search}%"`,
+    `maximum_retail_price LIKE "%${search}%"`,
+    `trade_price LIKE "%${search}%"`,
+    `discount_percentage LIKE "%${search}%"`,
+    `batch_number LIKE "%${search}%"`,
+    `batch_expiry LIKE "%${search}%"`,
+    `inward_id LIKE "%${search}%"`,
+    `inward_date LIKE "%${search}%"`,
+    `user_id LIKE "%${search}%"`,
+    `user_name LIKE "%${search}%")`,
+  ];
+  let searchTerms = searchTermsArray.join(' OR ');
+  //
+  if (isAdmin) searchTerms += ` AND location_id = ${loc_no} `;
+  //
+  if (filter != '') {
+    if (isReceived) {
+      searchTerms += ` AND inward_id IS NOT NULL `;
+    } else {
+      searchTerms += ` AND inward_id IS NULL `;
+    }
+  }
+  //
+  const response = (await prisma.$queryRawUnsafe(
+    `SELECT COUNT(*) as count FROM inward_sku WHERE ${searchTerms};`,
+  )) as any[];
+  const totalRows: number = response[0].count;
+  return totalRows;
 }
 async function getTableData() {
   'use server';
@@ -97,9 +96,6 @@ async function getTableData() {
       searchTerms += ` AND inward_id IS NULL `;
     }
   }
-  //
-  console.log('query', searchTerms);
-
   //
   return (await prisma.$queryRawUnsafe(`SELECT *
   FROM inward_sku
