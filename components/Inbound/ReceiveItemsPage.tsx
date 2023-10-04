@@ -174,6 +174,7 @@ function Table({
             grow: 0,
             center: true,
             width: '70px',
+            sortable: true,
           },
           {
             name: 'Prod. ID',
@@ -181,11 +182,13 @@ function Table({
             grow: 0,
             center: true,
             width: '70px',
+            sortable: true,
           },
           {
             name: 'Prod. Name',
             selector: (row: ReceiveType) => row.product_name,
             grow: 1,
+            sortable: true,
           },
           {
             name: 'Rec. Qty',
@@ -193,6 +196,7 @@ function Table({
             grow: 0,
             center: true,
             width: '80px',
+            sortable: true,
           },
           {
             name: 'MRP',
@@ -200,6 +204,7 @@ function Table({
             grow: 0,
             center: true,
             width: '80px',
+            sortable: true,
           },
           {
             name: 'T. P.',
@@ -207,6 +212,7 @@ function Table({
             grow: 0,
             center: true,
             width: '80px',
+            sortable: true,
           },
           {
             name: 'Disc. %',
@@ -214,6 +220,7 @@ function Table({
             grow: 0,
             center: true,
             width: '80px',
+            sortable: true,
           },
           {
             name: 'Batch. No.',
@@ -221,6 +228,7 @@ function Table({
               row.batch_number ? row.batch_number : '-',
             grow: 0,
             center: true,
+            sortable: true,
           },
           {
             name: 'Batch. Exp.',
@@ -228,6 +236,7 @@ function Table({
               row.batch_expiry?.substring(0, 10) || '-',
             grow: 0,
             center: true,
+            sortable: true,
           },
           {
             name: 'FOC',
