@@ -88,7 +88,15 @@ async function getTableData() {
   ];
   let searchTerms = searchTermsArray.join(' OR ');
   //
-  if (isAdmin) searchTerms += ` AND location_id = ${loc_no}`;
+  if (isAdmin) searchTerms += ` AND location_id = ${loc_no} `;
+  if (isReceived) {
+    searchTerms += ` AND inward_id IS NOT NULL `;
+  } else {
+    searchTerms += ` AND inward_id IS NULL `;
+  }
+  //
+  console.log('query', searchTerms);
+
   //
   return (await prisma.$queryRawUnsafe(`SELECT *
   FROM inward_sku
