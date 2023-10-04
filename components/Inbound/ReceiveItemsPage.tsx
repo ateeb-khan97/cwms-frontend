@@ -124,9 +124,9 @@ function Table({
         paginationServer={true}
         paginationTotalRows={totalRows}
         onSort={(col, orderBy) => {
-          console.log({
-            [col]: orderBy,
-          });
+          let temp: any = {};
+          temp[col] = orderBy;
+          console.log(temp);
         }}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
           const searchParams = new URLSearchParams(window.location.search);
