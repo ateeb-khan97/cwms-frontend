@@ -123,6 +123,11 @@ function Table({
         progressPending={isLoading}
         paginationServer={true}
         paginationTotalRows={totalRows}
+        onSort={(col, orderBy) => {
+          console.log({
+            [col]: orderBy,
+          });
+        }}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
           const searchParams = new URLSearchParams(window.location.search);
           if (searchParams.has('currentRowsPerPage')) {
