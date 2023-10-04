@@ -56,7 +56,11 @@ async function getCount() {
     return 0;
   }
 }
-async function getTableData() {
+interface IProp {
+  colName?: string;
+  sorting?: string;
+}
+async function getTableData({ colName = 'id', sorting = 'desc' }: IProp) {
   'use server';
   let page = '1';
   let currentRowsPerPage = '1';
@@ -106,7 +110,7 @@ async function getTableData() {
   FROM inward_sku
   WHERE
       ${searchTerms}
-  ORDER BY id DESC
+  ORDER BY ${colName} ${sorting}
   LIMIT ${currentRowsPerPage} OFFSET ${
     (Number(page) - 1) * Number(currentRowsPerPage)
   };

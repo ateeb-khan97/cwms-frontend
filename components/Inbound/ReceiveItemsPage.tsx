@@ -31,12 +31,14 @@ function Table({
   btnDisable,
   tableData,
   totalRows,
+  sortingFunction,
   downloadHandler,
 }: {
   isLoading: boolean;
   btnDisable: boolean;
   tableData: any[];
   totalRows: number;
+  sortingFunction: (col: any, sorting: any) => Promise<any>;
   downloadHandler: () => void;
 }) {
   const router = useRouter();
@@ -123,10 +125,7 @@ function Table({
         progressPending={isLoading}
         paginationServer={true}
         paginationTotalRows={totalRows}
-        onSort={(col, orderBy) => {
-          console.log(col.id);
-          console.log(orderBy);
-        }}
+        onSort={sortingFunction}
         onChangeRowsPerPage={(currentRowsPerPage, currentPage) => {
           const searchParams = new URLSearchParams(window.location.search);
           if (searchParams.has('currentRowsPerPage')) {
@@ -356,7 +355,7 @@ function Table({
 }
 //
 interface IPropType {
-  getTableData: () => Promise<any[]>;
+  getTableData: (val: any) => Promise<any[]>;
   getDownloadData: () => Promise<any[]>;
   getCount: () => Promise<number>;
 }
@@ -375,7 +374,13 @@ export default function ReceiveItemsPage({
   async function dataSetter() {
     setIsLoading(true);
     setTotalRows(await getCount());
-    setTableData(await getTableData());
+    setTableData(await getTableData({}));
+    setIsLoading(false);
+  }
+  //
+  async function sortingFunction(col: any, sorting: any) {
+    setIsLoading(true);
+    setTableData(await getTableData({ colName: col, sorting }));
     setIsLoading(false);
   }
   //
@@ -418,6 +423,7 @@ export default function ReceiveItemsPage({
           <Table
             isLoading={isLoading}
             btnDisable={btnDisable}
+            sortingFunction={sortingFunction}
             downloadHandler={downloadHandler}
             totalRows={totalRows}
             tableData={tableData}
