@@ -295,7 +295,7 @@ function Table({
           },
         ]}
       >
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-center justify-between bg-green-500">
           <Select
             data={['Received', 'Not-Received']}
             placeholder="Filter"
@@ -312,7 +312,7 @@ function Table({
               router.push(url);
             }}
           />
-          <div className="flex gap-5">
+          <div className="flex items-center gap-5">
             <Button
               loading={btnDisable}
               disabled={btnDisable}
