@@ -74,7 +74,7 @@ async function getTableData() {
   const isAdmin = type == 'admin';
   //
   const searchTermsArray = [
-    `product_name LIKE "%${search}%"`,
+    `(product_name LIKE "%${search}%"`,
     `received_quantity LIKE "%${search}%"`,
     `maximum_retail_price LIKE "%${search}%"`,
     `trade_price LIKE "%${search}%"`,
@@ -84,15 +84,18 @@ async function getTableData() {
     `inward_id LIKE "%${search}%"`,
     `inward_date LIKE "%${search}%"`,
     `user_id LIKE "%${search}%"`,
-    `user_name LIKE "%${search}%"`,
+    `user_name LIKE "%${search}%")`,
   ];
   let searchTerms = searchTermsArray.join(' OR ');
   //
   if (isAdmin) searchTerms += ` AND location_id = ${loc_no} `;
-  if (isReceived) {
-    searchTerms += ` AND inward_id IS NOT NULL `;
-  } else {
-    searchTerms += ` AND inward_id IS NULL `;
+  //
+  if (filter != '') {
+    if (isReceived) {
+      searchTerms += ` AND inward_id IS NOT NULL `;
+    } else {
+      searchTerms += ` AND inward_id IS NULL `;
+    }
   }
   //
   console.log('query', searchTerms);
