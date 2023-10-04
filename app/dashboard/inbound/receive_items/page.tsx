@@ -49,7 +49,7 @@ async function getCount() {
     `SELECT COUNT(*) as count FROM inward_sku WHERE ${searchTerms};`,
   )) as any[];
   const totalRows: number = response[0].count;
-  return totalRows;
+  return +totalRows;
 }
 async function getTableData() {
   'use server';
