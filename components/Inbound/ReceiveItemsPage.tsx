@@ -38,7 +38,7 @@ function Table({
   btnDisable: boolean;
   tableData: any[];
   totalRows: number;
-  sortingFunction: (col: any, sorting: any) => Promise<any>;
+  sortingFunction: (col: any, sorting: any) => void;
   downloadHandler: () => void;
 }) {
   const router = useRouter();
@@ -371,17 +371,15 @@ export default function ReceiveItemsPage({
   const [btnDisable, setBtnDisable] = useState<boolean>(false);
   const [tableData, setTableData] = useState<any[]>([]);
   const search = useSearchParams();
-  async function dataSetter() {
+  async function dataSetter(data: any) {
     setIsLoading(true);
     setTotalRows(await getCount());
-    setTableData(await getTableData({}));
+    setTableData(await getTableData(data));
     setIsLoading(false);
   }
   //
-  async function sortingFunction(col: any, sorting: any) {
-    setIsLoading(true);
-    setTableData(await getTableData({ colName: col, sorting }));
-    setIsLoading(false);
+  function sortingFunction(col: any, sorting: any) {
+    dataSetter({ col, sorting });
   }
   //
   const downloadHandler = async () => {
@@ -401,7 +399,7 @@ export default function ReceiveItemsPage({
   };
   //
   useEffect(() => {
-    dataSetter();
+    dataSetter({});
   }, [
     search.get('page'),
     search.get('search'),
