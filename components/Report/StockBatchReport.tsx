@@ -7,6 +7,8 @@ import axiosFunction from 'functions/axiosFunction';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { MdDownload, MdSearch } from 'react-icons/md';
+import { saveAs } from 'file-saver';
+import Papa from 'papaparse';
 //
 interface TableType {
   product_id: string;
@@ -28,28 +30,17 @@ interface TableType {
 //
 const TableHeadComponent = ({
   filterFunction,
+  downloadHandler,
 }: {
   filterFunction: (e: string) => void;
+  downloadHandler: () => void;
 }) => {
   const [search, setSearch] = useState<string>('');
   return (
     <>
       <div className="flex items-center gap-5">
         <Button
-          onClick={async () => {
-            await axiosFunction({
-              urlPath: '/inward/batch-report-download',
-              responseType: 'blob',
-            }).then((response: any) => {
-              const url = window.URL.createObjectURL(new Blob([response]));
-              const link = document.createElement('a');
-              link.href = url;
-              link.setAttribute('download', 'barcode-detail.csv');
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
-            });
-          }}
+          onClick={downloadHandler}
           className="bg-red-500 transition-all hover:bg-red-900"
           leftIcon={<MdDownload />}
         >
@@ -102,6 +93,13 @@ export default function StockBatchReport({
     setData(dt);
     setFilData(dt);
     setLoading(false);
+  }
+  //
+  async function downloadHandler() {
+    const csvData = Papa.unparse(filData);
+    // Create a Blob containing the CSV data
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
+    saveAs(blob, 'return-order.csv');
   }
   //
   useEffect(() => {
@@ -216,7 +214,10 @@ export default function StockBatchReport({
           ]}
           data={data}
         >
-          <TableHeadComponent filterFunction={filterFunction} />
+          <TableHeadComponent
+            downloadHandler={downloadHandler}
+            filterFunction={filterFunction}
+          />
         </DataTableComponent>
       )}
     </>
