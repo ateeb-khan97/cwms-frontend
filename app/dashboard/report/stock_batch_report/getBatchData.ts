@@ -29,7 +29,7 @@ export default async function getBatchData() {
   const userQuery = ` WHERE ind.location_id = ${loc} AND ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
   const adminQuery = ` WHERE ind.bin_id IS NOT NULL AND ind.is_received = 1 GROUP BY ind.product_id, isku.batch_number, ind.location_id;`;
   //
-  return (await prisma.$queryRawUnsafe(`SELECT ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
+  return (await prisma.$queryRawUnsafe(`SELECT group_concat(distinct ind.inward_id) as inwardIds, group_concat(distinct isku.po_id) as poIds, ind.product_id, isku.batch_number, (SELECT manufacturer_name FROM manufacturers LEFT JOIN products ON
     products.manufacturer_id = manufacturers.id WHERE products.id = ind.product_id) AS manufacturer_name,
   (SELECT group_concat(category_name)
   FROM
