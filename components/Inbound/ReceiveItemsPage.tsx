@@ -14,6 +14,7 @@ import { MdDownload, MdSearch } from 'react-icons/md';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Search from 'app/dashboard/report/sku-child-report/Search';
 import { saveAs } from 'file-saver';
+import Papa from 'papaparse';
 //
 function Header() {
   return (
@@ -390,21 +391,13 @@ export default function ReceiveItemsPage({
     setTableData(await getTableData());
     setIsLoading(false);
   }
-  const downloadHandler = async () => {
-    setBtnDisable(true);
+  async function downloadHandler() {
     const downloadData = await getDownloadData();
-    const csvData = [
-      Object.keys(downloadData[0]).join(','),
-      ...downloadData.map((item) => Object.values(item).join(',')),
-    ].join('\n');
-
+    const csvData = Papa.unparse(downloadData);
     // Create a Blob containing the CSV data
     const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8' });
-
-    // Trigger the download using the file-saver library
-    saveAs(blob, 'receive-items.csv');
-    setBtnDisable(false);
-  };
+    saveAs(blob, 'return-order.csv');
+  }
   //
   useEffect(() => {
     dataSetter();
